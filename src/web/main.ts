@@ -1,31 +1,122 @@
 // Character form → simulate the month up front → replay it in three.js with an event feed.
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 import calibrationJson from "../../data/calibration.json" with { type: "json" };
 import personasJson from "../../data/town.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Affinity, eventKey, type SimEvent, SLOTS, type Tuning, simulate } from "../sim/engine.ts";
 import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATING_BUDGET, type Sex, ageBand, buildWorld } from "../sim/world.ts";
+import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/inter";
 import { CITY_SIZE, buildCity } from "./city.ts";
+import { loadPeople, PERSON_SCALE } from "./people.ts";
 
 const DAYS = 30;
 const SPEEDS = [1, 4, 16, 64]; // × half an hour per 2 seconds
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
 
+// ---------------------------------------------------------------- the stage
+// Built at load, behind the form: a still, sunlit town. start() brings the same town to life.
+const stage = (async () => {
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.shadowMap.enabled = true;
+  $("#app").append(renderer.domElement);
+  const labels = new CSS2DRenderer();
+  labels.setSize(innerWidth, innerHeight);
+  Object.assign(labels.domElement.style, { position: "fixed", top: "0", pointerEvents: "none" });
+  document.body.append(labels.domElement);
+
+  const scene = new THREE.Scene();
+  // Fixed isometric view of the whole town: looking down the (1,1,1) diagonal, framed beside the feed and under the HUD.
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 300);
+  camera.position.set(60, 60, 60); camera.lookAt(0, 0, 0); camera.updateMatrixWorld();
+  let playing = false, declutter = () => {};
+  const overlaps = (a: DOMRect, b: DOMRect, lift: number) =>
+    a.left < b.right + 3 && b.left < a.right + 3 && a.top < b.bottom - lift && b.top - lift < a.bottom;
+  const frame = (play = playing) => {
+    playing = play;
+    const half = CITY_SIZE / 2, v = new THREE.Vector3();
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const x of [-half, half]) for (const y of [0, 3]) for (const z of [-half, half]) { // city bounds, tallest tower ~3
+      v.set(x, y, z).applyMatrix4(camera.matrixWorldInverse);
+      x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
+    }
+    const side = playing && innerWidth > 900 ? 360 : 0, top = playing ? 80 : 16, margin = 16; // feed panel, HUD
+    const w = innerWidth - side - 2 * margin, h = innerHeight - top - margin;
+    const s = Math.max((x1 - x0) / w, (y1 - y0) / h); // world units per pixel
+    const px = margin + w / 2, py = top + h / 2, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2; // city centre → this pixel
+    Object.assign(camera, { left: cx - px * s, right: cx + (innerWidth - px) * s, top: cy + py * s, bottom: cy - (innerHeight - py) * s });
+    camera.updateProjectionMatrix();
+    declutter();
+  };
+  frame();
+  const hemi = new THREE.HemisphereLight(0xdff2ff, 0x6a7a4a, 1);
+  const sun = new THREE.DirectionalLight(0xffffff, 2);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  const reach = CITY_SIZE * 0.75; // the sun circles, so cover the city's diagonal
+  Object.assign(sun.shadow.camera, { left: -reach, right: reach, top: reach, bottom: -reach, far: 100 });
+  scene.add(hemi, sun);
+  addEventListener("resize", () => {
+    frame();
+    renderer.setSize(innerWidth, innerHeight); labels.setSize(innerWidth, innerHeight);
+  });
+
+  const base = buildWorld(); // the town without a player: identical to the one the player joins
+  const city = await buildCity(scene, base);
+  // Place names. The renderer owns each wrapper's transform; we nudge the pill inside it so names never overlap.
+  const placeLabels = base.venues.filter(v => !["home", "work", "transit"].includes(v.kind)).map(v => {
+    const wrap = document.createElement("div"), pill = document.createElement("div");
+    pill.className = "label place"; pill.textContent = v.name; wrap.append(pill);
+    const label = new CSS2DObject(wrap);
+    label.position.copy(city.anchor[v.id]).setY(v.kind === "outdoors" || v.kind === "school" ? 0.8 : 1.5);
+    scene.add(label);
+    return { label, pill };
+  });
+  declutter = () => { // greedy, bottom of the screen first: lift each name above any it would cover
+    labels.render(scene, camera);
+    const placed: DOMRect[] = [], v = new THREE.Vector3();
+    const items = placeLabels.map(l => ({ ...l, y: (1 - v.copy(l.label.position).project(camera).y) / 2 * innerHeight }));
+    for (const it of items.sort((a, b) => b.y - a.y)) {
+      it.pill.style.transform = "";
+      let r = it.pill.getBoundingClientRect(), lift = 0;
+      for (let hit = placed.find(p => overlaps(p, r, lift)); hit; hit = placed.find(p => overlaps(p, r, lift))) lift = r.bottom - hit.top + 2;
+      it.pill.style.transform = `translateY(${-lift}px)`;
+      placed.push(new DOMRect(r.x, r.y - lift, r.width, r.height));
+    }
+  };
+  declutter();
+  hemi.intensity = 1.8; sun.intensity = 2.9; sun.position.set(8, 25, 12); scene.background = new THREE.Color(0xa8dcff);
+  renderer.setAnimationLoop(() => { renderer.render(scene, camera); labels.render(scene, camera); });
+  return { renderer, labels, scene, camera, hemi, sun, city, frame };
+})();
+
 // ---------------------------------------------------------------- character form
 const form = $<HTMLFormElement>("#setup");
 const ratingInputs = [...form.querySelectorAll<HTMLInputElement>("#ratings input")];
+const INTEREST_EMOJI: Record<string, string> = {
+  fitness: "💪", running: "🏃", outdoors: "🏕️", cooking: "🍳", "eating out": "🍽️", "wine and cocktails": "🍸",
+  "craft beer": "🍺", "live music": "🎸", dancing: "💃", "art and museums": "🎨", reading: "📚", "video games": "🎮",
+  "movies and tv": "🍿", "watching sports": "🏈", travel: "✈️", gardening: "🌱", "diy and crafts": "🔨", religion: "🙏",
+  volunteering: "🤝", tech: "💻", pets: "🐶", fashion: "👗", "yoga and wellness": "🧘", "board games": "🎲",
+};
 $("#interests").append(...INTERESTS.map(name => {
   const l = document.createElement("label");
-  l.className = "check";
-  l.innerHTML = `<input type="checkbox" name="interest" value="${name}" /> ${name}`;
+  l.className = "chip";
+  l.innerHTML = `<input type="checkbox" name="interest" value="${name}" /><span>${INTEREST_EMOJI[name]} ${name}</span>`;
   return l;
 }));
-const showBudget = () => {
+const showBudget = () => { // points left, plus each stat bar's fill and number
   const left = RATING_BUDGET - ratingInputs.reduce((s, i) => s + +i.value, 0);
-  $("#budget").textContent = `${left} point${left === 1 ? "" : "s"} left to spend`;
+  $("#budget").textContent = left ? `${left} point${left === 1 ? "" : "s"} to spend` : "all points spent";
+  $("#budget").classList.toggle("spent", !left);
+  for (const i of ratingInputs) {
+    i.style.setProperty("--pct", `${((+i.value - 1) / 9) * 100}%`);
+    i.nextElementSibling!.textContent = i.value;
+  }
 };
 ratingInputs.forEach(i => i.addEventListener("input", () => {
   const over = ratingInputs.reduce((s, x) => s + +x.value, 0) - RATING_BUDGET;
@@ -50,7 +141,10 @@ function readForm(): PlayerSpec {
   };
 }
 
+// npm run dev sets VITE_NO_API: UI work runs on the calibrated model and canned text, spending nothing.
+const NO_API = import.meta.env.VITE_NO_API === "1";
 async function api<T>(path: string, payload: unknown): Promise<T> {
+  if (NO_API) throw new Error("API calls are off (npm run dev). Use npm run dev:api for the real thing.");
   const r = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
   const data = await r.json().catch(() => ({ error: "The city is unreachable." }));
   if (!r.ok) throw new Error(data.error ?? "Something went wrong.");
@@ -103,68 +197,31 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   const feedItems = new Map<string, HTMLLIElement>();
   api<typeof story>("/api/story", { spec, bio, seed, affinity }).then(s => {
     story = s;
-    for (const [key, li] of feedItems) if (s.lines[key]) li.lastChild!.textContent = s.lines[key];
+    for (const [key, li] of feedItems) if (s.lines[key]) li.querySelector("p")!.textContent = s.lines[key];
   }).catch(() => {});
   const locations = res.locations!;
   const ticks = DAYS * SLOTS;
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.shadowMap.enabled = true;
-  $("#app").append(renderer.domElement);
-  const labels = new CSS2DRenderer();
-  labels.setSize(innerWidth, innerHeight);
-  Object.assign(labels.domElement.style, { position: "fixed", top: "0", pointerEvents: "none" });
-  document.body.append(labels.domElement);
+  const { renderer, labels, scene, camera, hemi, sun, city, frame } = await stage;
+  frame(true);
+  // The player's home: next door to someone in their friend circle (the town was laid out without them).
+  const mate = world.circles[world.agents[me].circle].find(id => id !== me)!;
+  city.anchor[world.agents[me].home] = city.anchor[world.agents[mate].home].clone().add(new THREE.Vector3(0.45, 0, 0.2));
+  city.indoor[world.agents[me].home] = true; city.spread[world.agents[me].home] = 0.5;
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 200);
-  camera.position.set(6, 7, 9); // start close; follow mode pans to the player
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.maxPolarAngle = Math.PI * 0.45;
-  controls.minDistance = 3; controls.maxDistance = 60;
-  const hemi = new THREE.HemisphereLight(0xffffff, 0x445533, 1);
-  const sun = new THREE.DirectionalLight(0xffffff, 2);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, { left: -CITY_SIZE / 2, right: CITY_SIZE / 2, top: CITY_SIZE / 2, bottom: -CITY_SIZE / 2, far: 80 });
-  scene.add(hemi, sun);
-  addEventListener("resize", () => {
-    camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight); labels.setSize(innerWidth, innerHeight);
-  });
-
-  const city = await buildCity(scene, world);
-  for (const v of world.venues) {
-    if (["home", "work", "transit"].includes(v.kind)) continue;
-    const div = document.createElement("div");
-    div.className = "label"; div.textContent = v.name;
-    const label = new CSS2DObject(div);
-    label.position.copy(city.anchor[v.id]).setY(v.kind === "outdoors" || v.kind === "school" ? 0.6 : 1.6);
-    scene.add(label);
-  }
-
-  // People: one instanced capsule each, the player as their own bigger mesh with a ring and a name tag.
-  const geo = new THREE.CapsuleGeometry(0.07, 0.14, 4, 8).translate(0, 0.14, 0);
-  const crowd = new THREE.InstancedMesh(geo, new THREE.MeshLambertMaterial(), N - 1);
-  const colour = new THREE.Color();
-  for (let i = 0; i < N - 1; i++) {
-    const a = world.agents[i];
-    crowd.setColorAt(i, colour.setHSL(a.sex === "female" ? 0.9 + (i % 7) * 0.012 : 0.55 + (i % 7) * 0.02, 0.45, 0.6));
-  }
-  crowd.castShadow = true;
-  scene.add(crowd);
+  // People: Kenney mini characters. Crowd instanced; the player animated, a bit bigger, with a ring and a name tag.
+  const people = await loadPeople(scene, world.agents.slice(0, -1).map(a => a.sex), spec.sex);
   const player = new THREE.Group();
-  const body = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color: 0xe0245e }));
-  body.scale.setScalar(1.5); body.castShadow = true;
-  const ring = new THREE.Mesh(new THREE.RingGeometry(0.2, 0.28, 32), new THREE.MeshBasicMaterial({ color: 0xe0245e, side: THREE.DoubleSide }));
+  people.player.scale.setScalar(PERSON_SCALE * 1.3);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.3, 0.42, 32), new THREE.MeshBasicMaterial({ color: 0xe0245e, side: THREE.DoubleSide }));
   ring.rotation.x = -Math.PI / 2; ring.position.y = 0.02;
   const tagDiv = document.createElement("div");
-  tagDiv.className = "label you"; tagDiv.textContent = spec.name;
+  tagDiv.className = "label you"; tagDiv.innerHTML = "<b></b><small></small>";
+  const [tagName, tagWhere] = tagDiv.children as unknown as [HTMLElement, HTMLElement];
+  tagName.textContent = spec.name;
   const tag = new CSS2DObject(tagDiv);
-  tag.position.y = 0.7;
-  player.add(body, ring, tag);
+  tag.position.y = 1.1;
+  player.add(people.player, ring, tag);
   scene.add(player);
 
   // Where agent i stands at a tick: their venue's anchor plus a stable personal offset.
@@ -184,7 +241,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   };
 
   // ------------------------------------------------------------ HUD and feed
-  let t = 0, speed = 4, paused = false, follow = true, nextEvent = 0;
+  let t = 0, speed = 4, paused = false, nextEvent = 0;
   const partners = new Set<number>();
   $("#hud").style.display = "flex"; $("#feed").style.display = "block";
   $("#speeds").append(...SPEEDS.map(s => {
@@ -194,7 +251,6 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     return b;
   }));
   $("#pause").onclick = () => { paused = !paused; $("#pause").textContent = paused ? "Play" : "Pause"; };
-  $("#follow").onclick = () => { follow = !follow; $("#follow").setAttribute("aria-pressed", String(follow)); };
   $("#skip").onclick = () => { t = ticks; };
 
   const who = (i: number) => {
@@ -218,33 +274,54 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   }
   const n = (k: number, one: string, many = one + "s") => `${k} ${k === 1 ? one : many}`;
   const friends = (k: number) => n(k, "friend");
-  const gossipLines = new Map<string, { li: HTMLLIElement; n: number }>();
+  const gossipLines = new Map<string, { li: HTMLLIElement; mine: number; theirs: number }>();
   const clock = (tick: number) => {
     const day = Math.floor(tick / SLOTS), mins = 240 + (tick % SLOTS) * 30;
     const wd = WEEKDAYS[(day + (mins >= 1440 ? 1 : 0)) % 7], hh = Math.floor(mins / 60) % 24, mm = mins % 60;
     return `Day ${day + 1} · ${wd} ${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
   };
   const feed = $("#feed ol");
+  // Every outcome gets a card: big emoji, a title in the player's terms, then the story line.
+  type Tone = "love" | "good" | "date" | "meh" | "gossip";
+  function outcome(e: SimEvent): { emoji: string; title: string; tone: Tone } {
+    switch (e.type) {
+      case "spark": return { emoji: "✨", title: "Sparks flew", tone: "good" };
+      case "match": return { emoji: "📱", title: "It's a match", tone: "good" };
+      case "rejected": return e.a === me ? { emoji: "🙅", title: "Turned down", tone: "meh" } : { emoji: "🤷", title: "Not feeling it", tone: "meh" };
+      case "date": return { emoji: "🍷", title: "Date night", tone: "date" };
+      case "stood_up": return e.a === me ? { emoji: "🪑", title: "Stood up", tone: "meh" } : { emoji: "👻", title: "You ghosted", tone: "meh" };
+      case "hookup": return { emoji: "💋", title: "Went home together", tone: "love" };
+      case "couple": return { emoji: "💘", title: "It's official", tone: "love" };
+      case "gossip": return e.a === me ? { emoji: "👂", title: "Heard some gossip", tone: "gossip" } : { emoji: "🗣️", title: "Word gets around", tone: "gossip" };
+    }
+  }
+  function card(tick: number, o: ReturnType<typeof outcome>, text: string) {
+    const li = document.createElement("li");
+    li.className = `card ${o.tone}`;
+    li.innerHTML = `<span class="emoji" aria-hidden="true">${o.emoji}</span><div><header><b>${o.title}</b><time>${clock(tick)}</time></header><p></p></div>`;
+    li.querySelector("p")!.textContent = text;
+    return li;
+  }
+
   function show(e: SimEvent) {
     if (e.type === "hookup") partners.add(other(e));
-    if (e.type === "gossip" && e.a !== me) { // one line per telling, however many friends heard it
-      const key = `${e.tick}|${e.b}|${e.about}`, g = gossipLines.get(key) ?? { li: document.createElement("li"), n: 0 };
-      if (!g.n) { g.li.className = "gossip"; feed.append(g.li); gossipLines.set(key, g); }
-      g.n++;
-      g.li.innerHTML = `<time>${clock(e.tick)}</time>`;
-      g.li.append(e.b === me ? `You told ${friends(g.n)} about your night with ${who(e.about!)}.`
-        : `${who(e.b)} told ${friends(g.n)} about your night together.`);
+    if (e.type === "gossip" && e.a !== me) { // one card per night: who told how many friends, both sides
+      const them = e.b === me ? e.about! : e.b, key = `${e.tick}|${them}`;
+      const g = gossipLines.get(key) ?? { li: card(e.tick, outcome(e), ""), mine: 0, theirs: 0 };
+      if (!gossipLines.has(key)) { feed.append(g.li); gossipLines.set(key, g); }
+      if (e.b === me) g.mine++; else g.theirs++;
+      const name = personasJson[them]?.name.split(" ")[0] ?? "they";
+      g.li.querySelector("p")!.textContent = [g.mine && `You told ${friends(g.mine)} about your night with ${who(them)}.`,
+        g.theirs && `${g.mine ? name : who(them)} told ${friends(g.theirs)}.`].filter(Boolean).join(" ");
       return;
     }
-    const li = document.createElement("li");
-    li.className = e.type;
-    li.innerHTML = `<time>${clock(e.tick)}</time>`;
-    li.append(describe(e));
+    const li = card(e.tick, outcome(e), describe(e));
     feed.append(li);
     feedItems.set(eventKey(e), li);
     if (["hookup", "spark", "match", "rejected", "couple"].includes(e.type)) {
-      tagDiv.textContent = `${spec.name} ${{ hookup: "💋", spark: "✨", match: "📱", rejected: "🙅", couple: "💘" }[e.type as string]}`;
-      setTimeout(() => tagDiv.textContent = spec.name, 2500);
+      tagName.textContent = `${spec.name} ${{ hookup: "💋", spark: "✨", match: "📱", rejected: "🙅", couple: "💘" }[e.type as string]}`;
+      if (e.type !== "rejected" || e.a === me) people.emote(e.type !== "rejected"); // nod at good news, head-shake at a no
+      setTimeout(() => tagName.textContent = spec.name, 2500);
     }
   }
 
@@ -256,10 +333,10 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     const esc = (t: string) => t.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!);
     el.innerHTML = `
       ${story.recap ? `<h2 class="headline">${esc(story.recap.headline)}</h2><p>${esc(story.recap.recap)}</p>` : ""}
-      <h3>${esc(spec.name)}'s month: ${partners.size} ${partners.size === 1 ? "partner" : "partners"}</h3>
+      <h3>💋 ${esc(spec.name)}'s month: ${partners.size} ${partners.size === 1 ? "partner" : "partners"}</h3>
       <ul>${[...partners].map(p => `<li>${who(p)}</li>`).join("") || "<li>Nobody. The city was not ready.</li>"}</ul>
-      <p>${n(count("spark"), "spark")} in person, ${n(count("match"), "app match", "app matches")}, ${n(count("date"), "date")}, ${n(count("rejected"), "rejection")}, stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}.</p>
-      <p>For scale: only ${anyInYear}% of real single ${spec.sex === "female" ? "women" : "men"} aged ${band} had <em>any</em> partner in a whole year (GSS 2022-24).</p>
+      <div class="stats"><span>✨ ${n(count("spark"), "spark")}</span><span>📱 ${n(count("match"), "match", "matches")}</span><span>🍷 ${n(count("date"), "date")}</span><span>🙅 ${n(count("rejected"), "rejection")}</span><span>🪑 stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}</span></div>
+      <p class="reality">For scale: only ${anyInYear}% of real single ${spec.sex === "female" ? "women" : "men"} aged ${band} had <em>any</em> partner in a whole year (GSS 2022-24).</p>
       <button id="again">Run it back</button> <button id="new" class="ghost">New character</button>`;
     el.style.display = "block";
     $("#again").onclick = () => { sessionStorage.setItem("rerun", JSON.stringify({ spec, bio, affinity })); location.reload(); };
@@ -267,10 +344,11 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   }
 
   // ------------------------------------------------------------ frame loop
-  const night = new THREE.Color(0x0b1026), day = new THREE.Color(0x9fd3ff), sky = new THREE.Color();
+  const night = new THREE.Color(0x1b2550), day = new THREE.Color(0xa8dcff), sky = new THREE.Color();
   const p0 = new THREE.Vector3(), p1 = new THREE.Vector3(), m = new THREE.Matrix4(), q = new THREE.Quaternion();
-  const one = new THREE.Vector3(1, 1, 1), none = new THREE.Vector3(0, 0, 0);
-  let last = performance.now(), done = false;
+  const size = new THREE.Vector3().setScalar(PERSON_SCALE), none = new THREE.Vector3(0, 0, 0), up = new THREE.Vector3(0, 1, 0);
+  const heading = new Float32Array(N);
+  let last = performance.now(), done = false, shownVenue = -1;
   renderer.setAnimationLoop(now => {
     const dt = Math.max(0, Math.min(0.1, (now - last) / 1000)); last = now; // rAF time can predate setup
     if (!paused && !done) t = Math.min(ticks, t + dt * speed / 2);
@@ -279,21 +357,29 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
 
     for (let i = 0; i < N; i++) {
       posAt(i, k, p0); posAt(i, k + 1, p1);
+      const dx = p1.x - p0.x, dz = p1.z - p0.z, moving = f < 1 && dx * dx + dz * dz > 1e-4;
+      if (moving) heading[i] = Math.atan2(dx, dz); // face where they're walking, keep facing it once there
       p0.lerp(p1, f * f * (3 - 2 * f));
-      if (i === me) player.position.copy(p0);
-      else crowd.setMatrixAt(i, m.compose(p0, q, hidden(i, k) ? none : one));
+      if (i === me) {
+        player.position.copy(p0); people.player.rotation.y = heading[i];
+        people.animate(moving && !paused, paused ? 0 : dt);
+        continue;
+      }
+      if (moving && !paused) p0.y = Math.abs(Math.sin(now / 90 + i)) * 0.06; // the crowd hops instead of animating
+      const slot = people.slot[i];
+      people.crowd[slot.mesh].setMatrixAt(slot.index, m.compose(p0, q.setFromAxisAngle(up, heading[i]), hidden(i, k) ? none : size));
     }
-    crowd.instanceMatrix.needsUpdate = true;
-    if (follow) controls.target.lerp(player.position, 0.05);
+    for (const mesh of people.crowd) mesh.instanceMatrix.needsUpdate = true;
 
     const hour = (4 + (t % SLOTS) / 2) % 24, light = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI));
     scene.background = sky.copy(night).lerp(day, light);
-    hemi.intensity = 0.35 + 0.9 * light; sun.intensity = 0.15 + 2.2 * light;
+    hemi.intensity = 0.9 + 0.9 * light; sun.intensity = 0.3 + 2.6 * light; // never too dark to see the colours
     sun.position.set(Math.cos((hour / 24) * 2 * Math.PI) * 20, 25, 12);
     $("#clock").textContent = clock(k);
+    const here = locations[k * N + me];
+    if (here !== shownVenue) { shownVenue = here; tagWhere.textContent = here === world.agents[me].home ? "home" : world.venues[here].name; }
     $("#score").textContent = `💋 ${partners.size}`;
 
-    controls.update();
     renderer.render(scene, camera);
     labels.render(scene, camera);
     if (t >= ticks && !done) { done = true; recap(); }

@@ -1,4 +1,5 @@
-// Lays the sim's venues out on a grid town built from Kenney City Kit models (CC0).
+// Lays the sim's venues out on a grid town. Downtown, roads and props: KayKit City Builder Bits (CC0).
+// Houses and trees: Kenney City Kit Suburban (CC0), recoloured per house with its variation textures.
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import type { Place, World } from "../sim/world.ts";
@@ -12,21 +13,21 @@ const MAP = [
   "HHPHHH",
   "HHHHHH",
 ];
-const BLOCK = 4, PERIOD = BLOCK + 1; // 4×4 tiles of lots, then a road
-const SIZE = MAP.length * PERIOD + 1; // tiles across, roads on every edge
-const tile = (i: number) => i - SIZE / 2 + 0.5; // tile index → world coordinate of its centre
-export const CITY_SIZE = SIZE;
+const CELL = 2; // a lot or a road square, the size of one KayKit tile
+const CELLS = MAP.length * 3 + 1; // each block is 2×2 lots, then a road; roads on every edge
+const at = (c: number) => (c - (CELLS - 1) / 2) * CELL; // cell index → world coordinate of its centre
+export const CITY_SIZE = CELLS * CELL;
 
-const MODELS = {
-  commercial: [..."abcdefghijklmn"].map(c => `commercial/building-${c}`),
-  tower: [..."abcde"].map(c => `commercial/building-skyscraper-${c}`),
-  filler: [..."abcdefghijklmn"].map(c => `commercial/low-detail-building-${c}`),
-  house: [..."abcdefghijklmnopqrstu"].map(c => `suburban/building-type-${c}`),
-  tree: ["suburban/tree-large", "suburban/tree-small"],
-  road: ["roads/road-straight", "roads/road-crossroad", "roads/light-square"],
-};
+const KAYKIT = [..."ABCDEFGH"].map(c => `kaykit/building_${c}`);
+const SHORT = KAYKIT.slice(0, 2).concat(KAYKIT.slice(4, 6)), TALL = [KAYKIT[2], KAYKIT[3], KAYKIT[6], KAYKIT[7]];
+const HOUSES = [..."abcdefghijklmnopqrstu"].map(c => `suburban/building-type-${c}`);
+const TREES = ["suburban/tree-large", "suburban/tree-small"];
+const CARS = ["kaykit/car_hatchback", "kaykit/car_sedan", "kaykit/car_stationwagon", "kaykit/car_taxi", "kaykit/car_police"];
+const PROPS = ["kaykit/road_straight", "kaykit/road_junction", "kaykit/road_tsplit", "kaykit/road_corner", "kaykit/base",
+  "kaykit/streetlight", "kaykit/bench", "kaykit/bush", "kaykit/watertower", "kaykit/firehydrant"];
+const HOUSE_COLOURS = ["colormap", "variation-a", "variation-b", "variation-c"];
 
-interface Lot { x: number; z: number; facing: number; block: string; blockId: number; dist: number } // facing: +1 road at +z, -1 at -z
+interface Lot { x: number; z: number; facing: number; block: string; blockId: number; dist: number } // facing: road at ±z
 
 export interface City {
   anchor: THREE.Vector3[]; // per venue id: where people stand (in front of the door)
@@ -35,37 +36,64 @@ export interface City {
 }
 
 export async function buildCity(scene: THREE.Scene, world: World): Promise<City> {
-  const loader = new GLTFLoader();
-  const names = Object.values(MODELS).flat();
+  const loader = new GLTFLoader(), textures = new THREE.TextureLoader();
+  const names = [...KAYKIT, ...HOUSES, ...TREES, ...CARS, ...PROPS];
   const loaded = new Map(await Promise.all(names.map(async n => {
-    const gltf = await loader.loadAsync(`/models/${n}.glb`);
+    const gltf = await loader.loadAsync(`/models/${n}.${n.startsWith("kaykit") ? "gltf" : "glb"}`);
     gltf.scene.traverse(o => { if ((o as THREE.Mesh).isMesh) o.castShadow = o.receiveShadow = true; });
     return [n, gltf.scene] as const;
   })));
-  const place = (name: string, x: number, z: number, rotY = 0, scale = 1) => {
+  // Kenney houses: same models, swapped palette texture per house.
+  const palettes = await Promise.all(HOUSE_COLOURS.map(async c => {
+    const t = await textures.loadAsync(`/models/suburban/Textures/${c}.png`);
+    t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; t.magFilter = THREE.NearestFilter;
+    return t;
+  }));
+  const recoloured = new Map<string, THREE.Material>();
+  const recolour = (m: THREE.Mesh, k: number) => {
+    const base = m.material as THREE.MeshStandardMaterial, key = `${base.uuid}|${k}`;
+    if (!recoloured.has(key)) recoloured.set(key, Object.assign(base.clone(), { map: palettes[k] }));
+    m.material = recoloured.get(key)!;
+  };
+  const place = (name: string, x: number, z: number, rotY = 0, scale = 1, palette = -1) => {
     const m = loaded.get(name)!.clone();
     m.position.set(x, 0, z); m.rotation.y = rotY; m.scale.setScalar(scale);
+    if (palette >= 0) m.traverse(o => { if ((o as THREE.Mesh).isMesh) recolour(o as THREE.Mesh, palette); });
     scene.add(m);
   };
+  const hash = (x: number, z: number) => Math.abs(Math.round(x * 73 + z * 151));
+  const pick = <T>(list: T[], k: number) => list[((k % list.length) + list.length) % list.length];
 
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(SIZE + 20, SIZE + 20), new THREE.MeshLambertMaterial({ color: 0x8fbf6a }));
-  ground.rotation.x = -Math.PI / 2; ground.position.y = -0.01; ground.receiveShadow = true;
+  // The town sits on a floating slab: grass on top, earth on the sides.
+  const grass = new THREE.MeshLambertMaterial({ color: 0x8fcf6a }), earth = new THREE.MeshLambertMaterial({ color: 0x8a6440 });
+  const ground = new THREE.Mesh(new THREE.BoxGeometry(CITY_SIZE + 1, 0.6, CITY_SIZE + 1), [earth, earth, grass, earth, earth, earth]);
+  ground.position.y = -0.31; ground.receiveShadow = true;
   scene.add(ground);
 
-  for (let i = 0; i < SIZE; i++) for (let j = 0; j < SIZE; j++) {
-    const ri = i % PERIOD === 0, rj = j % PERIOD === 0;
-    if (ri && rj) place("roads/road-crossroad", tile(i), tile(j));
-    else if (ri || rj) {
-      place("roads/road-straight", tile(i), tile(j), ri ? 0 : Math.PI / 2);
-      if ((i + j) % 4 === 2) place("roads/light-square", tile(i) + (ri ? 0.45 : 0), tile(j) + (rj ? 0.45 : 0), ri ? -Math.PI / 2 : 0);
+  // Roads: every third cell. Pieces chosen by which neighbours are road too.
+  const isRoad = (i: number, j: number) => i >= 0 && j >= 0 && i < CELLS && j < CELLS && (i % 3 === 0 || j % 3 === 0);
+  for (let i = 0; i < CELLS; i++) for (let j = 0; j < CELLS; j++) {
+    if (!isRoad(i, j)) continue;
+    const x = at(i), z = at(j);
+    const n = isRoad(i, j - 1), s = isRoad(i, j + 1), w = isRoad(i - 1, j), e = isRoad(i + 1, j);
+    const count = +n + +s + +w + +e;
+    if (count === 4) place("kaykit/road_junction", x, z);
+    else if (count === 3) place("kaykit/road_tsplit", x, z, !n ? Math.PI : !s ? 0 : !w ? -Math.PI / 2 : Math.PI / 2);
+    else if (count === 2 && (n || s) && (w || e)) place("kaykit/road_corner", x, z, s && e ? 0 : s && w ? -Math.PI / 2 : n && w ? Math.PI : Math.PI / 2);
+    else place("kaykit/road_straight", x, z, n || s ? 0 : Math.PI / 2);
+    // Streetlights on some straights, parked cars on others.
+    const h = hash(x, z);
+    if (count === 2 && ((n && s) || (w && e))) {
+      if (h % 5 === 0) place("kaykit/streetlight", x + (n ? 0.85 : 0), z + (n ? 0 : 0.85), n ? -Math.PI / 2 : 0);
+      else if (h % 7 === 0) place(pick(CARS, h), x + (n ? -0.45 : 0), z + (n ? 0 : -0.45), n ? 0 : Math.PI / 2);
     }
   }
 
-  // Lots: each block is 2×2 lots of 2×2 tiles; a lot's building faces the road on its z side.
+  // Lots: each block is 2×2 lots; a lot's building faces the road on its z side.
   const lots: Lot[] = [];
   MAP.forEach((row, bz) => [...row].forEach((block, bx) => {
     for (let lx = 0; lx < 2; lx++) for (let lz = 0; lz < 2; lz++) {
-      const x = tile(bx * PERIOD + 1.5 + 2 * lx), z = tile(bz * PERIOD + 1.5 + 2 * lz);
+      const x = at(bx * 3 + 1 + lx), z = at(bz * 3 + 1 + lz);
       lots.push({ x, z, facing: lz ? 1 : -1, block, blockId: bz * MAP.length + bx, dist: Math.hypot(x, z) });
     }
   }));
@@ -76,9 +104,8 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
   };
 
   const anchor: THREE.Vector3[] = [], indoor: boolean[] = [], spread: number[] = [];
-  const front = (l: Lot) => new THREE.Vector3(l.x, 0, l.z + l.facing * 1.15);
+  const front = (l: Lot) => new THREE.Vector3(l.x, 0, l.z + l.facing * 1.25);
   const rot = (l: Lot) => (l.facing > 0 ? 0 : Math.PI);
-  const pick = <T>(list: T[], k: number) => list[((k % list.length) + list.length) % list.length];
 
   const downtown = lots.filter(l => l.block === "C").sort((a, b) => a.dist - b.dist);
   const houses = lots.filter(l => l.block === "H");
@@ -89,35 +116,51 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
   const homeOwners = world.agents.slice().sort((a, b) => a.circle - b.circle);
   const houseOf = new Map(homeOwners.map((a, k) => [a.home, houses[Math.floor(k * houses.length / homeOwners.length)]]));
 
+  // Downtown lots go out centre-first, alternating labelled places with (unlabelled) workplaces so names don't pile up.
+  const labelled = world.venues.filter(v => ["restaurant_bar", "store", "gym", "other"].includes(v.kind));
+  const offices = world.venues.filter(v => v.kind === "work");
+  const downtownOrder = labelled.flatMap((v, k) => (offices[k] ? [v, offices[k]] : [v])).concat(offices.slice(labelled.length));
+  const downtownLot = new Map(downtownOrder.map((v, k) => [v.id, downtown[k]]));
+  nextDowntown = downtownOrder.length;
+
   for (const v of world.venues) {
     const kind: Place = v.kind;
     let lot: Lot | undefined;
     if (kind === "home") lot = houseOf.get(v.id)!;
-    else if (["restaurant_bar", "store", "gym", "other", "work"].includes(kind)) {
-      lot = downtown[nextDowntown++];
-      place(kind === "work" && v.id % 3 === 0 ? pick(MODELS.tower, v.id) : pick(MODELS.commercial, v.id), lot.x, lot.z, rot(lot));
+    else if (downtownLot.has(v.id)) {
+      lot = downtownLot.get(v.id)!;
+      place(pick(kind === "work" ? TALL : SHORT, v.id), lot.x, lot.z, rot(lot));
     } else if (kind === "worship") {
       lot = churchLots[churches++ * 2];
-      place(pick(MODELS.house, v.id + 7), lot.x, lot.z, rot(lot), 1.2);
+      place(pick(HOUSES, v.id + 7), lot.x, lot.z, rot(lot), 1.25, 3);
     }
-    if (lot) { anchor[v.id] = front(lot); indoor[v.id] = kind === "home" || kind === "work"; spread[v.id] = 0.45; continue; }
+    if (lot) { anchor[v.id] = front(lot); indoor[v.id] = kind === "home" || kind === "work"; spread[v.id] = 0.5; continue; }
     // Open-air venues: parks, the college quad, Main Street.
     if (kind === "outdoors") anchor[v.id] = blockCentre("P", parks++);
     else if (kind === "school") anchor[v.id] = blockCentre("S", 0);
-    else anchor[v.id] = new THREE.Vector3(tile(Math.floor(SIZE / 2)), 0, 0); // transit: Main Street runs north-south
+    else anchor[v.id] = new THREE.Vector3(at((CELLS - 1) / 2), 0, 0); // transit: Main Street runs north-south
     indoor[v.id] = false;
-    spread[v.id] = kind === "transit" ? 0 : 1.4;
+    spread[v.id] = kind === "transit" ? 0 : 1.6;
   }
 
-  // Houses everyone lives in, fillers on unused downtown lots, trees in parks and spare lots.
-  for (const l of new Set(houseOf.values())) place(pick(MODELS.house, Math.round(l.x * 7 + l.z * 13)), l.x, l.z, rot(l));
-  for (const l of houses.filter(h => ![...houseOf.values()].includes(h))) place(MODELS.tree[0], l.x, l.z, 0, 2);
-  for (const l of downtown.slice(nextDowntown)) place(pick(MODELS.filler, Math.round(l.x * 3 + l.z)), l.x, l.z, rot(l));
-  for (const l of churchLots.filter((_, k) => k % 2)) place(MODELS.tree[1], l.x, l.z, 0, 2);
-  const school = lots.filter(l => l.block === "S");
-  school.forEach((l, k) => k === 0 ? place(MODELS.tower[1], l.x, l.z, rot(l)) : place(MODELS.tree[k % 2], l.x, l.z, 0, 2));
-  for (const l of lots.filter(l => l.block === "P"))
-    for (let t = 0; t < 4; t++) place(MODELS.tree[t % 2], l.x + (t % 2 ? 0.5 : -0.5), l.z + (t < 2 ? 0.5 : -0.5), t, 1.6);
+  // Houses everyone lives in (each its own colours), fillers downtown, trees and benches in green spaces.
+  for (const l of new Set(houseOf.values())) {
+    const h = hash(l.x, l.z);
+    place(pick(HOUSES, h), l.x, l.z, rot(l), 1, h % HOUSE_COLOURS.length);
+    if (h % 3 === 0) place("kaykit/bush", l.x + 0.75, l.z + l.facing * 0.7);
+    if (h % 4 === 1) place(TREES[1], l.x - 0.8, l.z - l.facing * 0.7, h, 1.8);
+  }
+  const used = new Set(houseOf.values());
+  for (const l of houses.filter(h => !used.has(h))) {
+    place(TREES[0], l.x - 0.4, l.z - 0.3, 0, 2.2); place(TREES[1], l.x + 0.5, l.z + 0.4, 1, 2.2); place("kaykit/bush", l.x + 0.3, l.z - 0.6);
+  }
+  downtown.slice(nextDowntown).forEach((l, k) => k === 0 ? place("kaykit/watertower", l.x, l.z, 0, 1.6) : place(pick(SHORT, k + 3), l.x, l.z, rot(l)));
+  for (const l of churchLots.filter((_, k) => k % 2)) { place(TREES[0], l.x, l.z, 0, 2.4); place("kaykit/bench", l.x, l.z + 0.8); }
+  lots.filter(l => l.block === "S").forEach((l, k) => k === 0 ? place(TALL[3], l.x, l.z, rot(l)) : place(TREES[k % 2], l.x, l.z, k, 2.4));
+  for (const l of lots.filter(l => l.block === "P")) {
+    for (let t = 0; t < 4; t++) place(TREES[t % 2], l.x + (t % 2 ? 0.55 : -0.55), l.z + (t < 2 ? 0.55 : -0.55), t, 2);
+    place("kaykit/bench", l.x, l.z, l.facing > 0 ? 0 : Math.PI); place("kaykit/bush", l.x + 0.2, l.z + 0.2);
+  }
 
   return { anchor, indoor, spread };
 }

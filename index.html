@@ -5,75 +5,153 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sex and the City</title>
   <style>
-    :root { font-family: ui-sans-serif, system-ui, sans-serif; color: #1d1d27; }
-    body { margin: 0; overflow: hidden; background: #0b1026; }
+    :root {
+      --ink: #1d1a26; --muted: #6b6578; --line: #ece8f2; --paper: #fffdfb; --rose: #e0245e;
+      --display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+      font-family: "Inter Variable", ui-sans-serif, system-ui, sans-serif; color: var(--ink);
+      font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased;
+    }
+    body { margin: 0; overflow: hidden; background: #1b2550; }
     #app canvas { display: block; }
-    .panel { position: fixed; z-index: 10; background: rgba(255, 255, 255, 0.94); border-radius: 12px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25); }
-    #setup { inset: 0; margin: auto; width: min(560px, 92vw); height: fit-content; max-height: 92vh; overflow: auto; padding: 24px 28px; }
-    #setup h1 { margin: 0 0 4px; font-size: 28px; }
-    #setup p.sub { margin: 0 0 16px; color: #555; }
-    #setup fieldset { border: 0; padding: 0; margin: 0 0 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
-    #setup label { display: grid; gap: 4px; font-size: 13px; color: #444; }
-    #setup label.check { display: flex; align-items: center; gap: 6px; }
-    #setup input, #setup select { font: inherit; padding: 6px 8px; border: 1px solid #ccc; border-radius: 6px; }
-    #setup input[type=range] { padding: 0; }
-    #budget { grid-column: 1 / -1; font-size: 13px; color: #555; }
-    .describe { display: grid; gap: 6px; font-size: 13px; color: #444; margin-bottom: 8px; }
-    .describe textarea { font: inherit; padding: 8px; border: 1px solid #ccc; border-radius: 6px; resize: vertical; }
-    .describe-row { display: flex; gap: 10px; align-items: center; font-size: 13px; color: #a01040; }
-    #bio { font-style: italic; color: #333; margin: 8px 0 14px; min-height: 1em; }
-    #recap .headline { margin-top: 0; }
-    #setup #interests { grid-template-columns: repeat(3, 1fr); font-size: 12px; }
-    legend { font-weight: 600; margin-bottom: 8px; }
-    button { font: inherit; padding: 8px 14px; border: 0; border-radius: 8px; background: #e0245e; color: white; cursor: pointer; }
-    button.ghost { background: #eee; color: #222; }
-    button[aria-pressed=true] { background: #1d1d27; color: white; }
-    #hud { top: 12px; left: 12px; padding: 10px 14px; display: none; gap: 10px; align-items: center; flex-wrap: wrap; max-width: calc(100vw - 380px); }
-    #clock { font-weight: 600; min-width: 170px; font-variant-numeric: tabular-nums; }
-    #score { font-size: 20px; font-weight: 700; }
-    #feed { top: 12px; right: 12px; bottom: 12px; width: 330px; padding: 12px; overflow: auto; display: none; font-size: 13px; }
-    #feed h2 { margin: 0 0 8px; font-size: 15px; }
-    #feed ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column-reverse; gap: 6px; }
-    #feed li { padding: 6px 8px; border-radius: 6px; background: #f3f3f6; }
-    #feed li.hookup { background: #ffe0ea; } #feed li.couple { background: #ffd6f0; } #feed li.rejected, #feed li.stood_up { background: #eee; color: #666; }
-    #feed time { display: block; font-size: 11px; color: #888; }
-    #recap { inset: 0; margin: auto; width: min(520px, 92vw); height: fit-content; max-height: 90vh; overflow: auto; padding: 24px; display: none; }
-    .label { font-size: 11px; color: white; background: rgba(20, 20, 30, 0.7); padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
-    .you { font-size: 14px; font-weight: 700; background: #e0245e; }
+    h1, h2, h3, legend, #clock, #score, .card b { font-family: var(--display); }
+    .panel { position: fixed; z-index: 10; background: rgba(255, 253, 251, 0.95); border-radius: 18px; box-shadow: 0 10px 40px rgba(20, 10, 40, 0.28); backdrop-filter: blur(8px); }
+    button { font: inherit; font-weight: 600; padding: 9px 16px; border: 0; border-radius: 999px; background: var(--rose); color: white; cursor: pointer; transition: transform 0.1s, background 0.15s; }
+    button:hover { transform: translateY(-1px); } button:active { transform: none; }
+    button:disabled { opacity: 0.6; cursor: progress; }
+    button.ghost { background: #f1edf5; color: var(--ink); }
+    button[aria-pressed=true] { background: var(--ink); color: white; }
+
+    /* character form: a game's character creator, over the town */
+    #setup { inset: 0; margin: auto; width: min(1120px, 96vw); height: fit-content; max-height: 94vh; overflow: auto; padding: 30px 34px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 34px; background: rgba(255, 253, 251, 0.82); backdrop-filter: blur(14px) saturate(1.2); }
+    @media (max-width: 860px) { #setup { grid-template-columns: 1fr; } }
+    #setup .col { display: grid; align-content: start; gap: 14px; min-width: 0; }
+    #setup h1 { margin: 0; font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; background: linear-gradient(100deg, #e0245e, #ff7a45 55%, #8a3ffc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #setup p.sub { margin: 0; color: var(--muted); line-height: 1.45; font-size: 15px; }
+    #setup fieldset { border: 0; padding: 14px 16px 16px; margin: 0; border-radius: 16px; background: rgba(247, 243, 250, 0.85); display: grid; gap: 10px; }
+    legend { float: left; width: 100%; display: flex; justify-content: space-between; align-items: baseline; font-size: 17px; font-weight: 700; margin-bottom: 2px; padding: 0; }
+    legend small { font-family: "Inter Variable", sans-serif; font-size: 12px; font-weight: 500; color: var(--muted); }
+    #budget { font-family: "Inter Variable", sans-serif; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #ffe3ec; color: var(--rose); }
+    #budget.spent { background: #e7e4ec; color: var(--muted); }
+    .field { display: grid; gap: 5px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .pair { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+    #setup input[type=text], #setup input:not([type]), #setup input[type=number], .describe textarea { font: inherit; font-size: 16px; font-weight: 600; color: var(--ink); padding: 10px 12px; border: 2px solid var(--line); border-radius: 12px; background: white; text-transform: none; letter-spacing: 0; }
+    #setup input:focus-visible, .describe textarea:focus-visible { outline: none; border-color: var(--rose); }
+    .describe { display: grid; gap: 6px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .describe textarea { resize: none; line-height: 1.45; font-weight: 500; font-size: 14px; }
+    .describe-row { display: flex; gap: 12px; align-items: center; font-size: 13px; color: var(--rose); min-height: 38px; }
+    #bio { font-family: var(--display); font-size: 17px; color: var(--ink); margin: -4px 0 0; }
+    #bio:empty { display: none; }
+    .group, .pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .group-label { font-size: 13px; font-weight: 700; min-width: 54px; margin-right: 4px; }
+    .pips .group-label { min-width: 104px; }
+    .chip, .pip { position: relative; cursor: pointer; user-select: none; }
+    .chip input, .pip input { position: absolute; opacity: 0; pointer-events: none; }
+    .chip span { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--line); background: white; font-weight: 600; font-size: 14px; transition: transform 0.1s, background 0.15s, border-color 0.15s; }
+    .chip:hover span, .pip:hover span { transform: translateY(-1px); border-color: #d9d2e3; }
+    .chip input:checked + span { background: var(--ink); border-color: var(--ink); color: white; }
+    .pip span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; border: 2px solid var(--line); background: white; font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; transition: transform 0.1s; }
+    .pip input:checked + span { background: var(--rose); border-color: var(--rose); color: white; transform: scale(1.08); }
+    .chip input:focus-visible + span, .pip input:focus-visible + span { outline: 2px solid var(--rose); outline-offset: 2px; }
+    .stat { display: grid; grid-template-columns: 112px 1fr 26px; align-items: center; gap: 10px; }
+    .stat-name { font-size: 14px; font-weight: 700; }
+    .stat output { font-family: var(--display); font-size: 18px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
+    .stat input[type=range] { appearance: none; -webkit-appearance: none; height: 12px; border-radius: 999px; background: linear-gradient(to right, #ff7a45, var(--rose) var(--pct, 50%), #e7e1ee var(--pct, 50%)); cursor: pointer; }
+    .stat input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: white; border: 3px solid var(--rose); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); }
+    .stat input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: white; border: 3px solid var(--rose); }
+    #interests { grid-template-columns: none; display: flex !important; flex-wrap: wrap; gap: 6px; }
+    #interests legend { margin-bottom: 4px; }
+    #interests .chip span { padding: 6px 11px; font-size: 13px; }
+    .go { font-family: var(--display); font-size: 20px; font-weight: 800; padding: 16px 20px; border-radius: 16px; background: linear-gradient(100deg, #e0245e, #ff5a6a); box-shadow: 0 6px 18px rgba(224, 36, 94, 0.35); }
+
+    /* playback HUD */
+    #hud { top: 14px; left: 14px; padding: 8px 10px 8px 18px; display: none; gap: 8px; align-items: center; flex-wrap: wrap; max-width: calc(100vw - 400px); }
+    #clock { font-size: 17px; font-weight: 700; min-width: 178px; font-variant-numeric: tabular-nums; }
+    #score { font-size: 22px; font-weight: 800; padding: 2px 14px; margin-right: 6px; border-radius: 999px; background: #ffe3ec; color: var(--rose); }
+    #speeds { display: flex; gap: 4px; }
+    #hud button { padding: 7px 13px; font-size: 14px; }
+
+    /* the month as cards, newest first */
+    #feed { top: 14px; right: 14px; bottom: 14px; width: 360px; padding: 18px 14px 14px; overflow: auto; display: none; }
+    #feed h2 { margin: 0 4px 12px; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+    #feed ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column-reverse; gap: 8px; }
+    .card { display: grid; grid-template-columns: 52px 1fr; gap: 12px; align-items: start; padding: 12px 14px 12px 10px; border-radius: 14px; background: white; border: 1px solid var(--line); animation: arrive 0.35s ease-out; }
+    .card .emoji { font-size: 36px; line-height: 52px; width: 52px; height: 52px; text-align: center; border-radius: 12px; background: var(--tint); }
+    .card header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .card b { font-size: 16px; font-weight: 700; color: var(--accent); }
+    .card time { font-size: 11px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .card p { margin: 3px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+    .card.love { --tint: #ffd3e4; --accent: #c2185b; background: #fff4f8; border-color: #ffc9dc; }
+    .card.good { --tint: #ffe9c7; --accent: #c25e00; }
+    .card.date { --tint: #eadcff; --accent: #6b35c9; }
+    .card.meh { --tint: #eeeef2; --accent: #6b6578; }
+    .card.meh p { color: var(--muted); }
+    .card.gossip { --tint: #d9f2ea; --accent: #13795b; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(-8px) scale(0.98); } }
+
+    /* end of month */
+    #recap { inset: 0; margin: auto; width: min(560px, 92vw); height: fit-content; max-height: 90vh; overflow: auto; padding: 28px 32px; display: none; }
+    #recap .headline { margin: 0 0 10px; font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+    #recap h3 { font-size: 20px; margin: 18px 0 8px; }
+    #recap > :first-child { margin-top: 0; }
+    #recap p { line-height: 1.5; }
+    #recap ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+    #recap li { padding: 8px 12px; border-radius: 10px; background: #fff4f8; border: 1px solid #ffc9dc; }
+    .stats { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
+    .stats span { padding: 5px 11px; border-radius: 999px; background: #f4f1f7; font-size: 13px; font-weight: 600; }
+    .reality { color: var(--muted); font-size: 14px; }
+
+    /* in-world labels */
+    .label { font-size: 10px; color: white; background: rgba(20, 20, 30, 0.6); padding: 1px 5px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
+    .place { font-size: 10.5px; font-weight: 600; color: var(--ink); background: rgba(255, 255, 255, 0.88); padding: 2px 7px; border-radius: 999px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18); }
+    .you { display: grid; justify-items: center; font-family: var(--display); font-size: 14px; background: var(--rose); padding: 3px 10px; border-radius: 999px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); }
+    .you small { font-family: "Inter Variable", sans-serif; font-size: 10px; font-weight: 500; opacity: 0.9; }
   </style>
 </head>
 <body>
   <div id="app"></div>
 
   <form id="setup" class="panel">
-    <h1>Sex and the City</h1>
-    <p class="sub">Make someone. Drop them into a town of 500 people. Watch one month, calibrated to how often real people actually get lucky.</p>
-    <label class="describe">Describe your character, or set them up by hand below
-      <textarea name="description" rows="3" maxlength="1000" placeholder="Dev, 31, a sweet but chronically late sous-chef obsessed with natural wine and indie gigs. Into women. Out most weekends, never sets foot in a gym."></textarea>
-    </label>
-    <div class="describe-row"><button type="button" id="describe" class="ghost">Build from description</button> <span id="describe-status"></span></div>
-    <p id="bio"></p>
-    <fieldset>
-      <label>Name <input name="name" value="Alex" maxlength="24" required /></label>
-      <label>Age <input name="age" type="number" min="21" max="90" value="28" required /></label>
-      <label>Gender <select name="sex"><option value="male">Man</option><option value="female">Woman</option></select></label>
-      <label>Into <select name="into"><option value="women">Women</option><option value="men">Men</option><option value="everyone">Everyone</option></select></label>
-      <label>Nights out per week <input name="nightlife" type="range" min="0" max="5" value="2" /></label>
-      <label>Gym visits per week <input name="gym" type="range" min="0" max="6" value="1" /></label>
-      <label class="check"><input name="employed" type="checkbox" checked /> Has a job</label>
-      <label class="check"><input name="apps" type="checkbox" checked /> On the dating apps</label>
-    </fieldset>
-    <fieldset id="ratings">
-      <legend>How strangers see you (1-10)</legend>
-      <label>Looks <input name="attr" type="range" min="1" max="10" value="6" /></label>
-      <label>Sincerity <input name="sinc" type="range" min="1" max="10" value="7" /></label>
-      <label>Smarts <input name="intel" type="range" min="1" max="10" value="7" /></label>
-      <label>Fun <input name="fun" type="range" min="1" max="10" value="6" /></label>
-      <label>Ambition <input name="amb" type="range" min="1" max="10" value="7" /></label>
-      <div id="budget"></div>
-    </fieldset>
-    <fieldset id="interests"><legend>Up to 5 interests</legend></fieldset>
-    <button type="submit">Release them into the city</button>
+    <section class="col">
+      <h1>Sex and the City</h1>
+      <p class="sub">Create a character. Move them into a town of 500 people. Watch a month of dates, rejections and hookups, with odds from real surveys of how often people actually get lucky.</p>
+      <label class="describe"><span>Describe them, or build them by hand</span>
+        <textarea name="description" rows="3" maxlength="1000" placeholder="Dev, 31, a sweet but chronically late sous-chef obsessed with natural wine and indie gigs. Into women. Out most weekends, never sets foot in a gym."></textarea>
+      </label>
+      <div class="describe-row"><button type="button" id="describe" class="ghost">✨ Build from description</button><span id="describe-status"></span></div>
+      <p id="bio"></p>
+      <div class="pair">
+        <label class="field">Name <input name="name" value="Alex" maxlength="24" required /></label>
+        <label class="field">Age <input name="age" type="number" min="21" max="90" value="28" required /></label>
+      </div>
+      <div class="group"><span class="group-label">I'm</span>
+        <label class="chip"><input type="radio" name="sex" value="male" checked /><span>🙋‍♂️ A man</span></label>
+        <label class="chip"><input type="radio" name="sex" value="female" /><span>🙋‍♀️ A woman</span></label>
+      </div>
+      <div class="group"><span class="group-label">Into</span>
+        <label class="chip"><input type="radio" name="into" value="women" checked /><span>👩 Women</span></label>
+        <label class="chip"><input type="radio" name="into" value="men" /><span>👨 Men</span></label>
+        <label class="chip"><input type="radio" name="into" value="everyone" /><span>🌈 Everyone</span></label>
+      </div>
+      <fieldset class="life"><legend>Your week</legend>
+        <div class="pips"><span class="group-label">🍸 Nights out</span><label class="pip"><input type="radio" name="nightlife" value="0" /><span>0</span></label><label class="pip"><input type="radio" name="nightlife" value="1" /><span>1</span></label><label class="pip"><input type="radio" name="nightlife" value="2" checked /><span>2</span></label><label class="pip"><input type="radio" name="nightlife" value="3" /><span>3</span></label><label class="pip"><input type="radio" name="nightlife" value="4" /><span>4</span></label><label class="pip"><input type="radio" name="nightlife" value="5" /><span>5</span></label></div>
+        <div class="pips"><span class="group-label">🏋️ Gym visits</span><label class="pip"><input type="radio" name="gym" value="0" /><span>0</span></label><label class="pip"><input type="radio" name="gym" value="1" checked /><span>1</span></label><label class="pip"><input type="radio" name="gym" value="2" /><span>2</span></label><label class="pip"><input type="radio" name="gym" value="3" /><span>3</span></label><label class="pip"><input type="radio" name="gym" value="4" /><span>4</span></label><label class="pip"><input type="radio" name="gym" value="5" /><span>5</span></label><label class="pip"><input type="radio" name="gym" value="6" /><span>6</span></label></div>
+        <div class="group">
+          <label class="chip"><input type="checkbox" name="employed" checked /><span>💼 Has a job</span></label>
+          <label class="chip"><input type="checkbox" name="apps" checked /><span>📱 On the apps</span></label>
+        </div>
+      </fieldset>
+    </section>
+    <section class="col">
+      <fieldset id="ratings"><legend>How strangers see you <span id="budget"></span></legend>
+        <label class="stat"><span class="stat-name">👀 Looks</span><input name="attr" type="range" min="1" max="10" value="6" /><output>6</output></label>
+        <label class="stat"><span class="stat-name">💗 Sincerity</span><input name="sinc" type="range" min="1" max="10" value="7" /><output>7</output></label>
+        <label class="stat"><span class="stat-name">🧠 Smarts</span><input name="intel" type="range" min="1" max="10" value="7" /><output>7</output></label>
+        <label class="stat"><span class="stat-name">🎉 Fun</span><input name="fun" type="range" min="1" max="10" value="6" /><output>6</output></label>
+        <label class="stat"><span class="stat-name">🚀 Ambition</span><input name="amb" type="range" min="1" max="10" value="7" /><output>7</output></label>
+      </fieldset>
+      <fieldset id="interests"><legend>Loves <small>up to 5</small></legend></fieldset>
+      <button type="submit" class="go">Release them into the city 🏙️</button>
+    </section>
   </form>
 
   <div id="hud" class="panel">
@@ -81,7 +159,6 @@
     <span id="score"></span>
     <button id="pause" class="ghost">Pause</button>
     <span id="speeds"></span>
-    <button id="follow" class="ghost" aria-pressed="true">Follow me</button>
     <button id="skip" class="ghost">Skip to end</button>
   </div>
   <aside id="feed" class="panel"><h2>Your month</h2><ol></ol></aside>

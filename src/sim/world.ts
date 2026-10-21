@@ -140,15 +140,6 @@ export function buildWorld(player?: PlayerSpec): World {
       isPlayer: false,
     };
   });
-  if (player) {
-    if (player.age < MIN_AGE) throw new Error(`player must be ${MIN_AGE}+`);
-    agents.push({
-      ...player, id: agents.length, status: "single", gossip: 0.5, interests: interestMask(player.interests),
-      home: addVenue("home", `${player.name}'s place`), work: workplace.get(OFFICES[r() * OFFICES.length | 0])!, circle: -1,
-      favorites: {}, probs: shapeSchedule(player.employed, player.age, player.nightlife, player.gym, avgNight, avgGym),
-      isPlayer: true,
-    });
-  }
   for (const a of agents) {
     if (a.age < MIN_AGE) throw new Error(`agent ${a.id} is under ${MIN_AGE}`);
     for (const [kind, ids] of Object.entries(publicIds) as [Place, number[]][]) {
@@ -165,6 +156,24 @@ export function buildWorld(player?: PlayerSpec): World {
     members.forEach(m => m.circle = circles.length);
     circles.push(members.map(m => m.id));
     hangouts.push(members[r() * members.length | 0].home);
+  }
+
+  // The player joins last, on their own random stream, so the town (and its calibration) is identical with or
+  // without them: they move into an existing friend circle of people their age.
+  if (player) {
+    if (player.age < MIN_AGE) throw new Error(`player must be ${MIN_AGE}+`);
+    const pr = rng(WORLD_SEED + 1);
+    const me: Agent = {
+      ...player, id: agents.length, status: "single", gossip: 0.5, interests: interestMask(player.interests),
+      home: addVenue("home", `${player.name}'s place`), work: workplace.get(OFFICES[pr() * OFFICES.length | 0])!, circle: 0,
+      favorites: {}, probs: shapeSchedule(player.employed, player.age, player.nightlife, player.gym, avgNight, avgGym),
+      isPlayer: true,
+    };
+    for (const [kind, ids] of Object.entries(publicIds) as [Place, number[]][]) me.favorites[kind] = [ids[pr() * ids.length | 0], ids[pr() * ids.length | 0]];
+    const ageOf = (c: number[]) => c.reduce((s, id) => s + agents[id].age, 0) / c.length;
+    me.circle = circles.reduce((best, c, k) => Math.abs(ageOf(c) - player.age) < Math.abs(ageOf(circles[best]) - player.age) ? k : best, 0);
+    circles[me.circle].push(me.id);
+    agents.push(me);
   }
   return { agents, venues, circles, hangouts };
 }

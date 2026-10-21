@@ -24,10 +24,15 @@ python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
 ```sh
 npm install
 cp .env.example .env  # ANTHROPIC_API_KEY, TYPESAFE_API_KEY
-npm run dev         # API on :8787 + the game at localhost:5173
+npm run dev         # the game at localhost:5173, no API calls (canned text, no Jev)
+npm run dev:api     # API on :8787 + the game, with Claude and Jev
 npm run check       # determinism, 21+ only, and a simulated year vs GSS on held-out seeds (~4s)
 npm run calibrate   # refit data/tuning.json against GSS (~10 min)
 ```
+
+## Art
+
+All CC0: [KayKit City Builder Bits](https://kaylousberg.itch.io/city-builder-bits) by Kay Lousberg (downtown, roads, props), and Kenney's [City Kit Suburban](https://kenney.nl/assets/city-kit-suburban) (houses, trees, recoloured per house with its variation textures) and [Mini Characters](https://kenney.nl/assets/mini-characters) (people). Licences in `public/models/`.
 
 ## Models in the game
 
