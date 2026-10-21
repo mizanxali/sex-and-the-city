@@ -1,0 +1,94 @@
+{
+ "source": "Fisman & Iyengar speed dating 2002-04 (Columbia); dec ~ chooser's ratings of partner",
+ "features": [
+  "attr",
+  "sinc",
+  "intel",
+  "fun",
+  "amb",
+  "shar",
+  "int_corr",
+  "samerace",
+  "age_gap"
+ ],
+ "by_chooser": {
+  "female": {
+   "intercept": -5.5241,
+   "coef": {
+    "attr": 0.4017,
+    "sinc": -0.0859,
+    "intel": 0.1254,
+    "fun": 0.2751,
+    "amb": -0.1651,
+    "shar": 0.2704,
+    "int_corr": -0.0699,
+    "samerace": 0.0223,
+    "age_gap": -0.005
+   },
+   "yes_rate": 0.3737,
+   "auc": 0.814,
+   "n": 3366,
+   "feature_mean": {
+    "attr": 5.932,
+    "sinc": 7.086,
+    "intel": 7.446,
+    "fun": 6.285,
+    "amb": 6.936,
+    "shar": 5.401,
+    "int_corr": 0.196,
+    "samerace": 0.393,
+    "age_gap": 3.6
+   },
+   "feature_sd": {
+    "attr": 2.015,
+    "sinc": 1.871,
+    "intel": 1.612,
+    "fun": 2.061,
+    "amb": 1.856,
+    "shar": 2.201,
+    "int_corr": 0.307,
+    "samerace": 0.488,
+    "age_gap": 3.05
+   }
+  },
+  "male": {
+   "intercept": -5.1296,
+   "coef": {
+    "attr": 0.6936,
+    "sinc": -0.1588,
+    "intel": -0.04,
+    "fun": 0.2657,
+    "amb": -0.1595,
+    "shar": 0.2663,
+    "int_corr": 0.0373,
+    "samerace": -0.0748,
+    "age_gap": -0.0388
+   },
+   "yes_rate": 0.4878,
+   "auc": 0.836,
+   "n": 3485,
+   "feature_mean": {
+    "attr": 6.428,
+    "sinc": 7.231,
+    "intel": 7.271,
+    "fun": 6.505,
+    "amb": 6.584,
+    "shar": 5.517,
+    "int_corr": 0.194,
+    "samerace": 0.401,
+    "age_gap": 3.605
+   },
+   "feature_sd": {
+    "attr": 1.856,
+    "sinc": 1.621,
+    "intel": 1.502,
+    "fun": 1.843,
+    "amb": 1.725,
+    "shar": 2.091,
+    "int_corr": 0.304,
+    "samerace": 0.49,
+    "age_gap": 2.965
+   }
+  }
+ }
+}
