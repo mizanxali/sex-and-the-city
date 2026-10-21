@@ -2,8 +2,9 @@
 import assert from "node:assert/strict";
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Tuning, simulate } from "./engine.ts";
+import { centre } from "../server/ai.ts";
 import { gssSingles, loss, report, runYear } from "./stats.ts";
-import { MIN_AGE, type PlayerSpec, buildWorld } from "./world.ts";
+import { MIN_AGE, type PlayerSpec, buildWorld, gauss, rng } from "./world.ts";
 
 const tuning = tuningJson as Tuning;
 const HELD_OUT = [101, 102, 103, 104, 105, 106, 107, 108]; // calibration fits seeds 1-8
@@ -44,4 +45,17 @@ for (const sex of ["female", "male"]) {
   const r = s.extra[`${sex}|married`].rate;
   assert(r > 0.005 && r < 0.05, `married ${sex} affair rate ${r} outside 0.5-5%`);
 }
+// 4. Jev's affinity nudges are zero-mean, so they must reshuffle who likes the player, not how much.
+//    Same months with and without nudges as wide as the server allows (centre() caps them at sd 0.5).
+const nudge = (k: number) => { const r = rng(9000 + k); return withPlayer.agents.map(() => 0.8 * gauss(r)); };
+const ids = withPlayer.agents.slice(0, -1).map(a => a.id);
+let plain = 0, nudged = 0;
+const MONTHS = 160;
+for (let seed = 1; seed <= MONTHS; seed++) {
+  plain += simulate(withPlayer, tuning, { days: 30, seed, focus: me }).partners[me].length;
+  nudged += simulate(withPlayer, tuning, { days: 30, seed, focus: me,
+    affinity: { agent: me, toward: centre(nudge(seed), ids), from: centre(nudge(seed + 500), ids) } }).partners[me].length;
+}
+console.log(`player partners per month: ${(plain / MONTHS).toFixed(2)} plain vs ${(nudged / MONTHS).toFixed(2)} with affinity`);
+assert(Math.abs(nudged - plain) / Math.max(plain, 1) < 0.2, "affinity nudges shift the player's overall rate");
 console.log("ok");

@@ -18,6 +18,11 @@
     #setup input, #setup select { font: inherit; padding: 6px 8px; border: 1px solid #ccc; border-radius: 6px; }
     #setup input[type=range] { padding: 0; }
     #budget { grid-column: 1 / -1; font-size: 13px; color: #555; }
+    .describe { display: grid; gap: 6px; font-size: 13px; color: #444; margin-bottom: 8px; }
+    .describe textarea { font: inherit; padding: 8px; border: 1px solid #ccc; border-radius: 6px; resize: vertical; }
+    .describe-row { display: flex; gap: 10px; align-items: center; font-size: 13px; color: #a01040; }
+    #bio { font-style: italic; color: #333; margin: 8px 0 14px; min-height: 1em; }
+    #recap .headline { margin-top: 0; }
     #setup #interests { grid-template-columns: repeat(3, 1fr); font-size: 12px; }
     legend { font-weight: 600; margin-bottom: 8px; }
     button { font: inherit; padding: 8px 14px; border: 0; border-radius: 8px; background: #e0245e; color: white; cursor: pointer; }
@@ -43,6 +48,11 @@
   <form id="setup" class="panel">
     <h1>Sex and the City</h1>
     <p class="sub">Make someone. Drop them into a town of 500 people. Watch one month, calibrated to how often real people actually get lucky.</p>
+    <label class="describe">Describe your character, or set them up by hand below
+      <textarea name="description" rows="3" maxlength="1000" placeholder="Dev, 31, a sweet but chronically late sous-chef obsessed with natural wine and indie gigs. Into women. Out most weekends, never sets foot in a gym."></textarea>
+    </label>
+    <div class="describe-row"><button type="button" id="describe" class="ghost">Build from description</button> <span id="describe-status"></span></div>
+    <p id="bio"></p>
     <fieldset>
       <label>Name <input name="name" value="Alex" maxlength="24" required /></label>
       <label>Age <input name="age" type="number" min="21" max="90" value="28" required /></label>

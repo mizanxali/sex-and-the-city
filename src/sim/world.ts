@@ -168,3 +168,31 @@ export function buildWorld(player?: PlayerSpec): World {
   }
   return { agents, venues, circles, hangouts };
 }
+
+export const RATING_BUDGET = 33; // five 1-10 ratings averaging 6.6: you can be hot, or nice, not everything
+export const MAX_INTERESTS = 5;
+export const RATINGS = ["attr", "sinc", "intel", "fun", "amb"] as const;
+
+// Never trust a spec from a client or an LLM: clamp every field to the game's rules.
+export function clampSpec(raw: Partial<PlayerSpec>): PlayerSpec {
+  const num = (v: unknown, lo: number, hi: number, dflt: number) =>
+    Number.isFinite(Number(v)) ? Math.round(clamp(Number(v), lo, hi)) : dflt;
+  const age = num(raw.age, 0, 99, 30);
+  if (age < MIN_AGE) throw new Error(`Characters must be ${MIN_AGE} or older.`);
+  const spec: PlayerSpec = {
+    name: String(raw.name ?? "").replace(/[<>]/g, "").trim().slice(0, 24) || "You",
+    sex: raw.sex === "female" ? "female" : "male",
+    age,
+    orientation: (["straight", "gay", "bisexual"] as const).find(o => o === raw.orientation) ?? "straight",
+    employed: raw.employed !== false, apps: raw.apps !== false,
+    nightlife: num(raw.nightlife, 0, 5, 1), gym: num(raw.gym, 0, 6, 1),
+    attr: num(raw.attr, 1, 10, 6), sinc: num(raw.sinc, 1, 10, 6), intel: num(raw.intel, 1, 10, 6),
+    fun: num(raw.fun, 1, 10, 6), amb: num(raw.amb, 1, 10, 6),
+    interests: [...new Set((raw.interests ?? []).filter(i => INTERESTS.includes(i)))].slice(0, MAX_INTERESTS),
+  };
+  while (RATINGS.reduce((s, k) => s + spec[k], 0) > RATING_BUDGET) { // over budget: shave the highest
+    const top = RATINGS.reduce((a, b) => (spec[b] > spec[a] ? b : a));
+    spec[top]--;
+  }
+  return spec;
+}

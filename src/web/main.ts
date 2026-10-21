@@ -5,13 +5,11 @@ import { CSS2DObject, CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer
 import calibrationJson from "../../data/calibration.json" with { type: "json" };
 import personasJson from "../../data/town.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
-import { type SimEvent, SLOTS, type Tuning, simulate } from "../sim/engine.ts";
-import { INTERESTS, type Orientation, type PlayerSpec, type Sex, ageBand, buildWorld } from "../sim/world.ts";
+import { type Affinity, eventKey, type SimEvent, SLOTS, type Tuning, simulate } from "../sim/engine.ts";
+import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATING_BUDGET, type Sex, ageBand, buildWorld } from "../sim/world.ts";
 import { CITY_SIZE, buildCity } from "./city.ts";
 
 const DAYS = 30;
-const RATING_BUDGET = 33; // five ratings, average 6.6: you can be hot, or nice, not everything
-const MAX_INTERESTS = 5;
 const SPEEDS = [1, 4, 16, 64]; // × half an hour per 2 seconds
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
@@ -52,19 +50,61 @@ function readForm(): PlayerSpec {
   };
 }
 
-form.addEventListener("submit", e => {
+async function api<T>(path: string, payload: unknown): Promise<T> {
+  const r = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+  const data = await r.json().catch(() => ({ error: "The city is unreachable." }));
+  if (!r.ok) throw new Error(data.error ?? "Something went wrong.");
+  return data as T;
+}
+
+// Free text → server (moderation + Opus) → fill in the form, so the player can still tweak by hand.
+let bio = "";
+$("#describe").onclick = async () => {
+  const status = $("#describe-status"), description = (form.elements.namedItem("description") as HTMLTextAreaElement).value;
+  status.textContent = "Reading them…";
+  try {
+    const out = await api<{ spec: PlayerSpec; bio: string }>("/api/character", { description });
+    const s = out.spec, set = (name: string, v: string | number) => ((form.elements.namedItem(name) as HTMLInputElement).value = String(v));
+    for (const k of ["name", "age", "sex", "nightlife", "gym", "attr", "sinc", "intel", "fun", "amb"] as const) set(k, s[k]);
+    set("into", s.orientation === "bisexual" ? "everyone" : (s.orientation === "gay") === (s.sex === "female") ? "women" : "men");
+    (form.elements.namedItem("employed") as HTMLInputElement).checked = s.employed;
+    (form.elements.namedItem("apps") as HTMLInputElement).checked = s.apps;
+    form.querySelectorAll<HTMLInputElement>("input[name=interest]").forEach(b => (b.checked = s.interests.includes(b.value)));
+    bio = out.bio; $("#bio").textContent = bio; status.textContent = "";
+    showBudget();
+  } catch (e) { status.textContent = (e as Error).message; }
+};
+
+const newSeed = () => (Math.random() * 2 ** 31) | 0;
+form.addEventListener("submit", async e => {
   e.preventDefault();
+  const button = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+  button.disabled = true; button.textContent = "Asking the town about you…";
+  let spec = readForm(), affinity: Affinity | undefined;
+  try { ({ spec, affinity } = await api<{ spec: PlayerSpec; affinity: Affinity }>("/api/run", { spec, bio })); }
+  catch { /* offline: the calibrated sim still runs, just without Jev's read on who likes whom */ }
   form.style.display = "none";
-  start(readForm(), (Math.random() * 2 ** 31) | 0);
+  start(spec, bio, newSeed(), affinity);
 });
 const rerun = sessionStorage.getItem("rerun");
-if (rerun) { sessionStorage.removeItem("rerun"); form.style.display = "none"; start(JSON.parse(rerun), (Math.random() * 2 ** 31) | 0); }
+if (rerun) {
+  sessionStorage.removeItem("rerun"); form.style.display = "none";
+  const r = JSON.parse(rerun);
+  start(r.spec, r.bio, newSeed(), r.affinity);
+}
 
 // ---------------------------------------------------------------- the month
-async function start(spec: PlayerSpec, seed: number) {
+async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Affinity) {
   const world = buildWorld(spec);
   const N = world.agents.length, me = N - 1;
-  const res = simulate(world, tuningJson as Tuning, { days: DAYS, seed, focus: me, trackLocations: true });
+  const res = simulate(world, tuningJson as Tuning, { days: DAYS, seed, focus: me, trackLocations: true, affinity });
+  // Words arrive while the month plays; canned text covers anything not back yet.
+  let story: { lines: Record<string, string>; recap: { headline: string; recap: string } | null } = { lines: {}, recap: null };
+  const feedItems = new Map<string, HTMLLIElement>();
+  api<typeof story>("/api/story", { spec, bio, seed, affinity }).then(s => {
+    story = s;
+    for (const [key, li] of feedItems) if (s.lines[key]) li.lastChild!.textContent = s.lines[key];
+  }).catch(() => {});
   const locations = res.locations!;
   const ticks = DAYS * SLOTS;
 
@@ -164,6 +204,7 @@ async function start(spec: PlayerSpec, seed: number) {
   const at = (v: number) => world.venues[v].name;
   const other = (e: SimEvent) => (e.a === me ? e.b : e.a);
   function describe(e: SimEvent): string {
+    if (story.lines[eventKey(e)]) return story.lines[eventKey(e)];
     switch (e.type) {
       case "spark": return `Hit it off with ${who(other(e))} at ${at(e.venue)}. Numbers exchanged.`;
       case "match": return `Matched with ${who(other(e))} on the apps.`;
@@ -200,6 +241,7 @@ async function start(spec: PlayerSpec, seed: number) {
     li.innerHTML = `<time>${clock(e.tick)}</time>`;
     li.append(describe(e));
     feed.append(li);
+    feedItems.set(eventKey(e), li);
     if (["hookup", "spark", "match", "rejected", "couple"].includes(e.type)) {
       tagDiv.textContent = `${spec.name} ${{ hookup: "💋", spark: "✨", match: "📱", rejected: "🙅", couple: "💘" }[e.type as string]}`;
       setTimeout(() => tagDiv.textContent = spec.name, 2500);
@@ -211,14 +253,16 @@ async function start(spec: PlayerSpec, seed: number) {
     const anyInYear = Math.round(100 * (1 - gss["0"]));
     const count = (type: string) => res.events.filter(e => e.type === type && (type !== "rejected" || e.a === me)).length;
     const el = $("#recap");
+    const esc = (t: string) => t.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!);
     el.innerHTML = `
-      <h2>${spec.name}'s month: ${partners.size} ${partners.size === 1 ? "partner" : "partners"}</h2>
+      ${story.recap ? `<h2 class="headline">${esc(story.recap.headline)}</h2><p>${esc(story.recap.recap)}</p>` : ""}
+      <h3>${esc(spec.name)}'s month: ${partners.size} ${partners.size === 1 ? "partner" : "partners"}</h3>
       <ul>${[...partners].map(p => `<li>${who(p)}</li>`).join("") || "<li>Nobody. The city was not ready.</li>"}</ul>
       <p>${n(count("spark"), "spark")} in person, ${n(count("match"), "app match", "app matches")}, ${n(count("date"), "date")}, ${n(count("rejected"), "rejection")}, stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}.</p>
       <p>For scale: only ${anyInYear}% of real single ${spec.sex === "female" ? "women" : "men"} aged ${band} had <em>any</em> partner in a whole year (GSS 2022-24).</p>
       <button id="again">Run it back</button> <button id="new" class="ghost">New character</button>`;
     el.style.display = "block";
-    $("#again").onclick = () => { sessionStorage.setItem("rerun", JSON.stringify(spec)); location.reload(); };
+    $("#again").onclick = () => { sessionStorage.setItem("rerun", JSON.stringify({ spec, bio, affinity })); location.reload(); };
     $("#new").onclick = () => location.reload();
   }
 
@@ -228,7 +272,7 @@ async function start(spec: PlayerSpec, seed: number) {
   const one = new THREE.Vector3(1, 1, 1), none = new THREE.Vector3(0, 0, 0);
   let last = performance.now(), done = false;
   renderer.setAnimationLoop(now => {
-    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    const dt = Math.max(0, Math.min(0.1, (now - last) / 1000)); last = now; // rAF time can predate setup
     if (!paused && !done) t = Math.min(ticks, t + dt * speed / 2);
     const k = Math.min(Math.floor(t), ticks - 1), f = Math.min(1, (t - k) * 3); // walk in the first third, then linger
     while (nextEvent < res.events.length && res.events[nextEvent].tick <= t) show(res.events[nextEvent++]);

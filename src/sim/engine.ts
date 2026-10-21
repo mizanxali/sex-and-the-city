@@ -18,6 +18,7 @@ export interface Tuning {
 
 export type EventType = "spark" | "rejected" | "match" | "date" | "stood_up" | "hookup" | "couple" | "gossip";
 export interface SimEvent { tick: number; type: EventType; a: number; b: number; venue: number; about?: number }
+export const eventKey = (e: SimEvent) => `${e.tick}:${e.type}:${e.a}:${e.b}`;
 
 export interface SimOptions {
   days: number; seed: number;
@@ -25,7 +26,11 @@ export interface SimOptions {
   focus?: number;        // record events involving this agent (the player); omit for none
   recordAll?: boolean;   // record every event (debugging)
   trackLocations?: boolean;
+  affinity?: Affinity;   // persona-specific nudges for judgments involving the player (from Jev)
 }
+
+// Logit offsets, zero-mean across the town so calibrated rates hold; only judgments involving `agent` use them.
+export interface Affinity { agent: number; toward: number[]; from: number[] } // toward[i]: i judging agent; from[i]: agent judging i
 
 export interface SimResult {
   partners: number[][]; // distinct partners per agent during the run
@@ -47,8 +52,8 @@ const NIGHT_HOOKUP_PLACES = new Set<Place>(["restaurant_bar", "friends_home"]);
 
 const sigmoid = (z: number) => 1 / (1 + Math.exp(-z));
 const popcount = (n: number) => { let c = 0; while (n) { n &= n - 1; c++; } return c; };
-const attracted = (a: Agent, sex: Sex) => a.orientation === "bisexual" || (a.orientation === "gay") === (a.sex === sex);
-const compatible = (a: Agent, b: Agent) => attracted(a, b.sex) && attracted(b, a.sex);
+export const attracted = (a: Agent, sex: Sex) => a.orientation === "bisexual" || (a.orientation === "gay") === (a.sex === sex);
+export const compatible = (a: Agent, b: Agent) => attracted(a, b.sex) && attracted(b, a.sex);
 
 interface Pair { met: boolean; m: number; dates: number }
 type Action = { kind: "date" | "dateEnd"; a: number; b: number; venue: number };
@@ -58,6 +63,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
   const N = agents.length, P = PLACES.length, r: Rng = rng(opts.seed);
   const startWeekday = opts.startWeekday ?? 0;
   const model = attractionJson.by_chooser;
+  const aff = opts.affinity;
 
   // Shared-interest rating: interest overlap rescaled to the speed-dating "shar" distribution.
   const overlap = (a: Agent, b: Agent) => popcount(a.interests & b.interests) / Math.max(1, Math.min(popcount(a.interests), popcount(b.interests)));
@@ -86,7 +92,8 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
     const gap = Math.abs(a.age - b.age);
     const z = m.intercept + c.attr * see(b.attr) + c.sinc * see(b.sinc) + c.intel * see(b.intel) + c.fun * see(b.fun)
       + c.amb * see(b.amb) + c.shar * shar + c.int_corr * mean.int_corr + c.samerace * mean.samerace + c.age_gap * gap
-      - tuning.agePenalty * (gap / 10) ** 2 - (heard[i].has(j) ? GOSSIP_PENALTY : 0);
+      - tuning.agePenalty * (gap / 10) ** 2 - (heard[i].has(j) ? GOSSIP_PENALTY : 0)
+      + (aff ? (j === aff.agent ? aff.toward[i] : i === aff.agent ? aff.from[j] : 0) : 0);
     return sigmoid(z) * openness(i);
   }
 

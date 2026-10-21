@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node src/server/index.ts & vite",
+    "server": "node src/server/index.ts",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "calibrate": "node src/sim/calibrate.ts",
@@ -16,6 +17,8 @@
     "vite": "^8.3.5"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.0.0",
+    "@typesafe-ai/sdk": "^0.7.0",
     "three": "^0.186.1"
   }
 }
