@@ -1,5 +1,5 @@
 // The town: agents (500 personas + optional player) and the venues they move between.
-import personasJson from "../../data/personas.json" with { type: "json" };
+import personasJson from "../../data/town.json" with { type: "json" };
 import traitsJson from "../../data/traits.json" with { type: "json" };
 import attractionJson from "../../data/attraction.json" with { type: "json" };
 import schedulesJson from "../../data/schedules.json" with { type: "json" };
@@ -49,7 +49,22 @@ const PUBLIC: [Place, string[]][] = [
   ["transit", ["Main Street"]],
   ["other", ["Public Library", "Town Hall", "Laundromat"]],
 ];
-const N_WORKPLACES = 20;
+// Workplaces by industry, matched on Nemotron occupation codes; anything unmatched is office work.
+const SECTORS: [string, RegExp][] = [
+  ["Mercy General Hospital", /nurs|physician|health|medical|dental|pharmac|therap|surg|clinical|paramedic/],
+  ["Lincoln High School", /teach|educ|librar|professor|instructor|tutor/],
+  ["Little Sprouts Care Home", /child|personal_care|home_health|caregiv|social|counselor/],
+  ["TechHub", /software|computer|developer|programm|data|network|web|information/],
+  ["Golden Spoon Kitchens", /cook|food|waiter|waitress|bartender|dishwash|chef|host|baker|butcher/],
+  ["Ace Construction Yard", /construct|carpent|electric|plumb|painter|roof|mechanic|maintenance|repair|install|laborer|hvac|iron|sheet_metal/],
+  ["Big Box Warehouse", /stocker|material|driver|truck|transport|freight|warehouse|packer|deliver|courier|shipping|logistic/],
+  ["Downtown Retail Row", /retail|cashier|sales|merchandis|customer_service|counter|jewel|shoe/],
+  ["Sparkle Cleaning Co.", /maid|housekeep|janitor|clean|groundskeep|landscap/],
+  ["City Services", /police|fire|government|postal|guard|security|correction|bailiff|military|clergy/],
+  ["Steelworks Plant", /production|assembl|machin|operator|manufactur|weld|inspector|fabricat|metal|leather/],
+  ["Happy Paws Vet & Feed", /veterinar|animal|agricultur|farm/],
+];
+const OFFICES = ["Initech Offices", "Vandelay Industries", "Synergy Partners LLC"];
 const CIRCLE_SIZE = 12;
 
 export function rng(seed: number) { // mulberry32
@@ -108,7 +123,9 @@ export function buildWorld(player?: PlayerSpec): World {
   const addVenue = (kind: Place, name: string) => venues.push({ id: venues.length, kind, name }) - 1;
   const publicIds: Partial<Record<Place, number[]>> = {};
   for (const [kind, names] of PUBLIC) publicIds[kind] = names.map(n => addVenue(kind, n));
-  const workplaces = Array.from({ length: N_WORKPLACES }, (_, i) => addVenue("work", `Workplace ${i + 1}`));
+  const workplace = new Map([...SECTORS.map(([n]) => n), ...OFFICES].map(n => [n, addVenue("work", n)]));
+  const workFor = (occupation: string) => workplace.get(
+    SECTORS.find(([, rx]) => rx.test(occupation))?.[0] ?? OFFICES[hash(occupation) % OFFICES.length])!;
 
   const agents: Agent[] = personasJson.map(p => {
     const t = traits[String(p.id)];
@@ -118,7 +135,7 @@ export function buildWorld(player?: PlayerSpec): World {
       status: p.status as Status, employed, nightlife: t.nightlife, gym: t.gym, apps: t.dating_apps, gossip: t.gossip,
       attr: clamp(attrDist.mean + attrDist.sd * gauss(r), 1, 10), sinc: t.sincerity, intel: t.intelligence,
       fun: t.fun, amb: t.ambition, interests: interestMask(t.interests),
-      home: addVenue("home", `${p.name}'s place`), work: workplaces[hash(p.occupation) % N_WORKPLACES],
+      home: addVenue("home", `${p.name}'s place`), work: workFor(p.occupation),
       circle: -1, favorites: {}, probs: shapeSchedule(employed, p.age, t.nightlife, t.gym, avgNight, avgGym),
       isPlayer: false,
     };
@@ -127,7 +144,7 @@ export function buildWorld(player?: PlayerSpec): World {
     if (player.age < MIN_AGE) throw new Error(`player must be ${MIN_AGE}+`);
     agents.push({
       ...player, id: agents.length, status: "single", gossip: 0.5, interests: interestMask(player.interests),
-      home: addVenue("home", `${player.name}'s place`), work: workplaces[r() * N_WORKPLACES | 0], circle: -1,
+      home: addVenue("home", `${player.name}'s place`), work: workplace.get(OFFICES[r() * OFFICES.length | 0])!, circle: -1,
       favorites: {}, probs: shapeSchedule(player.employed, player.age, player.nightlife, player.gym, avgNight, avgGym),
       isPlayer: true,
     });

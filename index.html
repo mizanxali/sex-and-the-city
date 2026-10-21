@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sex and the City</title>
+  <style>
+    :root { font-family: ui-sans-serif, system-ui, sans-serif; color: #1d1d27; }
+    body { margin: 0; overflow: hidden; background: #0b1026; }
+    #app canvas { display: block; }
+    .panel { position: fixed; z-index: 10; background: rgba(255, 255, 255, 0.94); border-radius: 12px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25); }
+    #setup { inset: 0; margin: auto; width: min(560px, 92vw); height: fit-content; max-height: 92vh; overflow: auto; padding: 24px 28px; }
+    #setup h1 { margin: 0 0 4px; font-size: 28px; }
+    #setup p.sub { margin: 0 0 16px; color: #555; }
+    #setup fieldset { border: 0; padding: 0; margin: 0 0 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+    #setup label { display: grid; gap: 4px; font-size: 13px; color: #444; }
+    #setup label.check { display: flex; align-items: center; gap: 6px; }
+    #setup input, #setup select { font: inherit; padding: 6px 8px; border: 1px solid #ccc; border-radius: 6px; }
+    #setup input[type=range] { padding: 0; }
+    #budget { grid-column: 1 / -1; font-size: 13px; color: #555; }
+    #setup #interests { grid-template-columns: repeat(3, 1fr); font-size: 12px; }
+    legend { font-weight: 600; margin-bottom: 8px; }
+    button { font: inherit; padding: 8px 14px; border: 0; border-radius: 8px; background: #e0245e; color: white; cursor: pointer; }
+    button.ghost { background: #eee; color: #222; }
+    button[aria-pressed=true] { background: #1d1d27; color: white; }
+    #hud { top: 12px; left: 12px; padding: 10px 14px; display: none; gap: 10px; align-items: center; flex-wrap: wrap; max-width: calc(100vw - 380px); }
+    #clock { font-weight: 600; min-width: 170px; font-variant-numeric: tabular-nums; }
+    #score { font-size: 20px; font-weight: 700; }
+    #feed { top: 12px; right: 12px; bottom: 12px; width: 330px; padding: 12px; overflow: auto; display: none; font-size: 13px; }
+    #feed h2 { margin: 0 0 8px; font-size: 15px; }
+    #feed ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column-reverse; gap: 6px; }
+    #feed li { padding: 6px 8px; border-radius: 6px; background: #f3f3f6; }
+    #feed li.hookup { background: #ffe0ea; } #feed li.couple { background: #ffd6f0; } #feed li.rejected, #feed li.stood_up { background: #eee; color: #666; }
+    #feed time { display: block; font-size: 11px; color: #888; }
+    #recap { inset: 0; margin: auto; width: min(520px, 92vw); height: fit-content; max-height: 90vh; overflow: auto; padding: 24px; display: none; }
+    .label { font-size: 11px; color: white; background: rgba(20, 20, 30, 0.7); padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
+    .you { font-size: 14px; font-weight: 700; background: #e0245e; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <form id="setup" class="panel">
+    <h1>Sex and the City</h1>
+    <p class="sub">Make someone. Drop them into a town of 500 people. Watch one month, calibrated to how often real people actually get lucky.</p>
+    <fieldset>
+      <label>Name <input name="name" value="Alex" maxlength="24" required /></label>
+      <label>Age <input name="age" type="number" min="21" max="90" value="28" required /></label>
+      <label>Gender <select name="sex"><option value="male">Man</option><option value="female">Woman</option></select></label>
+      <label>Into <select name="into"><option value="women">Women</option><option value="men">Men</option><option value="everyone">Everyone</option></select></label>
+      <label>Nights out per week <input name="nightlife" type="range" min="0" max="5" value="2" /></label>
+      <label>Gym visits per week <input name="gym" type="range" min="0" max="6" value="1" /></label>
+      <label class="check"><input name="employed" type="checkbox" checked /> Has a job</label>
+      <label class="check"><input name="apps" type="checkbox" checked /> On the dating apps</label>
+    </fieldset>
+    <fieldset id="ratings">
+      <legend>How strangers see you (1-10)</legend>
+      <label>Looks <input name="attr" type="range" min="1" max="10" value="6" /></label>
+      <label>Sincerity <input name="sinc" type="range" min="1" max="10" value="7" /></label>
+      <label>Smarts <input name="intel" type="range" min="1" max="10" value="7" /></label>
+      <label>Fun <input name="fun" type="range" min="1" max="10" value="6" /></label>
+      <label>Ambition <input name="amb" type="range" min="1" max="10" value="7" /></label>
+      <div id="budget"></div>
+    </fieldset>
+    <fieldset id="interests"><legend>Up to 5 interests</legend></fieldset>
+    <button type="submit">Release them into the city</button>
+  </form>
+
+  <div id="hud" class="panel">
+    <span id="clock"></span>
+    <span id="score"></span>
+    <button id="pause" class="ghost">Pause</button>
+    <span id="speeds"></span>
+    <button id="follow" class="ghost" aria-pressed="true">Follow me</button>
+    <button id="skip" class="ghost">Skip to end</button>
+  </div>
+  <aside id="feed" class="panel"><h2>Your month</h2><ol></ol></aside>
+  <div id="recap" class="panel"></div>
+
+  <script type="module" src="/src/web/main.ts"></script>
+</body>
+</html>

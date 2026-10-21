@@ -115,12 +115,13 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
   };
 
   function hookup(i: number, j: number, tick: number, venue: number) {
+    const first = !partners[i].has(j);
     partners[i].add(j); partners[j].add(i);
     emit({ tick, type: "hookup", a: i, b: j, venue });
     const host = status[i] === "single" || status[j] !== "single" ? i : j;
     const until = (Math.floor(tick / SLOTS) + 1) * SLOTS + MORNING_SLOT;
     for (const x of [i, j]) { busyUntil[x] = until; busyVenue[x] = agents[host].home; }
-    for (const [teller, about] of [[i, j], [j, i]]) {
+    for (const [teller, about] of first ? [[i, j], [j, i]] : []) { // news only travels the first time
       for (const f of circles[agents[teller].circle]) {
         if (f === i || f === j || r() >= agents[teller].gossip) continue;
         heard[f].add(about);

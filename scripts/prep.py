@@ -179,6 +179,8 @@ def personas(cal):
             "hobbies": r["hobbies_and_interests"], "culture": r["cultural_background"]})
     assert all(p["age"] >= MIN_AGE for p in out), "minor in persona sample"
     write("personas.json", out)
+    # Slim copy for the browser bundle: the sim needs no persona prose.
+    write("town.json", [{k: p[k] for k in ["id", "name", "sex", "age", "orientation", "status", "occupation"]} for p in out])
     s = pd.DataFrame(out)
     print("  ", s.sex.value_counts().to_dict(), s.orientation.value_counts().to_dict(), s.status.value_counts().to_dict(),
           f"age {s.age.min()}-{s.age.max()} median {s.age.median():.0f}")
