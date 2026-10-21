@@ -69,6 +69,13 @@ def gss():
     for (sex, b), g in unmarried.groupby(["sex", "band"], observed=True):
         d = dist(g, "status", ["single", "partnered"])
         out["steady_partner_rate_unmarried"][f"{sex}|{b}"] = {"n": d["n"], "partnered": d["partnered"]}
+    # Someone on the side: 2+ partners last year while married / in a steady relationship. By sex, all ages.
+    taken = pd.concat([df[df.marital == "married"].assign(status="married"),
+                       unmarried[unmarried.status == "partnered"]])
+    taken = taken.dropna(subset=["partners"]).assign(extra=lambda d: ~d.partners.isin(["0", "1"]))
+    out["extra_partner_rate"] = {
+        f"{sex}|{st}": {"n": len(g), "rate": round(float((g.extra * g.wtssps).sum() / g.wtssps.sum()), 4)}
+        for (sex, st), g in taken.groupby(["sex", "status"])}
     write("calibration.json", out)
     return out
 

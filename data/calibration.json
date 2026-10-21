@@ -115,5 +115,23 @@
    "n": 184,
    "partnered": 0.2234
   }
+ },
+ "extra_partner_rate": {
+  "female|married": {
+   "n": 869,
+   "rate": 0.0175
+  },
+  "female|partnered": {
+   "n": 216,
+   "rate": 0.152
+  },
+  "male|married": {
+   "n": 882,
+   "rate": 0.022
+  },
+  "male|partnered": {
+   "n": 168,
+   "rate": 0.1399
+  }
  }
 }

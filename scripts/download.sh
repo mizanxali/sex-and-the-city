@@ -2,7 +2,7 @@
 # Fetch raw public datasets into data/raw/<source>/. Re-runnable; skips files already present.
 set -euo pipefail
 cd "$(dirname "$0")/../data/raw"
-UA="Mozilla/5.0 (sex-simulation data prep)"
+UA="Mozilla/5.0 (sex-and-the-city data prep)"
 
 get() { # dir url [user-agent]
   local f="$1/$(basename "$2")"
@@ -18,8 +18,8 @@ get speeddating "http://www.stat.columbia.edu/~gelman/arm/examples/speed.dating/
 # ATUS 2024 (BLS) — activity file has where/when, summary file has age/sex/day.
 # BLS 403s any request whose User-Agent lacks a contact email.
 if [ -n "${BLS_CONTACT:-}" ]; then
-  get atus https://www.bls.gov/tus/datafiles/atusact-2024.zip "sex-simulation-dataprep ($BLS_CONTACT)"
-  get atus https://www.bls.gov/tus/datafiles/atussum-2024.zip "sex-simulation-dataprep ($BLS_CONTACT)"
+  get atus https://www.bls.gov/tus/datafiles/atusact-2024.zip "sex-and-the-city-dataprep ($BLS_CONTACT)"
+  get atus https://www.bls.gov/tus/datafiles/atussum-2024.zip "sex-and-the-city-dataprep ($BLS_CONTACT)"
 else
   echo "skipping ATUS: set BLS_CONTACT=<your email> (BLS requires it in the User-Agent)" >&2
 fi

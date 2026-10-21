@@ -1,0 +1,14 @@
+{
+  "name": "sex-and-the-city",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "calibrate": "node src/sim/calibrate.ts",
+    "check": "node src/sim/check.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
+}
