@@ -42,18 +42,19 @@ them after a four-minute speed date, 1-10, average about 6-7. Self-praise ("irre
 self-reported and barely moves them; concrete details do.
 - nightlife: nights out per week (0-5). gym: gym visits per week (0-6). apps: on dating apps.
 - orientation: straight, gay, or bisexual, from who they are into. Default straight.
-- Unspecified: age 30, employed, nightlife 1, gym 1, apps true.
+- casual: true unless they want a relationship (looking for love, the one, something serious).
+- Unspecified: age 30, employed, nightlife 1, gym 1, apps true, casual true.
 - interests: up to 5, only from this list: ${INTERESTS.join(", ")}.
 - name: their first name, or invent a fitting one.
 - bio: one witty sentence in your own words (max 25 words), third person, tasteful. Never quote the player.`;
 
 const CHARACTER_SCHEMA = {
   type: "object", additionalProperties: false,
-  required: ["name", "sex", "age", "orientation", "employed", "nightlife", "gym", "apps", "attr", "sinc", "intel", "fun", "amb", "interests", "bio"],
+  required: ["name", "sex", "age", "orientation", "employed", "nightlife", "gym", "apps", "casual", "attr", "sinc", "intel", "fun", "amb", "interests", "bio"],
   properties: {
     name: { type: "string" }, sex: { type: "string", enum: ["male", "female"] }, age: { type: "integer" },
     orientation: { type: "string", enum: ["straight", "gay", "bisexual"] }, employed: { type: "boolean" },
-    nightlife: { type: "integer" }, gym: { type: "integer" }, apps: { type: "boolean" },
+    nightlife: { type: "integer" }, gym: { type: "integer" }, apps: { type: "boolean" }, casual: { type: "boolean" },
     attr: { type: "integer" }, sinc: { type: "integer" }, intel: { type: "integer" }, fun: { type: "integer" }, amb: { type: "integer" },
     interests: { type: "array", items: { type: "string", enum: INTERESTS } }, bio: { type: "string" },
   },

@@ -1,5 +1,5 @@
 // Kenney Mini Characters (CC0). The crowd: each character posed once, then drawn as one InstancedMesh per
-// character (500 skinned, animated meshes would be too slow). The player: a real animated character.
+// character (1,000 skinned, animated meshes would be too slow). The player: a real animated character.
 import * as THREE from "three";
 import { GLTFLoader, type GLTF } from "three/addons/loaders/GLTFLoader.js";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";

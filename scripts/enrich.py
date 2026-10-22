@@ -2,7 +2,8 @@
 
 Run: .venv/bin/python -I scripts/enrich.py   (needs ANTHROPIC_API_KEY in .env)
 Reads data/personas.json, writes data/traits.json keyed by persona id.
-Re-running resumes the saved batch instead of paying for a new one; delete data/raw/enrich_batch.txt to redo.
+data/raw/enrich_batch.txt lists the batches so far (one id per line): re-running only pays for personas no batch
+has covered yet (the town grew from 500 to 1000), then rescales everyone together. Delete the file to redo all.
 """
 import json
 import os
@@ -93,31 +94,35 @@ def rescale(traits):
 def main():
     personas = json.loads((ROOT / "data/personas.json").read_text())
     client = anthropic.Anthropic()
-    if BATCH_FILE.exists():
-        batch_id = BATCH_FILE.read_text().strip()
-    else:
-        batch_id = client.messages.batches.create(requests=[
+    batches = BATCH_FILE.read_text().split() if BATCH_FILE.exists() else []
+    running = any(client.messages.batches.retrieve(b).processing_status != "ended" for b in batches)
+    covered = set() if running else {r.custom_id for b in batches for r in client.messages.batches.results(b)}
+    if not running and (todo := [p for p in personas if str(p["id"]) not in covered]):  # running: wait, don't pay twice
+        batches.append(client.messages.batches.create(requests=[
             Request(custom_id=str(p["id"]), params=MessageCreateParamsNonStreaming(
                 model="claude-opus-5-5",
                 max_tokens=4000,
                 system=[{"type": "text", "text": SYSTEM, "cache_control": {"type": "ephemeral"}}],
                 messages=[{"role": "user", "content": prompt(p)}],
                 output_config={"effort": "low", "format": {"type": "json_schema", "schema": SCHEMA}},
-            )) for p in personas]).id
-        BATCH_FILE.write_text(batch_id)
-    print("batch", batch_id)
+            )) for p in todo]).id)
+        BATCH_FILE.write_text("\n".join(batches) + "\n")
+        print(f"new batch {batches[-1]} for {len(todo)} personas")
 
-    while (b := client.messages.batches.retrieve(batch_id)).processing_status != "ended":
-        print(f"  {b.request_counts.processing} processing, {b.request_counts.succeeded} done")
-        time.sleep(30)
+    for batch_id in batches:
+        while (b := client.messages.batches.retrieve(batch_id)).processing_status != "ended":
+            print(f"  {batch_id}: {b.request_counts.processing} processing, {b.request_counts.succeeded} done")
+            time.sleep(30)
 
     traits, failed = {}, []
-    for r in client.messages.batches.results(batch_id):
-        msg = r.result.message if r.result.type == "succeeded" else None
-        if msg is None or msg.stop_reason != "end_turn":
-            failed.append((r.custom_id, r.result.type, msg and msg.stop_reason))
-            continue
-        traits[r.custom_id] = clamp(json.loads(next(b.text for b in msg.content if b.type == "text")))
+    for batch_id in batches:
+        for r in client.messages.batches.results(batch_id):
+            msg = r.result.message if r.result.type == "succeeded" else None
+            if msg is None or msg.stop_reason != "end_turn":
+                failed.append((r.custom_id, r.result.type, msg and msg.stop_reason))
+                continue
+            traits[r.custom_id] = clamp(json.loads(next(b.text for b in msg.content if b.type == "text")))
+    traits = {k: traits[k] for k in sorted(traits, key=int)}
     rescale(traits)
     (ROOT / "data/traits.json").write_text(json.dumps(traits, indent=1, ensure_ascii=False))
     print(f"wrote data/traits.json: {len(traits)} ok, {len(failed)} failed {failed[:10]}")

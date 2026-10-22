@@ -135,7 +135,7 @@ function readForm(): PlayerSpec {
   const orientation: Orientation = into === "everyone" ? "bisexual" : (into === "women") === (sex === "female") ? "gay" : "straight";
   return {
     name: String(f.get("name")).trim() || "You", sex, age: Math.max(21, +f.get("age")!), orientation,
-    employed: f.has("employed"), apps: f.has("apps"), nightlife: +f.get("nightlife")!, gym: +f.get("gym")!,
+    employed: f.has("employed"), apps: f.has("apps"), casual: f.get("looking") !== "love", nightlife: +f.get("nightlife")!, gym: +f.get("gym")!,
     attr: +f.get("attr")!, sinc: +f.get("sinc")!, intel: +f.get("intel")!, fun: +f.get("fun")!, amb: +f.get("amb")!,
     interests: f.getAll("interest").map(String),
   };
@@ -160,6 +160,7 @@ $("#describe").onclick = async () => {
     const out = await api<{ spec: PlayerSpec; bio: string }>("/api/character", { description });
     const s = out.spec, set = (name: string, v: string | number) => ((form.elements.namedItem(name) as HTMLInputElement).value = String(v));
     for (const k of ["name", "age", "sex", "nightlife", "gym", "attr", "sinc", "intel", "fun", "amb"] as const) set(k, s[k]);
+    set("looking", s.casual ? "casual" : "love");
     set("into", s.orientation === "bisexual" ? "everyone" : (s.orientation === "gay") === (s.sex === "female") ? "women" : "men");
     (form.elements.namedItem("employed") as HTMLInputElement).checked = s.employed;
     (form.elements.namedItem("apps") as HTMLInputElement).checked = s.apps;

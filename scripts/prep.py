@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW, OUT = ROOT / "data/raw", ROOT / "data"
 SEED = 42
 MIN_AGE = 21  # US bar age; Nemotron contains minors, so this filter is load-bearing
-N_PERSONAS = 500
+N_PERSONAS = 1000  # the first 500 are the original town, unchanged
 AGE_BANDS = [(21, 29), (30, 44), (45, 64), (65, 120)]
 PARTNER_BUCKETS = ["0", "1", "2", "3", "4", "5-10", "11+"]
 
@@ -115,8 +115,8 @@ def bi_share(age):  # generation by age in 2026
     return 0.59 if age <= 29 else 0.52 if age <= 45 else 0.44 if age <= 61 else 0.19 if age <= 80 else 0.11
 
 
-def nemotron_rows(rng, n_requests=10, per=100):
-    cache = RAW / "nemotron/rows.json"
+def nemotron_rows(rng, n_requests=10, per=100, cache_name="rows.json"):
+    cache = RAW / "nemotron" / cache_name
     if cache.exists():
         return json.loads(cache.read_text())
     rows = []
@@ -140,12 +140,18 @@ NAME = re.compile(r"\b([A-Z][a-z]+(?:[-'][A-Z]?[a-z]+)? (?:Mc|Mac|O')?[A-Z][a-zA
 
 
 LEAD = re.compile(r"([A-Z][a-z][\w'\-]+(?: [A-Z][\w'\-]+)?),?\s+[a-z]")
-NOT_NAMES = {"The", "With", "After", "When", "Born", "Raised", "Growing", "Since", "Despite", "Though", "While"}
+NOT_NAMES = {"The", "With", "After", "When", "Born", "Raised", "Growing", "Since", "Despite", "Though", "While", "Retired"}
 
 
 def guess_name(text):
     if (m := LEAD.match(text)) and m.group(1).split()[0] not in NOT_NAMES:  # usually "Amy Smith is…"
-        return m.group(1)
+        lead = m.group(1)
+        if " " in lead:
+            return lead
+        if full := [n for n in NAME.findall(text) if n.split()[0] == lead]:  # "Joshua …", later "Joshua Reed"
+            return full[0]
+        if len(re.findall(rf"\b{lead}\b", text)) > 1:  # a first name repeats; "Practical and methodical, …" doesn't
+            return lead
     # Places ("New York", "Puerto Rican") repeat too, but a first name also appears alone ("Faye enjoys…").
     def score(cand):
         first = cand.split()[0]
@@ -156,21 +162,25 @@ def guess_name(text):
 
 def personas(cal):
     rng = random.Random(SEED)
-    rows = [r for r in nemotron_rows(rng) if int(r["age"]) >= MIN_AGE]
-    rows = rng.sample(rows, N_PERSONAS)
+    rows = rng.sample([r for r in nemotron_rows(rng) if int(r["age"]) >= MIN_AGE], 500)
+    # The town doubled later: newcomers come from a second sample on their own stream, so the first 500 don't change.
+    rng2, seen = random.Random(SEED + 1), {r["uuid"] for r in rows}
+    more = [r for r in nemotron_rows(random.Random(SEED + 2), cache_name="rows2.json") if int(r["age"]) >= MIN_AGE and r["uuid"] not in seen]
+    rows += rng2.sample(more, N_PERSONAS - 500)
     out = []
     for i, r in enumerate(rows):
+        roll_rng = rng if i < 500 else rng2
         age, sex = int(r["age"]), r["sex"].lower()
         name = guess_name(" ".join(r[k] for k in ["persona", "professional_persona", "hobbies_and_interests",
                                                   "cultural_background"]))
-        roll = rng.random()
+        roll = roll_rng.random()
         orientation = ("straight" if roll >= lgbtq_share(age)
                        else "bisexual" if roll < lgbtq_share(age) * bi_share(age) else "gay")
         if r["marital_status"].startswith("married"):
             status = "married"
         else:
             rate = cal["steady_partner_rate_unmarried"].get(f"{sex}|{band(age)}", {}).get("partnered", 0.3)
-            status = "partnered" if rng.random() < rate else "single"
+            status = "partnered" if roll_rng.random() < rate else "single"
         out.append({
             "id": i, "uuid": r["uuid"], "name": name, "sex": sex, "age": age, "orientation": orientation,
             "status": status, "marital_status": r["marital_status"], "education": r["education_level"],

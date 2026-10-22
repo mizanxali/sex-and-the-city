@@ -1,12 +1,12 @@
 {
  "chat": 32.5,
- "hookupNight": 0.6,
- "hookupDate": 4.65,
- "appSwipes": 6.15,
- "couple": 0.31,
+ "hookupNight": 0.4,
+ "hookupDate": 2.07,
+ "appSwipes": 13.8,
+ "couple": 0.207,
  "openPartnered": 0.0858,
  "openMarried": 0.1,
- "agePenalty": 0.354,
- "declineFemale": 0.376,
- "declineMale": 0.0951
+ "agePenalty": 0.157,
+ "declineFemale": 0.564,
+ "declineMale": 0.0423
 }

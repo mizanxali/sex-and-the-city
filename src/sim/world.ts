@@ -1,4 +1,4 @@
-// The town: agents (500 personas + optional player) and the venues they move between.
+// The town: agents (1,000 personas + optional player) and the venues they move between.
 import personasJson from "../../data/town.json" with { type: "json" };
 import traitsJson from "../../data/traits.json" with { type: "json" };
 import attractionJson from "../../data/attraction.json" with { type: "json" };
@@ -24,6 +24,7 @@ export interface PlayerSpec {
   nightlife: number; gym: number; apps: boolean; // nights out / gym visits per week, on dating apps
   attr: number; sinc: number; intel: number; fun: number; amb: number; // 1-10, speed-dating scale
   interests: string[];
+  casual: boolean; // keeping it casual: never becomes a couple (body count) vs looking for love
 }
 
 export interface Agent {
@@ -33,6 +34,7 @@ export interface Agent {
   home: number; work: number; circle: number; favorites: Partial<Record<Place, number[]>>;
   probs: Float32Array; // [daytype][slot][place], schedule shaped by this agent's habits
   isPlayer: boolean;
+  casual?: boolean; // player only
 }
 
 export interface Venue { id: number; kind: Place; name: string }
@@ -193,7 +195,7 @@ export function clampSpec(raw: Partial<PlayerSpec>): PlayerSpec {
     sex: raw.sex === "female" ? "female" : "male",
     age,
     orientation: (["straight", "gay", "bisexual"] as const).find(o => o === raw.orientation) ?? "straight",
-    employed: raw.employed !== false, apps: raw.apps !== false,
+    employed: raw.employed !== false, apps: raw.apps !== false, casual: raw.casual !== false,
     nightlife: num(raw.nightlife, 0, 5, 1), gym: num(raw.gym, 0, 6, 1),
     attr: num(raw.attr, 1, 10, 6), sinc: num(raw.sinc, 1, 10, 6), intel: num(raw.intel, 1, 10, 6),
     fun: num(raw.fun, 1, 10, 6), amb: num(raw.amb, 1, 10, 6),

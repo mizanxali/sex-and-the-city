@@ -9,6 +9,7 @@
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "calibrate": "node src/sim/calibrate.ts",
+    "balance": "node src/sim/balance.ts",
     "check": "node src/sim/check.ts"
   },
   "devDependencies": {

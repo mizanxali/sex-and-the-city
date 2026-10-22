@@ -14,7 +14,7 @@ const HELD_OUT = [101, 102, 103, 104, 105, 106, 107, 108]; // calibration fits s
 const world = buildWorld();
 assert(world.agents.every(a => a.age >= MIN_AGE));
 const player: PlayerSpec = {
-  name: "Test Player", sex: "male", age: 28, orientation: "straight", employed: true, nightlife: 2, gym: 2, apps: true,
+  name: "Test Player", sex: "male", age: 28, orientation: "straight", employed: true, casual: true, nightlife: 2, gym: 2, apps: true,
   attr: 6, sinc: 7, intel: 7, fun: 6, amb: 7, interests: ["live music", "craft beer", "video games"],
 };
 assert.throws(() => buildWorld({ ...player, age: 19 }));
