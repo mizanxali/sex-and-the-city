@@ -147,26 +147,29 @@ async function api<T>(path: string, payload: unknown): Promise<T> {
   if (NO_API) throw new Error("API calls are off (npm run dev). Use npm run dev:api for the real thing.");
   const r = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
   const data = await r.json().catch(() => ({ error: "The city is unreachable." }));
-  if (!r.ok) throw new Error(data.error ?? "Something went wrong.");
+  if (!r.ok) throw Object.assign(new Error(data.error ?? "Something went wrong."), { status: r.status });
   return data as T;
 }
 
 // Free text → server (moderation + Opus) → fill in the form, so the player can still tweak by hand.
 let bio = "";
+function fillForm(s: PlayerSpec, newBio: string) {
+  const set = (name: string, v: string | number) => ((form.elements.namedItem(name) as HTMLInputElement).value = String(v));
+  for (const k of ["name", "age", "sex", "nightlife", "gym", "attr", "sinc", "intel", "fun", "amb"] as const) set(k, s[k]);
+  set("looking", s.casual ? "casual" : "love");
+  set("into", s.orientation === "bisexual" ? "everyone" : (s.orientation === "gay") === (s.sex === "female") ? "women" : "men");
+  (form.elements.namedItem("employed") as HTMLInputElement).checked = s.employed;
+  (form.elements.namedItem("apps") as HTMLInputElement).checked = s.apps;
+  form.querySelectorAll<HTMLInputElement>("input[name=interest]").forEach(b => (b.checked = s.interests.includes(b.value)));
+  bio = newBio; $("#bio").textContent = bio;
+  showBudget();
+}
 $("#describe").onclick = async () => {
   const status = $("#describe-status"), description = (form.elements.namedItem("description") as HTMLTextAreaElement).value;
   status.textContent = "Reading them…";
   try {
     const out = await api<{ spec: PlayerSpec; bio: string }>("/api/character", { description });
-    const s = out.spec, set = (name: string, v: string | number) => ((form.elements.namedItem(name) as HTMLInputElement).value = String(v));
-    for (const k of ["name", "age", "sex", "nightlife", "gym", "attr", "sinc", "intel", "fun", "amb"] as const) set(k, s[k]);
-    set("looking", s.casual ? "casual" : "love");
-    set("into", s.orientation === "bisexual" ? "everyone" : (s.orientation === "gay") === (s.sex === "female") ? "women" : "men");
-    (form.elements.namedItem("employed") as HTMLInputElement).checked = s.employed;
-    (form.elements.namedItem("apps") as HTMLInputElement).checked = s.apps;
-    form.querySelectorAll<HTMLInputElement>("input[name=interest]").forEach(b => (b.checked = s.interests.includes(b.value)));
-    bio = out.bio; $("#bio").textContent = bio; status.textContent = "";
-    showBudget();
+    fillForm(out.spec, out.bio); status.textContent = "";
   } catch (e) { status.textContent = (e as Error).message; }
 };
 
@@ -176,24 +179,59 @@ form.addEventListener("submit", async e => {
   const button = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
   button.disabled = true; button.textContent = "Asking the town about you…";
   const description = (form.elements.namedItem("description") as HTMLTextAreaElement).value.trim();
-  let spec = readForm(), affinity: Affinity | undefined, runId: string | undefined;
-  try { ({ spec, affinity, runId } = await api<{ spec: PlayerSpec; affinity: Affinity; runId: string }>("/api/run", { spec, bio, description })); }
-  catch (err) {
-    if (/real person|adults|put in the city/.test((err as Error).message)) { // moderation said no: fix the description
+  let spec = readForm(), seed = newSeed(), affinity: Affinity | undefined, runId: string | undefined;
+  try {
+    ({ spec, seed, affinity, runId } = await api<{ spec: PlayerSpec; seed: number; affinity: Affinity; runId: string }>("/api/run", { spec, bio, description }));
+  } catch (err) {
+    if ([422, 429].includes((err as { status?: number }).status!)) { // moderation said no, or slow down: stay on the form
       button.disabled = false; button.textContent = "Release them into the city 🏙️";
       $("#describe-status").textContent = (err as Error).message;
       return;
-    } // otherwise offline: the calibrated sim still runs, just without Jev's read on who likes whom
+    } // otherwise offline: the calibrated sim still runs, unranked, without Jev's read on who likes whom
   }
-  form.style.display = "none";
-  start(spec, bio, newSeed(), affinity, runId);
+  form.style.display = "none"; $("#board-open").style.display = "none";
+  start(spec, bio, seed, affinity, runId);
+  sessionStorage.setItem("last", JSON.stringify({ spec, bio, description }));
 });
-const rerun = sessionStorage.getItem("rerun");
-if (rerun) {
-  sessionStorage.removeItem("rerun"); form.style.display = "none";
-  const r = JSON.parse(rerun);
-  start(r.spec, r.bio, newSeed(), r.affinity, r.runId);
+// "Run it back" reloads with the same character and releases them again: a new run, new dice.
+const last = sessionStorage.getItem("rerun");
+if (last) {
+  sessionStorage.removeItem("rerun");
+  const r = JSON.parse(last);
+  fillForm(r.spec, r.bio);
+  (form.elements.namedItem("description") as HTMLTextAreaElement).value = r.description;
+  form.requestSubmit();
 }
+
+// ---------------------------------------------------------------- leaderboard
+// Every run by everyone, best first: character name and body count.
+type Row = { rank: number; name: string; score: number };
+let boardRows = 0, boardYou: Row | null = null;
+async function loadBoard(more = false) {
+  const list = $("#board ol");
+  if (!more) { list.innerHTML = ""; boardRows = 0; }
+  try {
+    const { total, rows } = await api<{ total: number; rows: Row[] }>("/api/leaderboard", { offset: boardRows, limit: 50 });
+    for (const r of rows) {
+      const li = document.createElement("li");
+      li.className = boardYou && r.rank === boardYou.rank && r.name === boardYou.name && r.score === boardYou.score ? "mine" : "";
+      li.innerHTML = `<span class="rank">#${r.rank}</span><span class="who"></span><b>${r.score} 💋</b>`;
+      li.querySelector(".who")!.textContent = r.name;
+      list.append(li);
+    }
+    boardRows += rows.length;
+    $("#board .total").textContent = `${total.toLocaleString()} ${total === 1 ? "run" : "runs"}`;
+    $("#board-more").style.display = boardRows < total ? "block" : "none";
+  } catch (e) { $("#board .total").textContent = (e as Error).message; $("#board-more").style.display = "none"; }
+}
+function openBoard() {
+  $("#board .you-line").textContent = boardYou ? `You: #${boardYou.rank} · ${boardYou.name} · ${boardYou.score} 💋` : "";
+  $("#board").style.display = "flex";
+  loadBoard();
+}
+$("#board-open").onclick = openBoard;
+$("#board-close").onclick = () => ($("#board").style.display = "none");
+$("#board-more").onclick = () => loadBoard(true);
 
 // ---------------------------------------------------------------- the month
 async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Affinity, runId?: string) {
@@ -357,9 +395,15 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       <ul>${[...partners].map(p => `<li>${who(p)}</li>`).join("") || "<li>Nobody. The city was not ready.</li>"}</ul>
       <div class="stats"><span>✨ ${n(count("spark"), "spark")}</span><span>📱 ${n(count("match"), "match", "matches")}</span><span>🍷 ${n(count("date"), "date")}</span><span>🙅 ${n(count("rejected"), "rejection")}</span><span>🪑 stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}</span></div>
       <p class="reality">For scale: only ${anyInYear}% of real single ${spec.sex === "female" ? "women" : "men"} aged ${band} had <em>any</em> partner in a whole year (GSS 2022-24).</p>
-      <button id="again">Run it back</button> <button id="new" class="ghost">New character</button>`;
+      <p class="ranked" id="ranked">${runId ? "🏆 Ranking…" : "Unranked: the API is off, so this run isn't on the leaderboard."}</p>
+      <button id="again">Run it back</button> <button id="board-recap" class="ghost">🏆 Leaderboard</button> <button id="new" class="ghost">New character</button>`;
     el.style.display = "block";
-    $("#again").onclick = () => { sessionStorage.setItem("rerun", JSON.stringify({ spec, bio, affinity, runId })); location.reload(); };
+    if (runId) api<{ you: Row | null; total: number }>("/api/leaderboard", { limit: 0, run: runId }).then(({ you, total }) => {
+      boardYou = you;
+      $("#ranked").textContent = you ? `🏆 #${you.rank.toLocaleString()} of ${total.toLocaleString()} runs on the leaderboard` : "";
+    }).catch(() => ($("#ranked").textContent = ""));
+    $("#board-recap").onclick = openBoard;
+    $("#again").onclick = () => { sessionStorage.setItem("rerun", sessionStorage.getItem("last") ?? "{}"); location.reload(); };
     $("#new").onclick = () => location.reload();
   }
 

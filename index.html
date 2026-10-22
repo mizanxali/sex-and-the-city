@@ -101,6 +101,22 @@
     .stats { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
     .stats span { padding: 5px 11px; border-radius: 999px; background: #f4f1f7; font-size: 13px; font-weight: 600; }
     .reality { color: var(--muted); font-size: 14px; }
+    .ranked { font-family: var(--display); font-size: 18px; font-weight: 700; }
+
+    /* leaderboard: every run, best first */
+    .board-open { position: fixed; top: 14px; right: 14px; z-index: 11; box-shadow: 0 6px 18px rgba(224, 36, 94, 0.3); }
+    #board { inset: 0; margin: auto; z-index: 20; width: min(440px, 92vw); height: min(640px, 86vh); padding: 18px 16px 14px; display: none; flex-direction: column; gap: 8px; }
+    #board header { display: flex; align-items: baseline; gap: 10px; }
+    #board h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+    #board .total { color: var(--muted); font-size: 13px; flex: 1; }
+    #board header button { padding: 5px 11px; }
+    #board .you-line { margin: 0; font-weight: 700; color: var(--rose); }
+    #board .you-line:empty { display: none; }
+    #board ol { list-style: none; margin: 0; padding: 0; overflow: auto; flex: 1; display: grid; align-content: start; gap: 4px; }
+    #board li { display: grid; grid-template-columns: 56px 1fr auto; gap: 8px; align-items: center; padding: 8px 12px; border-radius: 10px; background: white; border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+    #board li.mine { background: #fff4f8; border-color: var(--rose); }
+    #board .rank { color: var(--muted); font-weight: 600; }
+    #board .who { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* in-world labels */
     .label { font-size: 10px; color: white; background: rgba(20, 20, 30, 0.6); padding: 1px 5px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
@@ -169,6 +185,13 @@
   </div>
   <aside id="feed" class="panel"><h2>Your month</h2><ol></ol></aside>
   <div id="recap" class="panel"></div>
+  <button id="board-open" class="board-open">🏆 Leaderboard</button>
+  <aside id="board" class="panel">
+    <header><h2>🏆 Leaderboard</h2><span class="total"></span><button id="board-close" class="ghost" aria-label="Close">✕</button></header>
+    <p class="you-line"></p>
+    <ol></ol>
+    <button id="board-more" class="ghost">Load more</button>
+  </aside>
 
   <script type="module" src="/src/web/main.ts"></script>
 </body>

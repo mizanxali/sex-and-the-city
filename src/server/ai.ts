@@ -137,18 +137,20 @@ export async function story(spec: PlayerSpec, bio: string, world: World, res: Si
 }
 
 // ---------------------------------------------------------------- Jev
-export async function moderate(description: string) {
+export async function moderate(character: { name?: string; description: string }) {
   const { answers } = await jev().systemOne({
-    state: { character_description: description },
+    state: { character_name: character.name ?? "", character_description: character.description },
     questions: {
-      real_person: noul("Does `character_description` name or describe a real, identifiable person (a private individual such as a friend, ex, coworker or neighbour, or a celebrity or public figure) rather than an invented character?"),
+      real_person: noul("Do `character_name` or `character_description` name or describe a real, identifiable person (a private individual such as a friend, ex, coworker or neighbour, or a celebrity or public figure) rather than an invented character? A common first name alone is not a real person."),
       minor: noul("Does `character_description` describe someone under 18, a child or a teenager, or emphasise childlike traits?"),
       hateful: noul("Is `character_description` hateful or demeaning toward a group, or does it describe sexual violence, coercion or non-consent?"),
+      bad_name: noul("Is `character_name` a slur, hateful, sexually explicit, or otherwise not fit to show on a public leaderboard? Silly or cheeky names are fine."),
     },
   });
   if (answers.minor.noul >= 0.5) return "Characters have to be adults.";
   if (answers.real_person.noul >= 0.5) return "Make someone up rather than describing a real person.";
   if (answers.hateful.noul >= 0.5) return "That description isn't something we can put in the city.";
+  if (answers.bad_name.noul >= 0.5) return "Pick a different name: this one goes on the leaderboard.";
   return null;
 }
 

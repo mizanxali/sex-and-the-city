@@ -1,6 +1,7 @@
 // API server: node src/server/index.ts. Keys stay here; the browser only ever sees results.
-import { randomUUID } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import { DatabaseSync } from "node:sqlite";
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Affinity, simulate, type Tuning } from "../sim/engine.ts";
 import { type PlayerSpec, buildWorld, clampSpec } from "../sim/world.ts";
@@ -25,15 +26,25 @@ const send = (res: ServerResponse, status: number, data: unknown) =>
 const bioOf = (v: unknown) => String(v ?? "").slice(0, 200);
 const MAX_DESCRIPTION = 1000;
 
-// Runs live here, not in the browser: the story (and later the leaderboard) uses the server's Jev scores, so a
-// client can't send its own. ponytail: in memory, newest 10k; lost on restart. SQLite when the leaderboard lands.
-const runs = new Map<string, { spec: PlayerSpec; bio: string; affinity: Affinity }>();
-const MAX_RUNS = 10_000;
+// Every run is ranked forever. The server picks the seed and simulates the month itself, so the score can't be
+// forged; the browser replays the same month from the same seed and Jev offsets.
+const db = new DatabaseSync(process.env.DB_PATH ?? new URL("../../game.db", import.meta.url).pathname);
+db.exec(`CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, created INTEGER NOT NULL, name TEXT NOT NULL,
+  score INTEGER NOT NULL, seed INTEGER NOT NULL, spec TEXT NOT NULL);
+  CREATE INDEX IF NOT EXISTS runs_rank ON runs (score DESC, created);`);
+const insertRun = db.prepare("INSERT INTO runs (id, created, name, score, seed, spec) VALUES (?, ?, ?, ?, ?, ?)");
+const rankOf = db.prepare("SELECT 1 + (SELECT COUNT(*) FROM runs WHERE score > r.score) AS rank, name, score FROM runs r WHERE id = ?");
+const page = db.prepare("SELECT name, score, 1 + (SELECT COUNT(*) FROM runs x WHERE x.score > r.score) AS rank FROM runs r ORDER BY score DESC, created LIMIT ? OFFSET ?");
+const total = db.prepare("SELECT COUNT(*) AS n FROM runs");
+
+// Jev offsets for the story, which the month needs while it plays. ponytail: in memory, newest 10k, lost on restart.
+const recent = new Map<string, { spec: PlayerSpec; bio: string; seed: number; affinity: Affinity }>();
+const MAX_RECENT = 10_000;
 
 // Per-IP limits on the routes that cost money (Claude, Jev). ponytail: fixed windows in memory, one process.
 const LIMITS: Record<string, { per: number; windowMs: number }> = {
   "/api/character": { per: 20, windowMs: 10 * 60_000 }, "/api/run": { per: 20, windowMs: 10 * 60_000 },
-  "/api/story": { per: 30, windowMs: 10 * 60_000 },
+  "/api/story": { per: 30, windowMs: 10 * 60_000 }, "/api/leaderboard": { per: 120, windowMs: 10 * 60_000 },
 };
 const hits = new Map<string, { start: number; count: number }>();
 function limit(route: string, ip: string) {
@@ -46,7 +57,6 @@ function limit(route: string, ip: string) {
 setInterval(() => { const now = Date.now(); for (const [k, h] of hits) if (now - h.start > 60 * 60_000) hits.delete(k); }, 10 * 60_000).unref();
 // Railway sits behind a proxy: the client is the first x-forwarded-for hop.
 const ipOf = (req: IncomingMessage) => String(req.headers["x-forwarded-for"] ?? "").split(",")[0].trim() || req.socket.remoteAddress || "?";
-const seedOf = (v: unknown) => (Number.isInteger(v) ? Number(v) : 0);
 function specOf(v: unknown) {
   try { return clampSpec((v ?? {}) as object); } catch (e) { throw new HttpError(400, (e as Error).message); }
 }
@@ -56,28 +66,40 @@ const routes: Record<string, (b: Record<string, unknown>) => Promise<unknown>> =
   "/api/character": async b => {
     const description = String(b.description ?? "").trim();
     if (description.length < 10 || description.length > MAX_DESCRIPTION) throw new HttpError(400, "Describe them in 10 to 1000 characters.");
-    const [blocked, parsed] = await Promise.all([moderate(description), parseCharacter(description)]);
+    const [blocked, parsed] = await Promise.all([moderate({ description }), parseCharacter(description)]);
     if (blocked) throw new HttpError(422, blocked);
     if (!parsed) throw new HttpError(422, "Couldn't turn that into a character. Try describing them differently.");
     return parsed;
   },
-  // Character (+ the player's own description) → moderated, Jev's read of the town, stored as a run.
+  // Character (+ the player's own description) → moderated, Jev's read of the town, a seed, a ranked score.
   "/api/run": async b => {
     const spec = specOf(b.spec), description = String(b.description ?? "").trim().slice(0, MAX_DESCRIPTION);
-    const [blocked, jev] = await Promise.all([description ? moderate(description) : null, affinity(spec, description, buildWorld(spec))]);
+    const world = buildWorld(spec), me = world.agents.length - 1;
+    const [blocked, jev] = await Promise.all([moderate({ name: spec.name, description }), affinity(spec, description, world)]);
     if (blocked) throw new HttpError(422, blocked);
-    const runId = randomUUID();
-    runs.set(runId, { spec, bio: bioOf(b.bio), affinity: jev.affinity });
-    if (runs.size > MAX_RUNS) runs.delete(runs.keys().next().value!);
-    return { runId, spec, affinity: jev.affinity, appeal: jev.appeal };
+    const runId = randomUUID(), seed = randomInt(2 ** 31);
+    const score = simulate(world, tuning, { days: DAYS, seed, focus: me, affinity: jev.affinity }).partners[me].length;
+    insertRun.run(runId, Date.now(), spec.name, score, seed, JSON.stringify(spec));
+    recent.set(runId, { spec, bio: bioOf(b.bio), seed, affinity: jev.affinity });
+    if (recent.size > MAX_RECENT) recent.delete(recent.keys().next().value!);
+    return { runId, seed, spec, affinity: jev.affinity };
   },
-  // A stored run on a given seed, re-simulated here, put into words.
+  // A recent run, re-simulated here, put into words.
   "/api/story": async b => {
-    const run = runs.get(String(b.runId));
+    const run = recent.get(String(b.runId));
     if (!run) throw new HttpError(404, "That run has expired.");
     const world = buildWorld(run.spec), me = world.agents.length - 1;
-    const res = simulate(world, tuning, { days: DAYS, seed: seedOf(b.seed), focus: me, affinity: run.affinity });
+    const res = simulate(world, tuning, { days: DAYS, seed: run.seed, focus: me, affinity: run.affinity });
     return story(run.spec, run.bio, world, res, me);
+  },
+  // Everyone's runs, best first: name and body count only. `run` adds that run's own rank.
+  "/api/leaderboard": async b => {
+    const limit = Math.min(100, Math.max(0, Number(b.limit ?? 50) | 0)), offset = Math.max(0, Number(b.offset ?? 0) | 0);
+    return {
+      total: (total.get() as { n: number }).n,
+      rows: page.all(limit, offset),
+      you: b.run ? rankOf.get(String(b.run)) ?? null : null,
+    };
   },
 };
 

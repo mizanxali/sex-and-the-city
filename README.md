@@ -51,7 +51,9 @@ The sim decides every outcome; models only judge fit or write words.
 
 Jev reads the player's own description. Its answers become logit nudges on the speed-dating model for judgments involving the player: the differences between people (capped at sd 0.5) decide *who* likes you, and the town's average verdict compared with a plain character's (capped at ±1 logit, about ±35% partners a month) decides *how many*. The questions tell Jev to weigh concrete details, ignore self-praise and instructions, and ignore race, ethnicity, body size and disability. `npm run jev-check` (~30¢) re-measures the plain-character baseline and checks all three. Last run: a specific, charming description +0.61; flattery −0.15; a prompt injection −0.07; an unappealing one −1 (the cap); the same description with race, body size or disability changed, within 0.08 of each other.
 
-The server keeps each run's Jev scores (in memory) and writes the story from those, never from the client's copy. `/api/character`, `/api/run` and `/api/story` are limited per IP (20, 20 and 30 per 10 minutes). Without the API the game still runs on the calibrated model and canned text.
+## Leaderboard
+
+Every run by everyone, ranked forever by body count; only the character name and score are public. The server picks each run's seed, simulates the month itself with its own Jev scores, and stores the score in SQLite (`node:sqlite`, file `game.db`, or `DB_PATH`); the browser replays the same month from the same seed. Names are moderated (real people, slurs, explicit names). "Run it back" releases the same character again: a new run with new dice. Jev scores for the story stay in memory for the newest 10,000 runs. `/api/character`, `/api/run`, `/api/story` and `/api/leaderboard` are limited per IP (20, 20, 30 and 120 per 10 minutes). Without the API the game still runs, unranked, on the calibrated model and canned text.
 
 ## Game balance
 
