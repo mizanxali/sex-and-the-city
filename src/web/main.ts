@@ -6,7 +6,7 @@ import townJson from "../../data/town.json" with { type: "json" };
 import traitsJson from "../../data/traits.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Affinity, eventKey, type SimEvent, SLOTS, type Tuning, simulate } from "../sim/engine.ts";
-import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATINGS, RATING_BUDGET, type Sex, buildWorld } from "../sim/world.ts";
+import { MAX_INTERESTS, type Orientation, type PlayerSpec, RATINGS, RATING_BUDGET, type Sex, buildWorld } from "../sim/world.ts";
 import "@fontsource-variable/bricolage-grotesque";
 import "@fontsource-variable/inter";
 import { type ShareData, share, xIntent } from "./share.ts";
@@ -16,6 +16,7 @@ import { loadPeople, PERSON_SCALE } from "./people.ts";
 const DAYS = 30;
 const SPEEDS = [1, 4, 16, 64]; // × half an hour per 2 seconds
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const PHONE_ZOOM = 1.6; // playback starts this far in on small screens, so the place names don't pile up
 // Same queries as the CSS: small screens measure the score and HUD; portrait ones stack the feed at the bottom.
 const COMPACT = "(max-width: 900px), (max-height: 500px)", STACKED = "(max-width: 900px) and (orientation: portrait)";
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
@@ -44,20 +45,25 @@ const stage = (async () => {
   const frame = (play = playing) => {
     playing = play;
     const half = CITY_SIZE / 2, v = new THREE.Vector3();
-    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, g0 = Infinity, g1 = -Infinity; // g: the ground alone
     for (const x of [-half, half]) for (const y of [0, 3]) for (const z of [-half, half]) { // city bounds, tallest tower ~3
       v.set(x, y, z).applyMatrix4(camera.matrixWorldInverse);
       x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
+      if (y === 0) { g0 = Math.min(g0, v.y); g1 = Math.max(g1, v.y); }
     }
-    // Desktop: feed on the right, score top-left. Small screens: town between the score bar and the HUD (and feed, in portrait).
+    // Desktop: feed on the right, score top-left, HUD below. Small screens: town between the score bar and the HUD (and feed, in portrait).
     const compact = playing && matchMedia(COMPACT).matches, margin = 16;
     const side = playing && !matchMedia(STACKED).matches ? 360 : 0;
-    const top = compact ? $("#score").getBoundingClientRect().bottom + 8 : playing ? 80 : margin;
-    const bottom = compact ? innerHeight - $("#hud").getBoundingClientRect().top + 8 : margin;
+    const top = compact ? $("#score").getBoundingClientRect().bottom + 8 : margin;
+    const bottom = playing ? innerHeight - $("#hud").getBoundingClientRect().top + 8 : margin; // clear of the HUD
     const w = innerWidth - side - 2 * margin, h = innerHeight - top - bottom;
     const s = Math.max((x1 - x0) / w, (y1 - y0) / h); // world units per pixel
-    const px = margin + w / 2, py = top + h / 2, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2; // city centre → this pixel
-    Object.assign(camera, { left: cx - px * s, right: cx + (innerWidth - px) * s, top: cy + py * s, bottom: cy - (innerHeight - py) * s });
+    // City centre → this pixel. Sized to fit the towers, but centred on the ground on desktop: the back corner's buildings
+    // are short, so centring the tower-height box would leave the town sitting low.
+    const px = margin + w / 2, py = top + h / 2, cx = (x0 + x1) / 2, cy = compact ? (y0 + y1) / 2 : (g0 + g1) / 2;
+    // three zooms about the frustum's middle (the screen centre); shift it so a zoom stays centred on (px, py) instead
+    const k = s * (1 - 1 / camera.zoom), dx = (innerWidth / 2 - px) * k, dy = (py - innerHeight / 2) * k;
+    Object.assign(camera, { left: cx - px * s - dx, right: cx + (innerWidth - px) * s - dx, top: cy + py * s - dy, bottom: cy - (innerHeight - py) * s - dy });
     camera.updateProjectionMatrix();
     declutter();
   };
@@ -111,18 +117,6 @@ const stage = (async () => {
 // ---------------------------------------------------------------- character form
 const form = $<HTMLFormElement>("#setup");
 const ratingInputs = [...form.querySelectorAll<HTMLInputElement>("#ratings input")];
-const INTEREST_EMOJI: Record<string, string> = {
-  fitness: "💪", running: "🏃", outdoors: "🏕️", cooking: "🍳", "eating out": "🍽️", "wine and cocktails": "🍸",
-  "craft beer": "🍺", "live music": "🎸", dancing: "💃", "art and museums": "🎨", reading: "📚", "video games": "🎮",
-  "movies and tv": "🍿", "watching sports": "🏈", travel: "✈️", gardening: "🌱", "diy and crafts": "🔨", religion: "🙏",
-  volunteering: "🤝", tech: "💻", pets: "🐶", fashion: "👗", "yoga and wellness": "🧘", "board games": "🎲",
-};
-$("#interests").append(...INTERESTS.map(name => {
-  const l = document.createElement("label");
-  l.className = "chip";
-  l.innerHTML = `<input type="checkbox" name="interest" value="${name}" /><span>${INTEREST_EMOJI[name]} ${name}</span>`;
-  return l;
-}));
 const showBudget = () => { // points left, plus each stat bar's fill and number
   const left = RATING_BUDGET - ratingInputs.reduce((s, i) => s + +i.value, 0);
   $("#budget").textContent = left ? `${left} point${left === 1 ? "" : "s"} to spend` : "all points spent";
@@ -229,7 +223,7 @@ form.addEventListener("submit", async e => {
       return;
     } // otherwise offline: the calibrated sim still runs, unranked, without Jev's read on who likes whom
   }
-  form.style.display = "none"; $("#corner").style.display = "none";
+  form.style.display = "none"; $("#corner").style.display = "none"; $("#veil").style.display = "none";
   start(spec, bio, seed, affinity, runId);
   sessionStorage.setItem("last", JSON.stringify({ spec, bio, description }));
 });
@@ -269,9 +263,9 @@ function openBoard() {
   popup("board");
   loadBoard();
 }
-// Leaderboard and how-it-works: at most one open, over a dimmed, blurred page.
-function popup(id: "board" | "how" | null) {
-  for (const p of ["board", "how"]) $(`#${p}`).style.display = p === id ? "flex" : "none";
+// Leaderboard, how-it-works and the recap: at most one open, over a dimmed, blurred page.
+function popup(id: "board" | "how" | "recap" | null) {
+  for (const p of ["board", "how", "recap"]) $(`#${p}`).style.display = p !== id ? "none" : p === "recap" ? "block" : "flex";
   $("#scrim").style.display = id ? "block" : "none";
 }
 $("#board-open").onclick = openBoard;
@@ -366,7 +360,8 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     return b;
   }));
   $("#pause").onclick = () => { paused = !paused; $("#pause").textContent = paused ? "Play" : "Pause"; };
-  $("#skip").onclick = () => { t = ticks; };
+  $("#skip").onclick = () => { if (done) recap(); else t = ticks; };
+  if (matchMedia(COMPACT).matches) camera.zoom = PHONE_ZOOM; // the whole town is too small to read on a phone; pinch out for it
   frame(true); // after the HUD is up: on phones the framing measures it
 
   const person = (i: number) => (i === me ? undefined : world.agents[i]); // everyone but the player
@@ -477,10 +472,9 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       <div class="stats"><span>✨ ${n(count("spark"), "spark")}</span><span>📱 ${n(count("match"), "match", "matches")}</span><span>🍷 ${n(count("date"), "date")}</span><span>🙅 ${n(count("rejected"), "rejection")}</span><span>🪑 stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}</span></div>
       <p class="ranked" id="ranked">${runId ? "🏆 Ranking…" : "Unranked: the API is off, so this run isn't on the leaderboard."}</p>
       <div class="share"><button id="share">📸 Share your month</button> <a id="post-x" class="button ghost" target="_blank" rel="noopener">Post on 𝕏</a> <span id="share-status"></span></div>
-      <div class="ctas"><button id="tweak">✏️ Tweak &amp; try again</button> <button id="board-recap" class="ghost">🏆 Leaderboard</button> <button id="new" class="ghost">New character</button></div>
+      <div class="ctas"><button id="tweak">✏️ Tweak &amp; try again</button> <button id="board-recap" class="ghost">🏆 Leaderboard</button> <button id="new" class="ghost">New character</button> <button id="back" class="ghost">🏙️ Back to the city</button></div>
       </div></div>`;
-    el.style.display = "block";
-    document.querySelectorAll<HTMLButtonElement>("#hud button").forEach(b => (b.disabled = true)); // the month is over
+    popup("recap");
     const card: ShareData = { name: spec.name, score: partners.size, rank: null, total: null, matches: count("match"), dates: count("date"),
       headline: story.recap?.headline ?? null, url: "https://sexandthecity.fun" };
     const postX = $<HTMLAnchorElement>("#post-x");
@@ -498,6 +492,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     $("#board-recap").onclick = openBoard;
     $("#tweak").onclick = () => { sessionStorage.setItem("tweak", sessionStorage.getItem("last") ?? ""); location.reload(); };
     $("#new").onclick = () => location.reload();
+    $("#back").onclick = () => popup(null);
   }
 
   // ------------------------------------------------------------ frame loop
@@ -539,6 +534,10 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
 
     renderer.render(scene, camera);
     labels.render(scene, camera);
-    if (t >= ticks && !done) { done = true; recap(); }
+    if (t >= ticks && !done) {
+      done = true;
+      document.querySelectorAll<HTMLButtonElement>("#hud button").forEach(b => (b.disabled = b.id !== "skip"));
+      Object.assign($("#skip"), { textContent: "🏆 View results", className: "" });
+    }
   });
 }

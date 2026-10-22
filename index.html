@@ -47,12 +47,11 @@
     .pair { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
     #setup input[type=text], #setup input:not([type]), #setup input[type=number], .describe textarea { font: inherit; font-size: 16px; font-weight: 600; color: var(--ink); padding: 10px 12px; border: 2px solid var(--line); border-radius: 12px; background: white; text-transform: none; letter-spacing: 0; }
     #setup input:focus-visible, .describe textarea:focus-visible { outline: none; border-color: var(--rose); }
-    .describe { display: grid; gap: 6px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-    .describe textarea { resize: none; line-height: 1.45; font-weight: 500; font-size: 14px; padding-right: 48px; }
-    .describe-box { position: relative; }
-    .dice { position: absolute; right: 8px; bottom: 8px; width: 34px; height: 34px; padding: 0; font-size: 17px; line-height: 1; }
+    .describe { display: grid; gap: 6px; font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--ink); }
+    .describe small { display: block; margin-top: 2px; line-height: 1.4; }
+    .describe textarea { resize: none; line-height: 1.45; font-weight: 500; font-size: 14px; }
     #describe:disabled { cursor: default; transform: none; }
-    .describe-row { display: flex; gap: 12px; align-items: center; font-size: 13px; color: var(--rose); min-height: 38px; }
+    .describe-row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; font-size: 13px; color: var(--rose); min-height: 38px; }
     #bio { font-family: var(--display); font-size: 17px; color: var(--ink); margin: -4px 0 0; }
     #bio:empty { display: none; }
     .group, .pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
@@ -112,7 +111,7 @@
 
     /* end of month */
     /* centred on the city, clear of the feed, like #hud */
-    #recap { inset: 0 388px 0 0; margin: auto; width: min(900px, calc(100vw - 416px)); height: fit-content; max-height: 90dvh; overflow: auto; padding: 28px 32px; display: none; box-sizing: border-box; }
+    #recap { z-index: 20; inset: 0 388px 0 0; margin: auto; width: min(900px, calc(100vw - 416px)); height: fit-content; max-height: 90dvh; overflow: auto; padding: 28px 32px; display: none; box-sizing: border-box; }
     #recap.solo { width: min(560px, calc(100vw - 416px)); }
     .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 32px; align-items: start; }
     #recap.solo .recap-grid { grid-template-columns: 1fr; }
@@ -144,7 +143,8 @@
     .corner { position: fixed; top: 14px; right: 14px; z-index: 11; display: flex; gap: 8px; }
     .board-open { box-shadow: 0 6px 18px rgba(224, 36, 94, 0.3); }
     .corner .ghost { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
-    #scrim { position: fixed; inset: 0; z-index: 19; display: none; background: rgba(27, 20, 40, 0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    #scrim, #veil { position: fixed; inset: 0; z-index: 19; display: none; background: rgba(27, 20, 40, 0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    #veil { display: block; z-index: 9; } /* behind the character form, under the corner buttons */
     #board, #how { inset: 0; margin: auto; z-index: 20; width: min(440px, 92vw); height: min(640px, 86dvh); padding: 18px 16px 14px; display: none; flex-direction: column; gap: 8px; }
     #board header { display: flex; align-items: baseline; gap: 10px; }
     #board h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
@@ -179,16 +179,31 @@
     /* phones and narrow windows: one-column form, clear of the leaderboard button */
     @media (max-width: 900px) {
       .panel { box-sizing: border-box; } /* padding inside the vw widths, not on top */
-      #setup { grid-template-columns: 1fr; inset: 64px 0 0; max-height: calc(100dvh - 76px); padding: 20px 18px; gap: 18px; }
-      #setup h1 { font-size: 40px; }
+      #setup { grid-template-columns: 1fr; inset: 58px 0 0; width: calc(100vw - 32px); max-height: calc(100dvh - 74px); padding: 20px 16px; gap: 14px; }
+      #setup .col { gap: 12px; }
+      #setup h1 { font-size: 32px; }
+      #setup p.sub { font-size: 14px; }
+      #setup fieldset { padding: 12px 14px 14px; }
+      #setup input[type=text], #setup input:not([type]), #setup input[type=number] { padding: 8px 10px; }
       .describe textarea { font-size: 16px; } /* iOS zooms into inputs under 16px */
-      /* day pips: label on its own line, the numbers in one row that shares the width */
-      .pips .group-label { flex-basis: 100%; min-width: 0; margin-bottom: 2px; }
+      .chip span { padding: 6px 11px; font-size: 13px; }
+      .go { font-size: 18px; padding: 14px 18px; }
+      .corner { top: 12px; right: 16px; }
+      .corner button { padding: 7px 13px; font-size: 14px; }
+      /* labels on their own line: the chips and day pips get the full width */
+      .group .group-label, .pips .group-label { flex-basis: 100%; min-width: 0; margin-bottom: 2px; }
       .pip { flex: 1 1 0; max-width: 44px; }
       .pip span { width: auto; }
-      #recap { padding: 20px 18px; }
-      .recap-grid { grid-template-columns: 1fr; gap: 18px; }
-      #recap .headline { font-size: 26px; }
+      #recap { padding: 18px 16px; }
+      .recap-grid { grid-template-columns: 1fr; gap: 14px; }
+      #recap .headline { font-size: 21px; margin-bottom: 8px; }
+      #recap .recap-story p { font-size: 14px; }
+      #recap details summary { font-size: 16px; }
+      #recap details summary::after { font-size: 12px; }
+      .stats { margin: 10px 0; }
+      .stats span { padding: 4px 9px; font-size: 12px; }
+      .ranked { font-size: 15px; }
+      #recap button, #recap a.button { padding: 8px 14px; font-size: 14px; }
     }
     /* short screens (phones on their side): score in a row, slimmer HUD. Keep in sync with COMPACT in main.ts */
     @media (max-width: 900px), (max-height: 500px) {
@@ -202,7 +217,7 @@
     @media (max-width: 900px) and (orientation: portrait) {
       #score { top: 10px; left: 10px; right: 10px; justify-content: center; }
       #feed { top: auto; left: 10px; right: 10px; bottom: 10px; width: auto; height: 38dvh; padding: 12px 10px 10px; }
-      #recap, #recap.solo { inset: 0; width: 92vw; } /* the feed is below, not beside: centre on the screen */
+      #recap, #recap.solo { inset: 0; width: calc(100vw - 32px); max-height: calc(100dvh - 32px); } /* the feed is below, not beside: centre on the screen */
       #feed h2 { font-size: 18px; margin-bottom: 8px; }
       #hud { left: 10px; right: 10px; bottom: calc(38dvh + 18px); transform: none; max-width: none; justify-content: center; padding: 6px 8px; }
       .card { grid-template-columns: 40px 1fr; gap: 10px; }
@@ -214,17 +229,15 @@
 <body>
   <div id="app"></div>
 
-  <form id="setup" class="panel">
+  <div id="veil"></div>
+  <form id="setup" class="panel" onsubmit="return false">
     <section class="col">
       <h1>Sex and the City</h1>
-      <p class="sub">Create a character. Move them into a town of 1,000 people. Watch a month of dates, rejections and hookups, with odds from real surveys of how often people actually get lucky.</p>
-      <div class="describe-box">
-        <label class="describe"><span>Describe them, or build them by hand <small>(the town reads it: specific and charming beats bragging)</small></span>
-          <textarea name="description" rows="3" maxlength="1000" placeholder="Dev, 31, a sweet but chronically late sous-chef obsessed with natural wine and indie gigs. Into women. Out most weekends, never sets foot in a gym."></textarea>
-        </label>
-        <button type="button" id="dice" class="dice ghost" title="Start from someone in the city" aria-label="Start from a random character from the city">🎲</button>
-      </div>
-      <div class="describe-row"><button type="button" id="describe" class="ghost">✨ Build from description</button><span id="describe-status"></span></div>
+      <p class="sub">Make someone up and drop them into a town of 1,000 people. You get one month to go home with as many of them as you can. Highest body count tops the leaderboard. The odds come from real surveys, so good luck.</p>
+      <label class="describe"><span>Describe your character <small>or set everything by hand below. The town reads this, so be specific: charm works, bragging doesn't.</small></span>
+        <textarea name="description" rows="3" maxlength="1000" placeholder="Dev, 31, a sweet but chronically late sous-chef obsessed with natural wine and indie gigs. Into women. Out most weekends, never sets foot in a gym."></textarea>
+      </label>
+      <div class="describe-row"><button type="button" id="describe" class="ghost">✨ Build from description</button><button type="button" id="dice" class="ghost" title="Start from someone in the city" aria-label="Start from a random character from the city">🎲 Randomize character</button><span id="describe-status"></span></div>
       <p id="bio"></p>
       <div class="pair">
         <label class="field">Name <input name="name" value="Alex" maxlength="24" required /></label>
@@ -253,14 +266,39 @@
       </fieldset>
     </section>
     <section class="col">
-      <fieldset id="ratings"><legend>How strangers see you <span id="budget"></span></legend>
-        <label class="stat"><span class="stat-name">👀 Looks<small>apps and first impressions</small></span><input name="attr" type="range" min="1" max="10" value="6" /><output>6</output></label>
-        <label class="stat"><span class="stat-name">💗 Sincerity<small>dates end at your place</small></span><input name="sinc" type="range" min="1" max="10" value="7" /><output>7</output></label>
-        <label class="stat"><span class="stat-name">🧠 Smarts<small>conversations click</small></span><input name="intel" type="range" min="1" max="10" value="7" /><output>7</output></label>
-        <label class="stat"><span class="stat-name">🎉 Fun<small>nights out end at your place</small></span><input name="fun" type="range" min="1" max="10" value="6" /><output>6</output></label>
-        <label class="stat"><span class="stat-name">🚀 Ambition<small>books dates fast, no clashes</small></span><input name="amb" type="range" min="1" max="10" value="7" /><output>7</output></label>
+      <fieldset id="ratings"><legend>How strangers see you <span id="budget" class="spent">all points spent</span></legend>
+        <label class="stat"><span class="stat-name">👀 Looks<small>apps and first impressions</small></span><input name="attr" type="range" min="1" max="10" value="6" style="--pct: 55.6%" /><output>6</output></label>
+        <label class="stat"><span class="stat-name">💗 Sincerity<small>dates end at your place</small></span><input name="sinc" type="range" min="1" max="10" value="7" style="--pct: 66.7%" /><output>7</output></label>
+        <label class="stat"><span class="stat-name">🧠 Smarts<small>conversations click</small></span><input name="intel" type="range" min="1" max="10" value="7" style="--pct: 66.7%" /><output>7</output></label>
+        <label class="stat"><span class="stat-name">🎉 Fun<small>nights out end at your place</small></span><input name="fun" type="range" min="1" max="10" value="6" style="--pct: 55.6%" /><output>6</output></label>
+        <label class="stat"><span class="stat-name">🚀 Ambition<small>books dates fast, no clashes</small></span><input name="amb" type="range" min="1" max="10" value="7" style="--pct: 66.7%" /><output>7</output></label>
       </fieldset>
-      <fieldset id="interests"><legend>Loves <small>up to 5</small></legend></fieldset>
+      <fieldset id="interests"><legend>Loves <small>up to 5</small></legend>
+        <label class="chip"><input type="checkbox" name="interest" value="fitness" /><span>💪 fitness</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="running" /><span>🏃 running</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="outdoors" /><span>🏕️ outdoors</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="cooking" /><span>🍳 cooking</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="eating out" /><span>🍽️ eating out</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="wine and cocktails" /><span>🍸 wine and cocktails</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="craft beer" /><span>🍺 craft beer</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="live music" /><span>🎸 live music</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="dancing" /><span>💃 dancing</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="art and museums" /><span>🎨 art and museums</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="reading" /><span>📚 reading</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="video games" /><span>🎮 video games</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="movies and tv" /><span>🍿 movies and tv</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="watching sports" /><span>🏈 watching sports</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="travel" /><span>✈️ travel</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="gardening" /><span>🌱 gardening</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="diy and crafts" /><span>🔨 diy and crafts</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="religion" /><span>🙏 religion</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="volunteering" /><span>🤝 volunteering</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="tech" /><span>💻 tech</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="pets" /><span>🐶 pets</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="fashion" /><span>👗 fashion</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="yoga and wellness" /><span>🧘 yoga and wellness</span></label>
+        <label class="chip"><input type="checkbox" name="interest" value="board games" /><span>🎲 board games</span></label>
+      </fieldset>
       <button type="submit" class="go">Release them into the city 🏙️</button>
     </section>
   </form>

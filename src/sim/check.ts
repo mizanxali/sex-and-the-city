@@ -1,11 +1,12 @@
 // The one check for the sim: npm run check. Fails loudly if the town drifts from reality or stops being deterministic.
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import breakupsJson from "../../data/breakups.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Tuning, simulate } from "./engine.ts";
 import { offsets } from "../server/ai.ts";
 import { YEAR, gssSingles, loss, report, runYear } from "./stats.ts";
-import { MIN_AGE, type PlayerSpec, buildWorld, gauss, rng } from "./world.ts";
+import { INTERESTS, MIN_AGE, type PlayerSpec, buildWorld, gauss, rng } from "./world.ts";
 
 const tuning = tuningJson as Tuning;
 const HELD_OUT = [101, 102, 103, 104, 105, 106, 107, 108]; // calibration fits seeds 1-16
@@ -18,6 +19,9 @@ const player: PlayerSpec = {
   attr: 6, sinc: 7, intel: 7, fun: 6, amb: 7, interests: ["live music", "craft beer", "video games"],
 };
 assert.throws(() => buildWorld({ ...player, age: 19 }));
+// The form's interest chips are in the HTML (no layout shift when the script lands): same list, same order.
+const chips = [...readFileSync(new URL("../../index.html", import.meta.url), "utf8").matchAll(/name="interest" value="([^"]+)"/g)].map(m => m[1]);
+assert.deepEqual(chips, INTERESTS, "index.html's interest chips drifted from INTERESTS");
 
 // 2. Same seed, same month.
 const withPlayer = buildWorld(player);
