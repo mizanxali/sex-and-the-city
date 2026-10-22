@@ -326,12 +326,21 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   // Where agent i stands at a tick: their venue's anchor plus a stable personal offset.
   const jitter = world.agents.map((_, i) => {
     const a = (i * 2.399963) % (2 * Math.PI), r = Math.sqrt(((i * 0.618034) % 1));
-    return { x: Math.cos(a) * r, z: Math.sin(a) * r, street: ((i * 0.754877) % 1) - 0.5 };
+    return { x: Math.cos(a) * r, z: Math.sin(a) * r };
   });
-  const posAt = (i: number, tick: number, out: THREE.Vector3) => {
-    const v = locations[Math.min(tick, ticks - 1) * N + i], j = jitter[i];
+  const via = new THREE.Vector3();
+  const posAt = (i: number, tick: number, out: THREE.Vector3): THREE.Vector3 => {
+    tick = Math.min(tick, ticks - 1);
+    const v = locations[tick * N + i], j = jitter[i];
+    if (world.venues[v].kind === "transit") { // travelling: partway along the line from the last place to the next
+      let a = tick, b = tick;
+      while (a > 0 && locations[a * N + i] === v) a--;
+      while (b < ticks - 1 && locations[b * N + i] === v) b++;
+      const from = locations[a * N + i] === v ? b : a, to = locations[b * N + i] === v ? a : b;
+      if (locations[from * N + i] === v) return out.copy(city.anchor[v]); // in transit all month: never happens
+      return posAt(i, from, out).lerp(posAt(i, to, via), (tick - a) / (b - a));
+    }
     out.copy(city.anchor[v]);
-    if (world.venues[v].kind === "transit") return out.set(out.x + j.x * 0.2, 0, j.street * (CITY_SIZE - 6));
     return out.set(out.x + j.x * city.spread[v], 0, out.z + j.z * city.spread[v]);
   };
   const hidden = (i: number, tick: number) => {
