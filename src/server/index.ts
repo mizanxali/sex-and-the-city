@@ -37,8 +37,10 @@ const routes: Record<string, Route> = {
   "/api/character": async b => {
     const description = String(b.description ?? "").trim();
     if (description.length < 10 || description.length > MAX_DESCRIPTION) throw new HttpError(400, "Describe them in 10 to 1000 characters.");
-    const [blocked, parsed] = await Promise.all([moderate({ description }), parseCharacter(description)]);
+    // Moderation's verdict wins even if parsing failed (the model API can reject the same text moderation catches).
+    const [blocked, parsed] = await Promise.all([moderate({ description }), parseCharacter(description).catch((e: Error) => e)]);
     if (blocked) throw new HttpError(422, blocked);
+    if (parsed instanceof Error) throw parsed;
     if (!parsed) throw new HttpError(422, "Couldn't turn that into a character. Try describing them differently.");
     return { spec: specOf(parsed.spec), bio: parsed.bio }; // after moderation, so a minor gets its message, not a clamp error
   },
