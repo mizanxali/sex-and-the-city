@@ -6,7 +6,7 @@ import calibrationJson from "../../data/calibration.json" with { type: "json" };
 import personasJson from "../../data/personas.json" with { type: "json" };
 import traitsJson from "../../data/traits.json" with { type: "json" };
 import { type Affinity, compatible, eventKey, type SimEvent, type SimResult } from "../sim/engine.ts";
-import { INTERESTS, type PlayerSpec, type World, ageBand, clampSpec } from "../sim/world.ts";
+import { INTERESTS, type PlayerSpec, type World, ageBand } from "../sim/world.ts";
 
 let claudeClient: Anthropic | undefined, jevClient: TypeSafeClient | undefined; // built lazily, after .env loads
 const claude = () => (claudeClient ??= new Anthropic());
@@ -29,7 +29,7 @@ async function json<T>(model: "claude-opus-5-5" | "claude-haiku-5-5", system: st
     output_config: { effort: "low", format: { type: "json_schema", schema } },
     ...(model === "claude-opus-5-5" ? { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" as const } : {}),
   });
-  if (res.stop_reason !== "end_turn") return null; // refusal or truncation: callers have canned text
+  if (res.stop_reason !== "end_turn") { console.error(model, res.stop_reason); return null; } // refusal or truncation: callers have canned text
   const text = res.content.find(b => b.type === "text");
   // No em dashes on screen, even if the prompt's ask is missed: "a — b" reads fine as "a, b".
   return text && "text" in text ? JSON.parse(text.text.replace(/\s*—\s*/g, ", ")) as T : null;
@@ -65,8 +65,7 @@ const CHARACTER_SCHEMA = {
 export async function parseCharacter(description: string) {
   const out = await json<PlayerSpec & { bio: string }>("claude-opus-5-5", CHARACTER_SYSTEM,
     `<description>\n${description}\n</description>`, CHARACTER_SCHEMA);
-  if (!out) return null;
-  return { spec: clampSpec(out), bio: out.bio.slice(0, 200) };
+  return out && { spec: out as PlayerSpec, bio: out.bio.slice(0, 200) }; // unclamped: the route moderates first, then clamps
 }
 
 const STORY_SYSTEM = `You narrate one player's month in "Sex and the City", a comedic dating simulation of a small \
@@ -125,13 +124,13 @@ export async function story(spec: PlayerSpec, bio: string, world: World, res: Si
     picked.length ? json<{ lines: { key: string; text: string }[] }>("claude-haiku-5-5", STORY_SYSTEM,
       `Rewrite each event's fact as one funny feed line (max 25 words), keyed by its key. Keep exactly who did ` +
       `what to whom, and where, as the fact states.\n\n${JSON.stringify({ player, people, events })}`,
-      LINES_SCHEMA).catch(() => null) : null,
+      LINES_SCHEMA).catch(e => (console.error("story lines", e), null)) : null,
     json<{ headline: string; recap: string }>("claude-opus-5-5", STORY_SYSTEM,
       `Write the end-of-month recap: a headline (max 10 words) and a recap (max 90 words) that lands on how this ` +
       `compares with reality: only ${Math.round(100 * (1 - gss["0"]))}% of real single ${spec.sex === "female" ? "women" : "men"} ` +
       `aged ${ageBand(spec.age)} had any partner in a whole year (GSS 2022-24).\n\n` +
       JSON.stringify({ player, partners, counts, highlights: events.filter(e => !e.fact.includes("turned")).slice(0, 15).map(e => e.fact), people }),
-      RECAP_SCHEMA).catch(() => null),
+      RECAP_SCHEMA).catch(e => (console.error("story recap", e), null)),
   ]);
   return {
     lines: Object.fromEntries((lines?.lines ?? []).filter(l => events.some(e => e.key === l.key)).map(l => [l.key, l.text.slice(0, 240)])),

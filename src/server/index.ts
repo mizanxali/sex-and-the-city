@@ -40,7 +40,7 @@ const routes: Record<string, Route> = {
     const [blocked, parsed] = await Promise.all([moderate({ description }), parseCharacter(description)]);
     if (blocked) throw new HttpError(422, blocked);
     if (!parsed) throw new HttpError(422, "Couldn't turn that into a character. Try describing them differently.");
-    return parsed;
+    return { spec: specOf(parsed.spec), bio: parsed.bio }; // after moderation, so a minor gets its message, not a clamp error
   },
   // Character (+ the player's own description) → moderated, Jev's read of the town, a seed, a ranked score.
   "/api/run": async (b, env) => {
