@@ -168,7 +168,6 @@
     #how p, #how ul { margin: 0 0 6px; }
     #how ul { padding-left: 20px; }
     #how li { margin-bottom: 3px; }
-    #how .fine { color: var(--muted); font-size: 12.5px; }
 
     /* in-world labels */
     .label { font-size: 10px; color: white; background: rgba(20, 20, 30, 0.6); padding: 1px 5px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
@@ -367,8 +366,19 @@
       <p>A town of 1,000 has only a handful of gay singles, so for gay characters the apps also reach singles from out of town. That makes the apps their best bet, and every kind of character has a real shot at the top.</p>
 
       <h3>🎲 Fair dice</h3>
-      <p>Your score is the number of different people you went home with in 30 days. The server rolls the dice and runs your month, so nobody can fake a score. "Tweak &amp; try again" brings your character back to edit, or to release unchanged with new dice. The AI never decides what happens: the simulation does, and afterwards Claude writes the feed and your recap.</p>
-      <p class="fine">Sources: General Social Survey 2022–24 (NORC), Fisman &amp; Iyengar speed-dating experiment (Columbia), How Couples Meet and Stay Together (Stanford), American Time Use Survey 2024 (BLS), Gallup, NVIDIA Nemotron-Personas-USA.</p>
+      <p>Your score is the number of different people you went home with in 30 days. The server rolls the dice and runs your month, so nobody can fake a score. "Tweak &amp; try again" brings your character back to edit, or to release unchanged with new dice. The AI never decides what happens: the simulation does.</p>
+
+      <h3>🤓 Technical details for nerds</h3>
+      <ul>
+        <li><b>Attraction:</b> two logistic regressions (women choosing, men choosing) fitted on ~3,400 speed-dating decisions each. P(yes) = σ(β₀ + Σ βᵢxᵢ) over the chooser's ratings and the age gap. AUC 0.81 / 0.84. Looks carry the most weight, then fun and shared interests.</li>
+        <li><b>Noise:</b> ratings are seen with Gaussian noise (sd 1 point in person, 1.5 on the apps). Race is held at the dataset average, so it never changes the odds.</li>
+        <li><b>Extra logit terms:</b> age-gap penalty, gossip, Jev's offsets and the player's charm bonus.</li>
+        <li><b>Schedules:</b> ATUS diaries give the odds of being at each place every half hour, by job, age and day of the week.</li>
+        <li><b>Breakups:</b> a daily hazard from HCMST, high in a couple's first six months and lower after.</li>
+        <li><b>Calibration:</b> ten knobs fitted by coordinate search so a simulated year matches GSS partner counts by sex and age, checked on seeds the fit never saw.</li>
+        <li><b>Determinism:</b> a seeded RNG gives the same month on the server and in your browser.</li>
+        <li><b>Data sources:</b> General Social Survey 2022–24 (NORC), Fisman &amp; Iyengar speed-dating experiment (Columbia), How Couples Meet and Stay Together (Stanford), American Time Use Survey 2024 (BLS), Gallup, NVIDIA Nemotron-Personas-USA.</li>
+      </ul>
     </div>
   </aside>
   <aside id="board" class="panel">
