@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "calibrate": "node src/sim/calibrate.ts",
     "balance": "node src/sim/balance.ts",
+    "jev-check": "node src/server/jev-check.ts",
     "check": "node src/sim/check.ts"
   },
   "devDependencies": {

@@ -175,28 +175,35 @@ form.addEventListener("submit", async e => {
   e.preventDefault();
   const button = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
   button.disabled = true; button.textContent = "Asking the town about you…";
-  let spec = readForm(), affinity: Affinity | undefined;
-  try { ({ spec, affinity } = await api<{ spec: PlayerSpec; affinity: Affinity }>("/api/run", { spec, bio })); }
-  catch { /* offline: the calibrated sim still runs, just without Jev's read on who likes whom */ }
+  const description = (form.elements.namedItem("description") as HTMLTextAreaElement).value.trim();
+  let spec = readForm(), affinity: Affinity | undefined, runId: string | undefined;
+  try { ({ spec, affinity, runId } = await api<{ spec: PlayerSpec; affinity: Affinity; runId: string }>("/api/run", { spec, bio, description })); }
+  catch (err) {
+    if (/real person|adults|put in the city/.test((err as Error).message)) { // moderation said no: fix the description
+      button.disabled = false; button.textContent = "Release them into the city 🏙️";
+      $("#describe-status").textContent = (err as Error).message;
+      return;
+    } // otherwise offline: the calibrated sim still runs, just without Jev's read on who likes whom
+  }
   form.style.display = "none";
-  start(spec, bio, newSeed(), affinity);
+  start(spec, bio, newSeed(), affinity, runId);
 });
 const rerun = sessionStorage.getItem("rerun");
 if (rerun) {
   sessionStorage.removeItem("rerun"); form.style.display = "none";
   const r = JSON.parse(rerun);
-  start(r.spec, r.bio, newSeed(), r.affinity);
+  start(r.spec, r.bio, newSeed(), r.affinity, r.runId);
 }
 
 // ---------------------------------------------------------------- the month
-async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Affinity) {
+async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Affinity, runId?: string) {
   const world = buildWorld(spec);
   const N = world.agents.length, me = N - 1;
   const res = simulate(world, tuningJson as Tuning, { days: DAYS, seed, focus: me, trackLocations: true, affinity });
   // Words arrive while the month plays; canned text covers anything not back yet.
   let story: { lines: Record<string, string>; recap: { headline: string; recap: string } | null } = { lines: {}, recap: null };
   const feedItems = new Map<string, HTMLLIElement>();
-  api<typeof story>("/api/story", { spec, bio, seed, affinity }).then(s => {
+  if (runId) api<typeof story>("/api/story", { runId, seed }).then(s => {
     story = s;
     for (const [key, li] of feedItems) if (s.lines[key]) li.querySelector("p")!.textContent = s.lines[key];
   }).catch(() => {});
@@ -352,7 +359,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       <p class="reality">For scale: only ${anyInYear}% of real single ${spec.sex === "female" ? "women" : "men"} aged ${band} had <em>any</em> partner in a whole year (GSS 2022-24).</p>
       <button id="again">Run it back</button> <button id="new" class="ghost">New character</button>`;
     el.style.display = "block";
-    $("#again").onclick = () => { sessionStorage.setItem("rerun", JSON.stringify({ spec, bio, affinity })); location.reload(); };
+    $("#again").onclick = () => { sessionStorage.setItem("rerun", JSON.stringify({ spec, bio, affinity, runId })); location.reload(); };
     $("#new").onclick = () => location.reload();
   }
 

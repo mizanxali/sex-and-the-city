@@ -29,7 +29,7 @@
     #setup p.sub { margin: 0; color: var(--muted); line-height: 1.45; font-size: 15px; }
     #setup fieldset { border: 0; padding: 14px 16px 16px; margin: 0; border-radius: 16px; background: rgba(247, 243, 250, 0.85); display: grid; gap: 10px; }
     legend { float: left; width: 100%; display: flex; justify-content: space-between; align-items: baseline; font-size: 17px; font-weight: 700; margin-bottom: 2px; padding: 0; }
-    legend small { font-family: "Inter Variable", sans-serif; font-size: 12px; font-weight: 500; color: var(--muted); }
+    legend small, .describe small { font-family: "Inter Variable", sans-serif; font-size: 12px; font-weight: 500; color: var(--muted); }
     #budget { font-family: "Inter Variable", sans-serif; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #ffe3ec; color: var(--rose); }
     #budget.spent { background: #e7e4ec; color: var(--muted); }
     .field { display: grid; gap: 5px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
@@ -116,7 +116,7 @@
     <section class="col">
       <h1>Sex and the City</h1>
       <p class="sub">Create a character. Move them into a town of 1,000 people. Watch a month of dates, rejections and hookups, with odds from real surveys of how often people actually get lucky.</p>
-      <label class="describe"><span>Describe them, or build them by hand</span>
+      <label class="describe"><span>Describe them, or build them by hand <small>— the town reads it: specific and charming beats bragging</small></span>
         <textarea name="description" rows="3" maxlength="1000" placeholder="Dev, 31, a sweet but chronically late sous-chef obsessed with natural wine and indie gigs. Into women. Out most weekends, never sets foot in a gym."></textarea>
       </label>
       <div class="describe-row"><button type="button" id="describe" class="ghost">✨ Build from description</button><span id="describe-status"></span></div>

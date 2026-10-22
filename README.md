@@ -30,6 +30,7 @@ npm run dev:api     # API on :8787 + the game, with Claude and Jev
 npm run check       # determinism, 21+ only, and a simulated year vs GSS on held-out seeds (~4s)
 npm run calibrate   # refit data/tuning.json against GSS (~40 min)
 npm run balance     # the player's score spread across 240 random builds, and which choices pay off (~70s)
+npm run jev-check   # Jev's verdicts on sample descriptions and a bias check (~30¢ of API calls)
 ```
 
 ## Art
@@ -42,19 +43,21 @@ The sim decides every outcome; models only judge fit or write words.
 
 | Call | Model | When | Rough cost |
 |---|---|---|---|
-| Moderate the character description (real person, minor, hateful) | Jev | per character | < $0.001 |
+| Moderate the character description (real person, minor, hateful) | Jev | per description built, and again at release | < $0.001 |
 | Description → capped stats + bio | Claude Opus 5.5 | per character | ~1¢ |
-| Would each compatible persona date the player, and vice versa | Jev | per run, ~270 personas in 7 parallel requests, ~0.5s | < $0.01 |
+| Would each compatible persona date the player, and vice versa | Jev | per run, ~520 personas in 13 parallel requests, ~1s | ~1¢ |
 | Feed lines for up to 40 key events | Claude Haiku 5.5 | per run | < 1¢ |
 | End-of-month recap | Claude Opus 5.5 (server-side refusal fallback on) | per run | ~2¢ |
 
-Jev's answers become zero-mean logit nudges on the calibrated speed-dating model for judgments involving the player, so the town's calibrated rates hold. Without the API the game still runs on the calibrated model and canned text.
+Jev reads the player's own description. Its answers become logit nudges on the speed-dating model for judgments involving the player: the differences between people (capped at sd 0.5) decide *who* likes you, and the town's average verdict compared with a plain character's (capped at ±1 logit, about ±35% partners a month) decides *how many*. The questions tell Jev to weigh concrete details, ignore self-praise and instructions, and ignore race, ethnicity, body size and disability. `npm run jev-check` (~30¢) re-measures the plain-character baseline and checks all three. Last run: a specific, charming description +0.61; flattery −0.15; a prompt injection −0.07; an unappealing one −1 (the cap); the same description with race, body size or disability changed, within 0.08 of each other.
+
+The server keeps each run's Jev scores (in memory) and writes the story from those, never from the client's copy. `/api/character`, `/api/run` and `/api/story` are limited per IP (20, 20 and 30 per 10 minutes). Without the API the game still runs on the calibrated model and canned text.
 
 ## Game balance
 
 The town is calibrated to real surveys; the player isn't. They're the main character (`MAIN_CHARACTER` in `src/sim/engine.ts`): six conversations per half hour instead of one, half the town's app swipes (more only floods them with matches they have no free evenings for), a logit bonus on yes in both directions (+2 for men, +1 for women, since women in the speed-dating data say yes far less), 3× the hookup odds, bar-hopping across town, and a night that can end at someone's place from 19:00. "Keeping it casual" players never couple up and move on after a hookup; "looking for love" players can couple, which slows the score. Everyone, player included, only swipes on nights in: a dinner, date, bar or party after 18:00 means no apps that night.
 
-Tuned for a typical month of 3-5 partners and 10-15 for strong builds. Last `npm run balance`: median 4.0, 90th percentile 10.7, best random build 15.7; a strong man 11.0, a strong woman 14.7.
+The description is a stat too: the town's overall verdict on it moves the score by up to about ±35% (`npm run check`: 9.1 partners a month without, 12.5 at the maximum). Tuned, before that, for a typical month of 3-5 partners and 10-15 for strong builds. Last `npm run balance`: median 4.0, 90th percentile 10.7, best random build 15.7; a strong man 11.0, a strong woman 14.7.
 
 - **Apps still decide most of the score** (6.4 a month with, 1.4 without). Dates are the bottleneck: a strong player already has more matches than free evenings.
 - **Nights out matter a little** (4.3 at 0 nights, 5.7 at 5), and not at all for the strongest builds, who are capped by evenings.
@@ -73,4 +76,4 @@ Where the simulated town still disagrees with reality. Update this list when cal
 - **Few distinct sincerity values.** The LLM gave only 4 levels across 1,000 people; rescaling to the speed-dating spread keeps 4 levels. Per-encounter perception noise smooths it.
 - **Dating-app use may be high.** 194 of 333 singles are on apps, including older and widowed people.
 - **Speed-dating data is narrow.** Straight NYC grad students, 2002-04, ages 18-55; age-gap effects beyond that range rely on the `agePenalty` and `decline*` knobs.
-- **Jev's bias correction is measured on one test character.** Symmetric nudges raise average luck (+11% at the 0.5 spread cap); shifting offsets down by spread²/3 is meant to cancel it. With the main-character boosts, the test character (a 28-year-old man) gets 8.46 partners a month with nudges vs 9.16 without (−8%). Other characters may drift differently.
+- **Jev's verdicts are measured on a handful of descriptions.** The plain-character baseline varies by about ±0.15 logit with age and sex (older characters get warmer verdicts), so the same description is worth a few percent more for a 45-year-old. The bias check covers race, body size and wheelchair use on one description; other traits (religion, accent, trans characters) aren't tested.

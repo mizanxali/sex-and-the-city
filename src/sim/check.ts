@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import breakupsJson from "../../data/breakups.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Tuning, simulate } from "./engine.ts";
-import { centre } from "../server/ai.ts";
+import { offsets } from "../server/ai.ts";
 import { YEAR, gssSingles, loss, report, runYear } from "./stats.ts";
 import { MIN_AGE, type PlayerSpec, buildWorld, gauss, rng } from "./world.ts";
 
@@ -61,17 +61,20 @@ const expected = 1 - Math.exp(-breakupsJson.new_couple_first_6_months.per_year /
 console.log(`couples split within six months: ${splitEarly}/${formed} vs HCMST ${(100 * expected).toFixed(0)}%`);
 assert(formed >= 10 && Math.abs(splitEarly / formed - expected) < 0.2, "breakup rate off");
 
-// 5. Jev's affinity nudges are zero-mean, so they must reshuffle who likes the player, not how much.
-//    Same months with and without nudges as wide as the server allows (centre() caps them at sd 0.5).
+// 5. Jev's nudges: differences between people reshuffle who likes the player, not how many (within 20%);
+//    the town's overall verdict on the description (appeal, capped at ±1 logit) moves the score on purpose.
 const nudge = (k: number) => { const r = rng(9000 + k); return withPlayer.agents.map(() => 0.8 * gauss(r)); };
 const ids = withPlayer.agents.slice(0, -1).map(a => a.id);
-let plain = 0, nudged = 0;
-const MONTHS = 160;
+const meanOf = (xs: number[]) => ids.reduce((s, i) => s + xs[i], 0) / ids.length;
+const withAppeal = (xs: number[], appeal: number) => offsets(xs, ids, meanOf(xs) - appeal).offsets;
+let plain = 0, nudged = 0, liked = 0;
+const MONTHS = 80;
 for (let seed = 1; seed <= MONTHS; seed++) {
-  plain += simulate(withPlayer, tuning, { days: 30, seed, focus: me }).partners[me].length;
-  nudged += simulate(withPlayer, tuning, { days: 30, seed, focus: me,
-    affinity: { agent: me, toward: centre(nudge(seed), ids), from: centre(nudge(seed + 500), ids) } }).partners[me].length;
+  const month = (aff?: (xs: number[]) => number[]) => simulate(withPlayer, tuning, { days: 30, seed, focus: me,
+    affinity: aff && { agent: me, toward: aff(nudge(seed)), from: aff(nudge(seed + 500)) } }).partners[me].length;
+  plain += month(); nudged += month(xs => withAppeal(xs, 0)); liked += month(xs => withAppeal(xs, 1));
 }
-console.log(`player partners per month: ${(plain / MONTHS).toFixed(2)} plain vs ${(nudged / MONTHS).toFixed(2)} with affinity`);
-assert(Math.abs(nudged - plain) / Math.max(plain, 1) < 0.2, "affinity nudges shift the player's overall rate");
+console.log(`player partners per month: ${(plain / MONTHS).toFixed(2)} plain, ${(nudged / MONTHS).toFixed(2)} with nudges, ${(liked / MONTHS).toFixed(2)} with max appeal`);
+assert(Math.abs(nudged - plain) / Math.max(plain, 1) < 0.2, "affinity spread shifts the player's overall rate");
+assert(liked > nudged * 1.15, "a well-liked description should pay off");
 console.log("ok");
