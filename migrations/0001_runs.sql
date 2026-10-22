@@ -1,0 +1,3 @@
+CREATE TABLE runs (id TEXT PRIMARY KEY, created INTEGER NOT NULL, name TEXT NOT NULL, score INTEGER NOT NULL,
+  seed INTEGER NOT NULL, spec TEXT NOT NULL, bio TEXT NOT NULL DEFAULT '', affinity TEXT);
+CREATE INDEX runs_rank ON runs (score DESC, created);

@@ -27,8 +27,10 @@ python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
 ```sh
 npm install
 cp .env.example .env  # ANTHROPIC_API_KEY, TYPESAFE_API_KEY
+npx wrangler d1 migrations apply sex-and-the-city --local  # once, for dev:api
 npm run dev         # the game at localhost:5173, no API calls (canned text, no Jev)
-npm run dev:api     # API on :8787 + the game, with Claude and Jev
+npm run dev:api     # API worker on :8787 (wrangler dev, local D1) + the game, with Claude and Jev
+npm run deploy      # migrate D1 and deploy to Cloudflare Workers (keys: wrangler secret put ANTHROPIC_API_KEY / TYPESAFE_API_KEY)
 npm run check       # determinism, 21+ only, and a simulated year vs GSS on held-out seeds (~4s)
 npm run calibrate   # refit data/tuning.json against GSS (~40 min)
 npm run balance     # the player's score spread across 240 random builds, and which choices pay off (~70s)

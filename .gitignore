@@ -5,3 +5,5 @@ data/raw/
 __pycache__/
 dist/
 *.db
+.wrangler/
+.dev.vars

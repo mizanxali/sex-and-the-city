@@ -4,20 +4,21 @@
   "type": "module",
   "scripts": {
     "dev": "VITE_NO_API=1 vite",
-    "dev:api": "node src/server/index.ts & vite",
-    "server": "node src/server/index.ts",
+    "dev:api": "wrangler dev & vite",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "calibrate": "node src/sim/calibrate.ts",
     "balance": "node src/sim/balance.ts",
     "jev-check": "node src/server/jev-check.ts",
-    "check": "node src/sim/check.ts"
+    "check": "node src/sim/check.ts",
+    "deploy": "wrangler d1 migrations apply sex-and-the-city --remote && wrangler deploy"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
     "@types/three": "^0.186.0",
     "typescript": "^7.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.5",
+    "wrangler": "^4.152.0"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.0.0",
