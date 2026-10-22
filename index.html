@@ -4,6 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sex and the City</title>
+  <meta name="description" content="Create a character, move them into a town of 1,000 people, and watch a month of dates, rejections and hookups. Climb the leaderboard." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="%SITE_URL%/" />
+  <meta property="og:title" content="Sex and the City" />
+  <meta property="og:description" content="Create the most irresistible character you can. A town of 1,000 people decides. Climb the leaderboard." />
+  <meta property="og:image" content="%SITE_URL%/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Sex and the City: create the most irresistible character, a town of 1,000 people decides. Climb the leaderboard." />
+  <meta name="twitter:card" content="summary_large_image" />
   <style>
     :root {
       --ink: #1d1a26; --muted: #6b6578; --line: #ece8f2; --paper: #fffdfb; --rose: #e0245e;
@@ -102,6 +114,9 @@
     .stats span { padding: 5px 11px; border-radius: 999px; background: #f4f1f7; font-size: 13px; font-weight: 600; }
     .reality { color: var(--muted); font-size: 14px; }
     .ranked { font-family: var(--display); font-size: 18px; font-weight: 700; }
+    .share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 12px; }
+    a.button { display: inline-block; font-weight: 600; padding: 9px 16px; border-radius: 999px; text-decoration: none; color: var(--ink); background: #f1edf5; }
+    #share-status { color: var(--muted); font-size: 13px; }
 
     /* leaderboard: every run, best first */
     .board-open { position: fixed; top: 14px; right: 14px; z-index: 11; box-shadow: 0 6px 18px rgba(224, 36, 94, 0.3); }

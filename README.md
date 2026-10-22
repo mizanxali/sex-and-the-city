@@ -9,6 +9,7 @@ python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
 ./scripts/download.sh                       # ATUS needs BLS_CONTACT=<email>, or download the zips by hand
 .venv/bin/python -I scripts/prep.py         # → data/{personas,calibration,attraction,schedules,breakups}.json
 .venv/bin/python -I scripts/enrich.py       # → data/traits.json (Claude Batch API, ~$2, needs .env)
+.venv/bin/python -I scripts/icons.py        # → public/og.png, apple-touch-icon.png, favicon.svg (needs npm install)
 ```
 
 ## Data sources
@@ -37,6 +38,8 @@ npm run jev-check   # Jev's verdicts on sample descriptions and a bias check (~3
 
 All CC0: [KayKit City Builder Bits](https://kaylousberg.itch.io/city-builder-bits) by Kay Lousberg (downtown, roads, props), and Kenney's [City Kit Suburban](https://kenney.nl/assets/city-kit-suburban) (houses, trees, recoloured per house with its variation textures) and [Mini Characters](https://kenney.nl/assets/mini-characters) (people). Licences in `public/models/`.
 
+The 💋 in the favicon and link-preview image is [Noto Emoji](https://github.com/googlefonts/noto-emoji) (Apache 2.0). Set `SITE_URL` when building (`SITE_URL=https://… npm run build`) so the link-preview image URL is absolute.
+
 ## Models in the game
 
 The sim decides every outcome; models only judge fit or write words.
@@ -53,7 +56,7 @@ Jev reads the player's own description. Its answers become logit nudges on the s
 
 ## Leaderboard
 
-Every run by everyone, ranked forever by body count; only the character name and score are public. The server picks each run's seed, simulates the month itself with its own Jev scores, and stores the score in SQLite (`node:sqlite`, file `game.db`, or `DB_PATH`); the browser replays the same month from the same seed. Names are moderated (real people, slurs, explicit names). "Run it back" releases the same character again: a new run with new dice. Jev scores for the story stay in memory for the newest 10,000 runs. `/api/character`, `/api/run`, `/api/story` and `/api/leaderboard` are limited per IP (20, 20, 30 and 120 per 10 minutes). Without the API the game still runs, unranked, on the calibrated model and canned text.
+Every run by everyone, ranked forever by body count; only the character name and score are public. The server picks each run's seed, simulates the month itself with its own Jev scores, and stores the score in SQLite (`node:sqlite`, file `game.db`, or `DB_PATH`); the browser replays the same month from the same seed. Names are moderated (real people, slurs, explicit names). "Run it back" releases the same character again: a new run with new dice. The recap's "Share your month" draws a 1080×1350 card in the browser (`src/web/share.ts`: name, body count, rank, the month's headline, the GSS reality line, the link) and opens the phone's share sheet, or downloads it and copies the link on desktop; "Post on 𝕏" pre-fills a post. Jev scores for the story stay in memory for the newest 10,000 runs. `/api/character`, `/api/run`, `/api/story` and `/api/leaderboard` are limited per IP (20, 20, 30 and 120 per 10 minutes). Without the API the game still runs, unranked, on the calibrated model and canned text.
 
 ## Game balance
 

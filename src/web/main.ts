@@ -8,6 +8,7 @@ import { type Affinity, eventKey, type SimEvent, SLOTS, type Tuning, simulate } 
 import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATING_BUDGET, type Sex, ageBand, buildWorld } from "../sim/world.ts";
 import "@fontsource-variable/bricolage-grotesque";
 import "@fontsource-variable/inter";
+import { type ShareData, share, xIntent } from "./share.ts";
 import { CITY_SIZE, buildCity } from "./city.ts";
 import { loadPeople, PERSON_SCALE } from "./people.ts";
 
@@ -396,12 +397,24 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       <div class="stats"><span>✨ ${n(count("spark"), "spark")}</span><span>📱 ${n(count("match"), "match", "matches")}</span><span>🍷 ${n(count("date"), "date")}</span><span>🙅 ${n(count("rejected"), "rejection")}</span><span>🪑 stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}</span></div>
       <p class="reality">For scale: only ${anyInYear}% of real single ${spec.sex === "female" ? "women" : "men"} aged ${band} had <em>any</em> partner in a whole year (GSS 2022-24).</p>
       <p class="ranked" id="ranked">${runId ? "🏆 Ranking…" : "Unranked: the API is off, so this run isn't on the leaderboard."}</p>
+      <div class="share"><button id="share">📸 Share your month</button> <a id="post-x" class="button ghost" target="_blank" rel="noopener">Post on 𝕏</a> <span id="share-status"></span></div>
       <button id="again">Run it back</button> <button id="board-recap" class="ghost">🏆 Leaderboard</button> <button id="new" class="ghost">New character</button>`;
     el.style.display = "block";
+    const card: ShareData = { name: spec.name, score: partners.size, rank: null, total: null, matches: count("match"), dates: count("date"),
+      headline: story.recap?.headline ?? null, url: location.origin,
+      reality: `Real single ${spec.sex === "female" ? "women" : "men"} aged ${band}: only ${anyInYear}% had anyone in a whole year.` };
+    const postX = $<HTMLAnchorElement>("#post-x");
+    postX.href = xIntent(card);
     if (runId) api<{ you: Row | null; total: number }>("/api/leaderboard", { limit: 0, run: runId }).then(({ you, total }) => {
       boardYou = you;
       $("#ranked").textContent = you ? `🏆 #${you.rank.toLocaleString()} of ${total.toLocaleString()} runs on the leaderboard` : "";
+      if (you) { card.rank = you.rank; card.total = total; postX.href = xIntent(card); }
     }).catch(() => ($("#ranked").textContent = ""));
+    $("#share").onclick = async () => {
+      $("#share-status").textContent = "Drawing…";
+      const how = await share(card).catch(() => null);
+      $("#share-status").textContent = how === "downloaded" ? "Saved the image and copied the link." : how ? "" : "Couldn't make the image.";
+    };
     $("#board-recap").onclick = openBoard;
     $("#again").onclick = () => { sessionStorage.setItem("rerun", sessionStorage.getItem("last") ?? "{}"); location.reload(); };
     $("#new").onclick = () => location.reload();
