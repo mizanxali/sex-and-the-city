@@ -24,6 +24,7 @@
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
     "@typesafe-ai/sdk": "^0.7.0",
+    "human-names": "^1.0.13",
     "three": "^0.186.1"
   }
 }

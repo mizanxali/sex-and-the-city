@@ -2,9 +2,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
+import townJson from "../../data/town.json" with { type: "json" };
+import traitsJson from "../../data/traits.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Affinity, eventKey, type SimEvent, SLOTS, type Tuning, simulate } from "../sim/engine.ts";
-import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATING_BUDGET, type Sex, buildWorld } from "../sim/world.ts";
+import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATINGS, RATING_BUDGET, type Sex, buildWorld } from "../sim/world.ts";
 import "@fontsource-variable/bricolage-grotesque";
 import "@fontsource-variable/inter";
 import { type ShareData, share, xIntent } from "./share.ts";
@@ -20,6 +22,7 @@ const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as
 
 // ---------------------------------------------------------------- the stage
 // Built at load, behind the form: a still, sunlit town. start() brings the same town to life.
+const base = buildWorld(); // the town without a player: identical to the one the player joins
 const stage = (async () => {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -77,7 +80,6 @@ const stage = (async () => {
     renderer.setSize(innerWidth, innerHeight); labels.setSize(innerWidth, innerHeight);
   });
 
-  const base = buildWorld(); // the town without a player: identical to the one the player joins
   const city = await buildCity(scene, base);
   // Place names. The renderer owns each wrapper's transform; we nudge the pill inside it so names never overlap.
   const placeLabels = base.venues.filter(v => !["home", "work", "transit"].includes(v.kind)).map(v => {
@@ -185,6 +187,32 @@ $("#describe").onclick = async () => {
   } catch (e) { status.textContent = (e as Error).message; }
 };
 
+// 🎲 A starting point, free: a single resident aged 21-45 under an invented name (human-names' English lists, loaded on
+// first click; its index pulls in every language, so import the lists directly), their
+// job, quirks, week and ratings in the form, the ratings scaled to spend exactly the 33-point budget.
+const traitsOf = traitsJson as Record<string, { nightlife: number; gym: number; dating_apps: boolean; interests: string[]; type: string; dealbreaker: string; flirting_style: string }>;
+const cast21to45 = townJson.filter(p => !("visitor" in p) && p.status === "single" && p.age >= 21 && p.age <= 45);
+$("#dice").onclick = async () => {
+  const p = cast21to45[Math.random() * cast21to45.length | 0], t = traitsOf[String(p.id)], sex = p.sex as Sex;
+  const names: string[] = (await (sex === "female" ? import("human-names/data/female-human-names-en.json") : import("human-names/data/male-human-names-en.json"))).default;
+  const name = names[Math.random() * names.length | 0], old = new RegExp(`\\b${p.name.split(" ")[0]}\\b`, "g"), own = (s: string) => s.replace(old, name);
+  const job = p.occupation.replaceAll("_", " "); // as the feed shows it: "janitor or building cleaner"
+  const working = !["not_in_workforce", "no_occupation"].includes(p.occupation);
+  const into = p.orientation === "bisexual" ? "everyone" : (p.orientation === "gay") === (sex === "female") ? "women" : "men";
+  (form.elements.namedItem("description") as HTMLTextAreaElement).value = `${name}, ${p.age}, ${working ? `${/^[aeiou]/.test(job) ? "an" : "a"} ${job}` : "between jobs"}. ` +
+    `Into ${into}. ${own(t.flirting_style)} Type: ${own(t.type)} Dealbreaker: ${own(t.dealbreaker)}`;
+  const r = base.agents[p.id], sum = RATINGS.reduce((s, k) => s + r[k], 0);
+  const pts = Object.fromEntries(RATINGS.map(k => [k, Math.max(1, Math.min(10, Math.round(r[k] * RATING_BUDGET / sum)))])) as Record<(typeof RATINGS)[number], number>;
+  for (let left = RATING_BUDGET - RATINGS.reduce((s, k) => s + pts[k], 0); left !== 0;) { // rounding: fix the last point or two
+    const k = RATINGS[Math.random() * RATINGS.length | 0];
+    if (left > 0 && pts[k] < 10) { pts[k]++; left--; } else if (left < 0 && pts[k] > 1) { pts[k]--; left++; }
+  }
+  fillForm({ ...readForm(), ...pts, name, age: p.age, sex, orientation: p.orientation as Orientation, employed: working,
+    nightlife: Math.min(5, t.nightlife), gym: Math.min(6, t.gym), apps: t.dating_apps, interests: t.interests.slice(0, MAX_INTERESTS) }, "");
+  $<HTMLButtonElement>("#describe").disabled = true; // the form already matches; editing the text turns it back on
+};
+$("textarea[name=description]").addEventListener("input", () => ($<HTMLButtonElement>("#describe").disabled = false));
+
 const newSeed = () => (Math.random() * 2 ** 31) | 0;
 form.addEventListener("submit", async e => {
   e.preventDefault();
@@ -205,14 +233,14 @@ form.addEventListener("submit", async e => {
   start(spec, bio, seed, affinity, runId);
   sessionStorage.setItem("last", JSON.stringify({ spec, bio, description }));
 });
-// "Run it back" reloads with the same character and releases them again: a new run, new dice.
-const last = sessionStorage.getItem("rerun");
+// "Tweak & try again" reloads with the last character filled in but not released: change something, or release
+// as is for new dice.
+const last = sessionStorage.getItem("tweak");
 if (last) {
-  sessionStorage.removeItem("rerun");
+  sessionStorage.removeItem("tweak");
   const r = JSON.parse(last);
   fillForm(r.spec, r.bio);
   (form.elements.namedItem("description") as HTMLTextAreaElement).value = r.description;
-  form.requestSubmit();
 }
 
 // ---------------------------------------------------------------- leaderboard
@@ -238,13 +266,18 @@ async function loadBoard(more = false) {
 }
 function openBoard() {
   $("#board .you-line").textContent = boardYou ? `You: #${boardYou.rank} · ${boardYou.name} · ${boardYou.score} 💋` : "";
-  $("#board").style.display = "flex";
+  popup("board");
   loadBoard();
 }
-$("#board-open").onclick = () => { $("#how").style.display = "none"; openBoard(); };
-$("#board-close").onclick = () => ($("#board").style.display = "none");
-$("#how-open").onclick = () => { $("#board").style.display = "none"; $("#how").style.display = "flex"; };
-$("#how-close").onclick = () => ($("#how").style.display = "none");
+// Leaderboard and how-it-works: at most one open, over a dimmed, blurred page.
+function popup(id: "board" | "how" | null) {
+  for (const p of ["board", "how"]) $(`#${p}`).style.display = p === id ? "flex" : "none";
+  $("#scrim").style.display = id ? "block" : "none";
+}
+$("#board-open").onclick = openBoard;
+$("#how-open").onclick = () => popup("how");
+for (const id of ["#board-close", "#how-close", "#scrim"]) $(id).onclick = () => popup(null);
+addEventListener("keydown", e => { if (e.key === "Escape") popup(null); });
 $("#board-more").onclick = () => loadBoard(true);
 
 // ---------------------------------------------------------------- the month
@@ -255,10 +288,14 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   // Words arrive while the month plays; canned text covers anything not back yet.
   let story: { lines: Record<string, string>; recap: { headline: string; recap: string } | null } = { lines: {}, recap: null };
   const feedItems = new Map<string, [HTMLLIElement, SimEvent]>();
+  let writing = !!runId; // the recap is on its way
   if (runId) api<typeof story>("/api/story", { runId, seed }).then(s => {
     story = s;
     for (const [key, [li, e]] of feedItems) if (s.lines[key]) cast(li, s.lines[key], [e.a, e.b, e.about ?? -1]);
-  }).catch(() => {});
+  }).catch(() => {}).finally(() => {
+    writing = false;
+    if ($("#recap").style.display === "block") recap(); // the month ended first (Skip, or a fast speed): swap in the words now
+  });
   const locations = res.locations!;
   const ticks = DAYS * SLOTS;
 
@@ -419,15 +456,22 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     const count = (type: string) => res.events.filter(e => e.type === type && (type !== "rejected" || e.a === me)).length;
     const el = $("#recap");
     const esc = (t: string) => t.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!);
-    el.innerHTML = `
-      ${story.recap ? `<h2 class="headline">${esc(story.recap.headline)}</h2><p>${esc(story.recap.recap)}</p>` : ""}
-      <h3>💋 ${esc(spec.name)}'s month: ${partners.size} ${partners.size === 1 ? "partner" : "partners"}</h3>
-      <ul>${[...partners].map(p => `<li>${who(p)}</li>`).join("") || "<li>Nobody. The city was not ready.</li>"}</ul>
+    const open = el.querySelector("details")?.open ? " open" : ""; // keep the list as the player left it on a redraw
+    // Two columns: the story on the left, everything to do on the right (one column without a story, or on phones).
+    el.classList.toggle("solo", !story.recap && !writing);
+    el.innerHTML = `<div class="recap-grid">
+      <div class="recap-story">${story.recap ? `<h2 class="headline">${esc(story.recap.headline)}</h2><p>${esc(story.recap.recap)}</p>`
+        : writing ? `<p class="writing">✍️ Writing your recap…</p>` : ""}</div>
+      <div class="recap-side">
+      <details${open}><summary>💋 ${esc(spec.name)}'s month: ${partners.size} ${partners.size === 1 ? "partner" : "partners"}</summary>
+        <ul>${[...partners].map(p => `<li>${who(p)}</li>`).join("") || "<li>Nobody. The city was not ready.</li>"}</ul></details>
       <div class="stats"><span>✨ ${n(count("spark"), "spark")}</span><span>📱 ${n(count("match"), "match", "matches")}</span><span>🍷 ${n(count("date"), "date")}</span><span>🙅 ${n(count("rejected"), "rejection")}</span><span>🪑 stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}</span></div>
       <p class="ranked" id="ranked">${runId ? "🏆 Ranking…" : "Unranked: the API is off, so this run isn't on the leaderboard."}</p>
       <div class="share"><button id="share">📸 Share your month</button> <a id="post-x" class="button ghost" target="_blank" rel="noopener">Post on 𝕏</a> <span id="share-status"></span></div>
-      <button id="again">Run it back</button> <button id="board-recap" class="ghost">🏆 Leaderboard</button> <button id="new" class="ghost">New character</button>`;
+      <div class="ctas"><button id="tweak">✏️ Tweak &amp; try again</button> <button id="board-recap" class="ghost">🏆 Leaderboard</button> <button id="new" class="ghost">New character</button></div>
+      </div></div>`;
     el.style.display = "block";
+    document.querySelectorAll<HTMLButtonElement>("#hud button").forEach(b => (b.disabled = true)); // the month is over
     const card: ShareData = { name: spec.name, score: partners.size, rank: null, total: null, matches: count("match"), dates: count("date"),
       headline: story.recap?.headline ?? null, url: "https://sexandthecity.fun" };
     const postX = $<HTMLAnchorElement>("#post-x");
@@ -443,7 +487,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       $("#share-status").textContent = how === "downloaded" ? "Saved the image and copied the link." : how ? "" : "Couldn't make the image.";
     };
     $("#board-recap").onclick = openBoard;
-    $("#again").onclick = () => { sessionStorage.setItem("rerun", sessionStorage.getItem("last") ?? "{}"); location.reload(); };
+    $("#tweak").onclick = () => { sessionStorage.setItem("tweak", sessionStorage.getItem("last") ?? ""); location.reload(); };
     $("#new").onclick = () => location.reload();
   }
 

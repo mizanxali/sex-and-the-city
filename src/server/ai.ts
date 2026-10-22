@@ -31,7 +31,8 @@ async function json<T>(model: "claude-opus-5-5" | "claude-haiku-5-5", system: st
   });
   if (res.stop_reason !== "end_turn") return null; // refusal or truncation: callers have canned text
   const text = res.content.find(b => b.type === "text");
-  return text && "text" in text ? JSON.parse(text.text) as T : null;
+  // No em dashes on screen, even if the prompt's ask is missed: "a — b" reads fine as "a, b".
+  return text && "text" in text ? JSON.parse(text.text.replace(/\s*—\s*/g, ", ")) as T : null;
 }
 
 const CHARACTER_SYSTEM = `You turn a player's description of a fictional character into stats for a comedic dating \
@@ -47,7 +48,7 @@ self-reported and barely moves them; concrete details do.
 - Unspecified: age 30, employed, nightlife 1, gym 1, apps true, casual true.
 - interests: up to 5, only from this list: ${INTERESTS.join(", ")}.
 - name: their first name, or invent a fitting one.
-- bio: one witty sentence in your own words (max 25 words), third person, tasteful. Never quote the player.`;
+- bio: one witty sentence in your own words (max 25 words), third person, tasteful. Never quote the player. No em dashes.`;
 
 const CHARACTER_SCHEMA = {
   type: "object", additionalProperties: false,
@@ -72,7 +73,8 @@ const STORY_SYSTEM = `You narrate one player's month in "Sex and the City", a co
 town. The simulation already decided what happened; you only put it into words. Write in second person ("you"), \
 dry and funny, specific to each person's quirks, type, dealbreaker and flirting style. Fade to black: never \
 describe sex, bodies, or anything explicit; "went home together" is as far as it goes. Never mock anyone for \
-age, race, religion, disability, weight or orientation; laugh with people, at situations.`;
+age, race, religion, disability, weight or orientation; laugh with people, at situations. Never use em dashes: use a \
+comma, a colon, parentheses, or two sentences.`;
 
 const LINES_SCHEMA = {
   type: "object", additionalProperties: false, required: ["lines"],

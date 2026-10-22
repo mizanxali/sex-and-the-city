@@ -48,7 +48,10 @@
     #setup input[type=text], #setup input:not([type]), #setup input[type=number], .describe textarea { font: inherit; font-size: 16px; font-weight: 600; color: var(--ink); padding: 10px 12px; border: 2px solid var(--line); border-radius: 12px; background: white; text-transform: none; letter-spacing: 0; }
     #setup input:focus-visible, .describe textarea:focus-visible { outline: none; border-color: var(--rose); }
     .describe { display: grid; gap: 6px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-    .describe textarea { resize: none; line-height: 1.45; font-weight: 500; font-size: 14px; }
+    .describe textarea { resize: none; line-height: 1.45; font-weight: 500; font-size: 14px; padding-right: 48px; }
+    .describe-box { position: relative; }
+    .dice { position: absolute; right: 8px; bottom: 8px; width: 34px; height: 34px; padding: 0; font-size: 17px; line-height: 1; }
+    #describe:disabled { cursor: default; transform: none; }
     .describe-row { display: flex; gap: 12px; align-items: center; font-size: 13px; color: var(--rose); min-height: 38px; }
     #bio { font-family: var(--display); font-size: 17px; color: var(--ink); margin: -4px 0 0; }
     #bio:empty { display: none; }
@@ -83,6 +86,7 @@
     #score b { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
     #speeds { display: flex; gap: 4px; }
     #hud button { padding: 7px 13px; font-size: 14px; }
+    #hud button:disabled { cursor: default; transform: none; }
 
     /* the month as cards, newest first */
     #feed { top: 14px; right: 14px; bottom: 14px; width: 360px; padding: 18px 14px 14px; overflow: auto; display: none; }
@@ -106,7 +110,22 @@
     @keyframes arrive { from { opacity: 0; transform: translateY(-8px) scale(0.98); } }
 
     /* end of month */
-    #recap { inset: 0; margin: auto; width: min(560px, 92vw); height: fit-content; max-height: 90dvh; overflow: auto; padding: 28px 32px; display: none; }
+    /* centred on the city, clear of the feed, like #hud */
+    #recap { inset: 0 388px 0 0; margin: auto; width: min(900px, calc(100vw - 416px)); height: fit-content; max-height: 90dvh; overflow: auto; padding: 28px 32px; display: none; box-sizing: border-box; }
+    #recap.solo { width: min(560px, calc(100vw - 416px)); }
+    .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 32px; align-items: start; }
+    #recap.solo .recap-grid { grid-template-columns: 1fr; }
+    #recap.solo .recap-story:empty { display: none; }
+    .recap-story p { margin: 0; }
+    .writing { color: var(--muted); font-style: italic; animation: writing 1.4s ease-in-out infinite; }
+    @keyframes writing { 50% { opacity: 0.4; } }
+    @media (prefers-reduced-motion: reduce) { .writing { animation: none; } }
+    #recap details summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-family: var(--display); font-size: 20px; font-weight: 800; }
+    #recap details summary::-webkit-details-marker { display: none; }
+    #recap details summary::after { content: "Show ▾"; flex: none; font-family: "Inter Variable", sans-serif; font-size: 13px; font-weight: 600; color: var(--muted); }
+    #recap details[open] summary::after { content: "Hide ▴"; }
+    #recap details ul { margin-top: 10px; max-height: 40dvh; overflow: auto; }
+    .ctas { display: flex; flex-wrap: wrap; gap: 8px; }
     #recap .headline { margin: 0 0 10px; font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
     #recap h3 { font-size: 20px; margin: 18px 0 8px; }
     #recap > :first-child { margin-top: 0; }
@@ -124,6 +143,7 @@
     .corner { position: fixed; top: 14px; right: 14px; z-index: 11; display: flex; gap: 8px; }
     .board-open { box-shadow: 0 6px 18px rgba(224, 36, 94, 0.3); }
     .corner .ghost { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
+    #scrim { position: fixed; inset: 0; z-index: 19; display: none; background: rgba(27, 20, 40, 0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
     #board, #how { inset: 0; margin: auto; z-index: 20; width: min(440px, 92vw); height: min(640px, 86dvh); padding: 18px 16px 14px; display: none; flex-direction: column; gap: 8px; }
     #board header { display: flex; align-items: baseline; gap: 10px; }
     #board h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
@@ -161,7 +181,12 @@
       #setup { grid-template-columns: 1fr; inset: 64px 0 0; max-height: calc(100dvh - 76px); padding: 20px 18px; gap: 18px; }
       #setup h1 { font-size: 40px; }
       .describe textarea { font-size: 16px; } /* iOS zooms into inputs under 16px */
+      /* day pips: label on its own line, the numbers in one row that shares the width */
+      .pips .group-label { flex-basis: 100%; min-width: 0; margin-bottom: 2px; }
+      .pip { flex: 1 1 0; max-width: 44px; }
+      .pip span { width: auto; }
       #recap { padding: 20px 18px; }
+      .recap-grid { grid-template-columns: 1fr; gap: 18px; }
       #recap .headline { font-size: 26px; }
     }
     /* short screens (phones on their side): score in a row, slimmer HUD. Keep in sync with COMPACT in main.ts */
@@ -176,6 +201,7 @@
     @media (max-width: 900px) and (orientation: portrait) {
       #score { top: 10px; left: 10px; right: 10px; justify-content: center; }
       #feed { top: auto; left: 10px; right: 10px; bottom: 10px; width: auto; height: 38dvh; padding: 12px 10px 10px; }
+      #recap, #recap.solo { inset: 0; width: 92vw; } /* the feed is below, not beside: centre on the screen */
       #feed h2 { font-size: 18px; margin-bottom: 8px; }
       #hud { left: 10px; right: 10px; bottom: calc(38dvh + 18px); transform: none; max-width: none; justify-content: center; padding: 6px 8px; }
       .card { grid-template-columns: 40px 1fr; gap: 10px; }
@@ -190,9 +216,12 @@
     <section class="col">
       <h1>Sex and the City</h1>
       <p class="sub">Create a character. Move them into a town of 1,000 people. Watch a month of dates, rejections and hookups, with odds from real surveys of how often people actually get lucky.</p>
-      <label class="describe"><span>Describe them, or build them by hand <small>— the town reads it: specific and charming beats bragging</small></span>
-        <textarea name="description" rows="3" maxlength="1000" placeholder="Dev, 31, a sweet but chronically late sous-chef obsessed with natural wine and indie gigs. Into women. Out most weekends, never sets foot in a gym."></textarea>
-      </label>
+      <div class="describe-box">
+        <label class="describe"><span>Describe them, or build them by hand <small>(the town reads it: specific and charming beats bragging)</small></span>
+          <textarea name="description" rows="3" maxlength="1000" placeholder="Dev, 31, a sweet but chronically late sous-chef obsessed with natural wine and indie gigs. Into women. Out most weekends, never sets foot in a gym."></textarea>
+        </label>
+        <button type="button" id="dice" class="dice ghost" title="Start from someone in the city" aria-label="Start from a random character from the city">🎲</button>
+      </div>
       <div class="describe-row"><button type="button" id="describe" class="ghost">✨ Build from description</button><span id="describe-status"></span></div>
       <p id="bio"></p>
       <div class="pair">
@@ -247,6 +276,7 @@
     <button id="how-open" class="ghost">❓ How it works</button>
     <button id="board-open" class="board-open">🏆 Leaderboard</button>
   </div>
+  <div id="scrim"></div>
   <aside id="how" class="panel" aria-labelledby="how-title">
     <header><h2 id="how-title">❓ How it works</h2><button id="how-close" class="ghost" aria-label="Close">✕</button></header>
     <div class="how-body">
@@ -297,7 +327,7 @@
       <p>A town of 1,000 has only a handful of gay singles, so for gay characters the apps also reach singles from out of town. That makes the apps their best bet, and every kind of character has a real shot at the top.</p>
 
       <h3>🎲 Fair dice</h3>
-      <p>Your score is the number of different people you went home with in 30 days. The server rolls the dice and runs your month, so nobody can fake a score. "Run it back" is the same character with new dice. The AI never decides what happens: the simulation does, and afterwards Claude writes the feed and your recap.</p>
+      <p>Your score is the number of different people you went home with in 30 days. The server rolls the dice and runs your month, so nobody can fake a score. "Tweak &amp; try again" brings your character back to edit, or to release unchanged with new dice. The AI never decides what happens: the simulation does, and afterwards Claude writes the feed and your recap.</p>
       <p class="fine">Sources: General Social Survey 2022–24 (NORC), Fisman &amp; Iyengar speed-dating experiment (Columbia), How Couples Meet and Stay Together (Stanford), American Time Use Survey 2024 (BLS), Gallup, NVIDIA Nemotron-Personas-USA.</p>
     </div>
   </aside>
