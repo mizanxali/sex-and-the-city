@@ -34,6 +34,7 @@ export interface City {
   anchor: THREE.Vector3[]; // per venue id: where people stand (in front of the door)
   indoor: boolean[];       // per venue id: people there are hidden (homes, workplaces)
   spread: number[];        // per venue id: how far people fan out around the anchor
+  night(k: number): void;  // 0 day … 1 night: streetlights fade in
 }
 
 export async function buildCity(scene: THREE.Scene, world: World): Promise<City> {
@@ -72,6 +73,7 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
   ground.position.y = -0.31; ground.receiveShadow = true;
   scene.add(ground);
 
+  const lamps: THREE.Vector3[] = []; // streetlight bulbs, lit at night
   // Roads: every third cell. Pieces chosen by which neighbours are road too.
   const isRoad = (i: number, j: number) => i >= 0 && j >= 0 && i < CELLS && j < CELLS && (i % 3 === 0 || j % 3 === 0);
   for (let i = 0; i < CELLS; i++) for (let j = 0; j < CELLS; j++) {
@@ -86,7 +88,11 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
     // Streetlights on some straights, parked cars on others.
     const h = hash(x, z);
     if (count === 2 && ((n && s) || (w && e))) {
-      if (h % 5 === 0) place("kaykit/streetlight", x + (n ? 0.85 : 0), z + (n ? 0 : 0.85), n ? -Math.PI / 2 : 0);
+      if (h % 5 === 0) {
+        const lx = x + (n ? 0.85 : 0), lz = z + (n ? 0 : 0.85), r = n ? -Math.PI / 2 : 0;
+        place("kaykit/streetlight", lx, lz, r);
+        lamps.push(new THREE.Vector3(-0.21, 0.92, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), r).add(new THREE.Vector3(lx, 0, lz)));
+      }
       else if (h % 7 === 0) place(pick(CARS, h), x + (n ? -0.45 : 0), z + (n ? 0 : -0.45), n ? 0 : Math.PI / 2);
     }
   }
@@ -187,5 +193,20 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
     scene.add(merged);
   }
 
-  return { anchor, indoor, spread };
+  // Streetlights at night: a warm bulb and a pool on the road, faked with additive glow (dozens of real lights cost every pixel).
+  const canvas = Object.assign(document.createElement("canvas"), { width: 64, height: 64 }), ctx = canvas.getContext("2d")!;
+  const fade = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  fade.addColorStop(0, "#fff"); fade.addColorStop(1, "#000");
+  ctx.fillStyle = fade; ctx.fillRect(0, 0, 64, 64);
+  const glow = { transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false };
+  const poolLight = new THREE.MeshBasicMaterial({ ...glow, color: 0xffb860, map: new THREE.CanvasTexture(canvas) });
+  const bulbLight = new THREE.MeshBasicMaterial({ ...glow, color: 0xfff0c0 });
+  const pools = new THREE.InstancedMesh(new THREE.PlaneGeometry(2.2, 2.2).rotateX(-Math.PI / 2), poolLight, lamps.length);
+  const bulbs = new THREE.InstancedMesh(new THREE.SphereGeometry(0.06, 8, 6), bulbLight, lamps.length);
+  const m = new THREE.Matrix4();
+  lamps.forEach((p, k) => { pools.setMatrixAt(k, m.makeTranslation(p.x, 0.11, p.z)); bulbs.setMatrixAt(k, m.makeTranslation(p.x, p.y, p.z)); });
+  scene.add(pools, bulbs);
+  const night = (k: number) => { poolLight.opacity = 0.7 * k; bulbLight.opacity = k; };
+
+  return { anchor, indoor, spread, night };
 }

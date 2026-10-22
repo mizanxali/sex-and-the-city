@@ -532,6 +532,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     scene.background = sky.copy(night).lerp(day, light);
     hemi.intensity = 0.9 + 0.9 * light; sun.intensity = 0.3 + 2.6 * light; // never too dark to see the colours
     sun.position.set(Math.cos((hour / 24) * 2 * Math.PI) * 20, 25, 12);
+    city.night(Math.min(1, Math.max(0, 1 - light * 2))); // lamps on through dusk and dawn
     $("#clock").textContent = clock(k, true);
     const here = locations[k * N + me];
     if (here !== shownVenue) { shownVenue = here; tagWhere.textContent = here === world.agents[me].home ? "home" : world.venues[here].name; }
