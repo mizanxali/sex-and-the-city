@@ -243,7 +243,14 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   // ------------------------------------------------------------ HUD and feed
   let t = 0, speed = 4, paused = false, nextEvent = 0;
   const partners = new Set<number>();
-  $("#hud").style.display = "flex"; $("#feed").style.display = "block";
+  let matches = 0, dates = 0;
+  const tally = () => {
+    $("#matches").innerHTML = `📱 <b>${matches}</b> ${matches === 1 ? "match" : "matches"}`;
+    $("#dates").innerHTML = `🍷 <b>${dates}</b> ${dates === 1 ? "date" : "dates"}`;
+    $("#bodies").innerHTML = `💋 <b>${partners.size}</b> body count`;
+  };
+  tally();
+  $("#hud").style.display = $("#score").style.display = "flex"; $("#feed").style.display = "block";
   $("#speeds").append(...SPEEDS.map(s => {
     const b = document.createElement("button");
     b.className = "ghost"; b.textContent = `${s}×`; b.setAttribute("aria-pressed", String(s === speed));
@@ -305,6 +312,9 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
 
   function show(e: SimEvent) {
     if (e.type === "hookup") partners.add(other(e));
+    if (e.type === "match") matches++;
+    if (e.type === "date") dates++;
+    tally();
     if (e.type === "gossip" && e.a !== me) { // one card per night: who told how many friends, both sides
       const them = e.b === me ? e.about! : e.b, key = `${e.tick}|${them}`;
       const g = gossipLines.get(key) ?? { li: card(e.tick, outcome(e), ""), mine: 0, theirs: 0 };
@@ -378,7 +388,6 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     $("#clock").textContent = clock(k);
     const here = locations[k * N + me];
     if (here !== shownVenue) { shownVenue = here; tagWhere.textContent = here === world.agents[me].home ? "home" : world.venues[here].name; }
-    $("#score").textContent = `💋 ${partners.size}`;
 
     renderer.render(scene, camera);
     labels.render(scene, camera);

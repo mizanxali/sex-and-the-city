@@ -64,9 +64,11 @@
     .go { font-family: var(--display); font-size: 20px; font-weight: 800; padding: 16px 20px; border-radius: 16px; background: linear-gradient(100deg, #e0245e, #ff5a6a); box-shadow: 0 6px 18px rgba(224, 36, 94, 0.35); }
 
     /* playback HUD */
-    #hud { top: 14px; left: 14px; padding: 8px 10px 8px 18px; display: none; gap: 8px; align-items: center; flex-wrap: wrap; max-width: calc(100vw - 400px); }
+    #hud { bottom: 14px; left: calc((100vw - 388px) / 2); transform: translateX(-50%); padding: 8px 10px 8px 18px; display: none; gap: 8px; align-items: center; flex-wrap: wrap; max-width: calc(100vw - 416px); }
     #clock { font-size: 17px; font-weight: 700; min-width: 178px; font-variant-numeric: tabular-nums; }
-    #score { font-size: 22px; font-weight: 800; padding: 2px 14px; margin-right: 6px; border-radius: 999px; background: #ffe3ec; color: var(--rose); }
+    #score { top: 14px; left: 14px; padding: 10px; display: none; flex-direction: column; gap: 6px; }
+    #score span { display: flex; align-items: baseline; gap: 5px; padding: 3px 12px; border-radius: 999px; background: #ffe3ec; color: var(--rose); font-size: 13px; font-weight: 600; white-space: nowrap; }
+    #score b { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
     #speeds { display: flex; gap: 4px; }
     #hud button { padding: 7px 13px; font-size: 14px; }
 
@@ -154,9 +156,9 @@
     </section>
   </form>
 
+  <div id="score" class="panel"><span id="matches"></span><span id="dates"></span><span id="bodies"></span></div>
   <div id="hud" class="panel">
     <span id="clock"></span>
-    <span id="score"></span>
     <button id="pause" class="ghost">Pause</button>
     <span id="speeds"></span>
     <button id="skip" class="ghost">Skip to end</button>
