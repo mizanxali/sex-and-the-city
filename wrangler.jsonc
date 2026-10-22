@@ -17,5 +17,7 @@
     { "pattern": "sexandthecity.fun", "custom_domain": true },
     { "pattern": "www.sexandthecity.fun", "custom_domain": true }
   ],
+  // Run next to the Anthropic API: from some edge locations its calls came back 403 "Request not allowed".
+  "placement": { "mode": "targeted", "hostname": "api.anthropic.com" },
   "observability": { "enabled": true }
 }
