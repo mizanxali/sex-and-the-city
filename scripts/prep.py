@@ -234,8 +234,48 @@ def schedules():
     print(f"  {len(out['groups'])} groups; pooled across ages: {[g for g, v in out['groups'].items() if 'pooled_ages' in v]}")
 
 
+# ------------------------------------------------- HCMST 2017→2020 → breakup rates
+def breakups():
+    """Breakups per year for unmarried couples, by how long they'd been together. Couples partnered in 2017,
+    followed up in 2020; time at risk split by relationship age (piecewise-constant hazard)."""
+    months = {m: i for i, m in enumerate(["January", "February", "March", "April", "May", "June", "July",
+                                          "August", "September", "October", "November", "December"])}
+    d = pd.read_stata(RAW / "hcmst/hcmst.dta")
+    d = d[d.w2_section.isin(["C, still partnered w 2017 unmarried partner", "no longer partnered w 2017 unmarried partner"])
+          & d.w1_relate_duration_in2017_years.notna()]
+    w1, w2 = 2017 + 6.8 / 12, 2020 + 8.3 / 12  # wave 1 fielded Jul-Aug 2017, wave 2 Sep-Oct 2020
+
+    def hazard(g, lo, hi):  # breakups per year while the relationship was lo..hi years old
+        events = exposure = n = 0.0
+        for _, r in g.iterrows():
+            w = r.w2_attrition_adj_weights
+            broke = r.w2_section.startswith("no longer")
+            end = w2
+            if broke and not pd.isna(r.w2_breakup_year):
+                end = min(max(r.w2_breakup_year + (months.get(r.w2_breakup_month, 6) + 0.5) / 12, w1), w2)
+            elif broke:
+                end = (w1 + w2) / 2
+            start = max(r.w1_relate_duration_in2017_years, 0)  # relationship age at wave 1
+            exposure += w * max(0.0, min(hi, start + end - w1) - max(lo, start))
+            if broke and lo <= start + end - w1 < hi:
+                events += w; n += 1
+        return {"per_year": round(events / exposure, 3), "breakups": int(n)}
+
+    noncohab = d[d.w1_partnership_status_cohab == "in unmarried noncohab partnership"]
+    out = {"source": "HCMST 2017-2020 (Rosenfeld, Thomas & Hausen), unmarried couples, weighted by w2_attrition_adj_weights",
+           "new_couple_first_6_months": hazard(noncohab, 0, 0.5),  # dating, not living together: couples the sim makes
+           "new_couple_6_to_24_months": hazard(noncohab, 0.5, 2),
+           "unmarried_any_duration": hazard(d, 0, 100)}           # everyone already partnered when the year starts
+    write("breakups.json", out)
+    print(" ", out)
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1:  # one step, e.g. `prep.py breakups`
+        globals()[sys.argv[1]]()
+        sys.exit()
     cal = gss()
     attraction()
     personas(cal)
     schedules()
+    breakups()

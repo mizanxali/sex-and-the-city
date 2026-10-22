@@ -1,0 +1,15 @@
+{
+ "source": "HCMST 2017-2020 (Rosenfeld, Thomas & Hausen), unmarried couples, weighted by w2_attrition_adj_weights",
+ "new_couple_first_6_months": {
+  "per_year": 1.657,
+  "breakups": 15
+ },
+ "new_couple_6_to_24_months": {
+  "per_year": 0.302,
+  "breakups": 30
+ },
+ "unmarried_any_duration": {
+  "per_year": 0.171,
+  "breakups": 144
+ }
+}

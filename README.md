@@ -7,7 +7,7 @@ Comedy dating sim grounded in real data: create a character, drop them into a to
 ```sh
 python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
 ./scripts/download.sh                       # ATUS needs BLS_CONTACT=<email>, or download the zips by hand
-.venv/bin/python -I scripts/prep.py         # → data/{personas,calibration,attraction,schedules}.json
+.venv/bin/python -I scripts/prep.py         # → data/{personas,calibration,attraction,schedules,breakups}.json
 .venv/bin/python -I scripts/enrich.py       # → data/traits.json (Claude Batch API, ~$2, needs .env)
 ```
 
@@ -16,6 +16,7 @@ python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
 - Personas: [NVIDIA Nemotron-Personas-USA](https://huggingface.co/datasets/nvidia/Nemotron-Personas-USA), CC BY 4.0. Sampled, filtered to 21+, and extended with generated traits.
 - Partner counts and relationship status: [General Social Survey](https://gss.norc.org) 2022 and 2024, NORC at the University of Chicago.
 - Attraction model: Fisman, Iyengar, Kamenica & Simonson (2006), speed dating experiment, Columbia University.
+- Breakup rates: Rosenfeld, Michael J., Reuben J. Thomas, and Sonia Hausen. 2023. [How Couples Meet and Stay Together 2017-2020-2022](https://data.stanford.edu/hcmst2017) combined dataset. Stanford University Libraries. Its data use agreement asks users to cite it and to tell the contact person (mrosenfe@stanford.edu) about work that uses it.
 - Daily schedules: [American Time Use Survey](https://www.bls.gov/tus/) 2024, U.S. Bureau of Labor Statistics.
 - Orientation rates: Gallup LGBTQ+ identification, [2025](https://news.gallup.com/poll/656708/lgbtq-identification-rises.aspx) and [2026](https://news.gallup.com/poll/702206/lgbtq-identification-holds.aspx) reports.
 
@@ -52,11 +53,12 @@ Jev's answers become zero-mean logit nudges on the calibrated speed-dating model
 
 Where the simulated town still disagrees with reality. Update this list when calibration changes.
 
-- **Young singles' partner counts are the wrong shape.** Women 21-29 are too concentrated (25% with 3+ partners a year vs 14% in GSS, 26% with exactly 1 vs 42%); men 21-29 too thin at the top (14% with 3+ vs 28%). The speed-dating model has men saying yes more (49% vs 37%), so young women collect the most sparks.
-- **Men 45-64 cluster at 2 partners** (15% vs 3%) and miss the 3+ tail (4% vs 14%).
-- **`openPartnered` (0.1) is a guess, not fitted.** GSS's "2+ partners while partnered" rate (14-15%) counts people who paired up mid-year, so it can't serve as a target.
-- **Large fitted knobs.** `chat` 21.7 and `appSwipes` 17 compensate for a quiet town (0.4 nights out a week on average) and most chats being between incompatible people. They're curve-fit, not measured.
+- **Young men miss the 3+ tail.** Men 21-29: 13% with 3+ partners a year vs 28% in GSS, too many with exactly 1-2. Breakups didn't move it; everyone in the town has similar odds, while in reality a small group has most of the partners.
+- **Young women have too few with exactly 1 partner** (31% vs 42%) and slightly too many with 3+ (17% vs 14%). Better than before breakups (26% and 25%). The speed-dating model has men saying yes more (49% vs 37%), so young women collect the most sparks.
+- **Middle-aged singles are too active.** Women 45-64: 60% with no partner vs 73%. Men 45-64 cluster at 2 partners (13% vs 3%) and miss the 3+ tail (6% vs 14%).
+- **Large fitted knobs.** `chat` 32.5 and `appSwipes` 6.15 compensate for a quiet town (0.4 nights out a week on average) and most chats being between incompatible people. They're curve-fit, not measured.
+- **Breakup rates rest on few couples.** The first-six-months rate (1.66 a year) comes from 15 HCMST breakups. Couples formed in town are treated as dating, not living together, for as long as they last; married couples never split (1.5% a year in HCMST).
 - **Few distinct sincerity values.** The LLM gave only 3 levels (7-9); rescaling to the speed-dating spread keeps 3 levels. Per-encounter perception noise smooths it.
 - **Dating-app use may be high.** 105 of 180 singles are on apps, including older and widowed people.
 - **Speed-dating data is narrow.** Straight NYC grad students, 2002-04, ages 18-55; age-gap effects beyond that range rely on the `agePenalty` and `decline*` knobs.
-- **Jev's bias correction is measured on one test character.** Symmetric nudges raise average luck (+11% at the 0.5 spread cap); shifting offsets down by spread²/3 cancelled it for a 28-year-old man (0.62 vs 0.63 partners a month). Other characters may drift by a few percent.
+- **Jev's bias correction is measured on one test character.** Symmetric nudges raise average luck (+11% at the 0.5 spread cap); shifting offsets down by spread²/3 was meant to cancel it, but after the breakup re-fit the test character (a 28-year-old man) gets 0.59 partners a month with nudges vs 0.70 without (−16%, inside the check's 20% bound). Other characters may drift differently.

@@ -1,7 +1,8 @@
 // Deterministic town simulation. Everyone, player included, follows the same rules:
 // move by real schedules → chat when co-located → both judge (speed-dating model) → date → maybe hook up.
 import attractionJson from "../../data/attraction.json" with { type: "json" };
-import { type Agent, type Place, type Rng, type Sex, type World, DAYTYPES, PLACES, gauss, rng } from "./world.ts";
+import breakupsJson from "../../data/breakups.json" with { type: "json" };
+import { type Agent, type Place, type Rng, type Sex, type Status, type World, DAYTYPES, PLACES, gauss, rng } from "./world.ts";
 
 export interface Tuning {
   chat: number;          // multiplier on per-venue chat rates
@@ -9,14 +10,14 @@ export interface Tuning {
   hookupDate: number;    // hookup after a date, × mutual desire
   appSwipes: number;     // profiles an app user judges per day
   couple: number;        // chance two singles become a couple after hooking up
-  openPartnered: number; // how available someone in a relationship is (multiplies their yes); not fitted, see DEFAULT_TUNING
+  openPartnered: number; // how available someone in a relationship is (multiplies their yes)
   openMarried: number;
   agePenalty: number;    // extra logit penalty per (age gap / 10)^2; speed dating only saw ages 18-55
   declineFemale: number; // interest in dating falls by exp(-decline) per decade past 30 (GSS: most single 65+ have no partner)
   declineMale: number;
 }
 
-export type EventType = "spark" | "rejected" | "match" | "date" | "stood_up" | "hookup" | "couple" | "gossip";
+export type EventType = "spark" | "rejected" | "match" | "date" | "stood_up" | "hookup" | "couple" | "breakup" | "gossip";
 export interface SimEvent { tick: number; type: EventType; a: number; b: number; venue: number; about?: number }
 export const eventKey = (e: SimEvent) => `${e.tick}:${e.type}:${e.a}:${e.b}`;
 
@@ -33,7 +34,8 @@ export interface SimOptions {
 export interface Affinity { agent: number; toward: number[]; from: number[] } // toward[i]: i judging agent; from[i]: agent judging i
 
 export interface SimResult {
-  partners: number[][]; // distinct partners per agent during the run
+  partners: number[][]; // distinct partners per agent during the run (in town; a starting partner lives elsewhere)
+  status: Status[];     // relationship status when the run ends
   events: SimEvent[];
   locations?: Uint16Array; // [tick * agents + agent] = venue id
 }
@@ -42,6 +44,10 @@ export const SLOTS = 48; // 30-minute slots starting 04:00
 const DATE_SLOT = 30, DATE_LEN = 4, LATE_SLOT = 36, APP_SLOT = 36, MORNING_SLOT = 10; // 19:00, 2h, 22:00, 22:00, 09:00
 const PERCEPTION_SD = 1; // strangers misjudge you by about a point
 const ANOTHER_DATE = 0.6;
+// HCMST: dating couples split fast at first, slower after six months; couples already together when the run starts
+// (partner out of town, unknown duration) at the all-durations rate. Married couples don't split (1.5%/yr; ponytail).
+const SPLIT_EARLY = breakupsJson.new_couple_first_6_months.per_year / 365, SPLIT_LATER = breakupsJson.new_couple_6_to_24_months.per_year / 365;
+const SPLIT_ESTABLISHED = breakupsJson.unmarried_any_duration.per_year / 365, EARLY_DAYS = 182;
 const GOSSIP_PENALTY = 0.7; // logit hit for someone who just slept with your friend
 // ponytail: relative chat rates per 30 min are a judgment call; tuning.chat scales them all to fit GSS.
 const CHAT_RATE: Partial<Record<Place, number>> = {
@@ -72,7 +78,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
   const ovSd = Math.sqrt(samples.reduce((s, v) => s + (v - ovMean) ** 2, 0) / samples.length) || 1;
 
   const status = agents.map(a => a.status);
-  const partnerOf = new Int32Array(N).fill(-1);
+  const partnerOf = new Int32Array(N).fill(-1), coupledOn = new Int32Array(N); // day the couple formed
   const seeking = agents.map(a => Math.exp(-(a.sex === "female" ? tuning.declineFemale : tuning.declineMale) * Math.max(0, a.age - 30) / 10));
   const openness = (i: number) => seeking[i] * (status[i] === "single" ? 1 : status[i] === "married" ? tuning.openMarried : tuning.openPartnered);
   const heard = agents.map(() => new Set<number>()); // people i heard hooked up with i's friend
@@ -136,7 +142,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
       }
     }
     if (status[i] === "single" && status[j] === "single" && r() < tuning.couple) {
-      status[i] = status[j] = "partnered"; partnerOf[i] = j; partnerOf[j] = i;
+      status[i] = status[j] = "partnered"; partnerOf[i] = j; partnerOf[j] = i; coupledOn[i] = coupledOn[j] = Math.floor(tick / SLOTS);
       emit({ tick, type: "couple", a: i, b: j, venue });
     }
   }
@@ -178,6 +184,14 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
     const prevTick = tick - 1, prevWd = (startWeekday + Math.floor(prevTick / SLOTS)) % 7;
     const prevOff = ((prevWd <= 3 ? 0 : prevWd - 3) * SLOTS + ((prevTick % SLOTS) + SLOTS) % SLOTS) * P;
     const off = (dt * SLOTS + slot) * P;
+
+    if (slot === MORNING_SLOT) for (let i = 0; i < N; i++) { // breakups, decided over breakfast
+      const j = partnerOf[i];
+      if (status[i] !== "partnered" || j < i && j !== -1) continue; // each couple once
+      if (r() >= (j === -1 ? SPLIT_ESTABLISHED : day - coupledOn[i] < EARLY_DAYS ? SPLIT_EARLY : SPLIT_LATER)) continue;
+      status[i] = "single"; partnerOf[i] = -1;
+      if (j !== -1) { status[j] = "single"; partnerOf[j] = -1; emit({ tick, type: "breakup", a: i, b: j, venue: agents[i].home }); }
+    }
 
     for (const act of agenda.get(tick) ?? []) {
       const { a, b, venue } = act, p = pair(a, b);
@@ -243,11 +257,9 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
     }
   }
 
-  return { partners: partners.map(s => [...s].sort((x, y) => x - y)), events, locations };
+  return { partners: partners.map(s => [...s].sort((x, y) => x - y)), status, events, locations };
 }
 
-// ponytail: openPartnered is a guess (≈4× married). GSS's partnered "2+ partners" rate counts people who
-// paired up mid-year, so it can't be fitted against; revisit if a cleaner target turns up.
 export const DEFAULT_TUNING: Tuning = {
   chat: 4, hookupNight: 0.6, hookupDate: 2, appSwipes: 12, couple: 0.3, openPartnered: 0.1, openMarried: 0.03,
   agePenalty: 0.5, declineFemale: 0.3, declineMale: 0.2,

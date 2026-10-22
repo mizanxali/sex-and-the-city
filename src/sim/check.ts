@@ -1,13 +1,14 @@
 // The one check for the sim: npm run check. Fails loudly if the town drifts from reality or stops being deterministic.
 import assert from "node:assert/strict";
+import breakupsJson from "../../data/breakups.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Tuning, simulate } from "./engine.ts";
 import { centre } from "../server/ai.ts";
-import { gssSingles, loss, report, runYear } from "./stats.ts";
+import { YEAR, gssSingles, loss, report, runYear } from "./stats.ts";
 import { MIN_AGE, type PlayerSpec, buildWorld, gauss, rng } from "./world.ts";
 
 const tuning = tuningJson as Tuning;
-const HELD_OUT = [101, 102, 103, 104, 105, 106, 107, 108]; // calibration fits seeds 1-8
+const HELD_OUT = [101, 102, 103, 104, 105, 106, 107, 108]; // calibration fits seeds 1-16
 
 // 1. Nobody under 21, and the player can't be either.
 const world = buildWorld();
@@ -45,7 +46,22 @@ for (const sex of ["female", "male"]) {
   const r = s.extra[`${sex}|married`].rate;
   assert(r > 0.005 && r < 0.05, `married ${sex} affair rate ${r} outside 0.5-5%`);
 }
-// 4. Jev's affinity nudges are zero-mean, so they must reshuffle who likes the player, not how much.
+// 4. Couples formed in town split at HCMST's rate: within six months, 1 - exp(-rate / 2) of them.
+let formed = 0, splitEarly = 0;
+for (const seed of HELD_OUT.slice(0, 4)) {
+  const ev = simulate(world, tuning, { days: YEAR, seed, recordAll: true }).events;
+  const since = new Map<number, number>();
+  for (const e of ev) {
+    if (e.type === "couple" && e.tick < (YEAR - 182) * 48) { since.set(e.a, e.tick).set(e.b, e.tick); formed++; }
+    if (e.type === "breakup" && since.has(e.a) && e.tick - since.get(e.a)! < 182 * 48) splitEarly++;
+    if (e.type === "breakup") { since.delete(e.a); since.delete(e.b); }
+  }
+}
+const expected = 1 - Math.exp(-breakupsJson.new_couple_first_6_months.per_year / 2);
+console.log(`couples split within six months: ${splitEarly}/${formed} vs HCMST ${(100 * expected).toFixed(0)}%`);
+assert(formed >= 10 && Math.abs(splitEarly / formed - expected) < 0.2, "breakup rate off");
+
+// 5. Jev's affinity nudges are zero-mean, so they must reshuffle who likes the player, not how much.
 //    Same months with and without nudges as wide as the server allows (centre() caps them at sd 0.5).
 const nudge = (k: number) => { const r = rng(9000 + k); return withPlayer.agents.map(() => 0.8 * gauss(r)); };
 const ids = withPlayer.agents.slice(0, -1).map(a => a.id);

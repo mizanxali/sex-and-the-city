@@ -83,7 +83,7 @@ const RECAP_SCHEMA = {
   properties: { headline: { type: "string" }, recap: { type: "string" } },
 };
 
-const STORY_TYPES = new Set(["hookup", "couple", "date", "spark", "match", "stood_up", "rejected"]);
+const STORY_TYPES = new Set(["hookup", "couple", "breakup", "date", "spark", "match", "stood_up", "rejected"]);
 const MAX_LINES = 40;
 
 export async function story(spec: PlayerSpec, bio: string, world: World, res: SimResult, me: number) {
@@ -104,6 +104,7 @@ export async function story(spec: PlayerSpec, bio: string, world: World, res: Si
       case "stood_up": return e.a === me ? `${x} didn't show up to your date at ${at}; you waited.` : `You didn't show up to your date with ${x} at ${at}; they waited.`;
       case "hookup": return `You and ${x} went home together.`;
       case "couple": return `You and ${x} became an official couple.`;
+      case "breakup": return `You and ${x} broke up.`;
       default: return "";
     }
   };

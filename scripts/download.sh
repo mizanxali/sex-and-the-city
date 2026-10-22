@@ -14,6 +14,10 @@ get() { # dir url [user-agent]
 for y in 2022 2024; do get gss https://gss.norc.org/content/dam/gss/get-the-data/documents/stata/${y}_stata.zip; done
 # Columbia speed dating experiment (Fisman & Iyengar), via Gelman ARM examples (OpenML mirror unreachable)
 get speeddating "http://www.stat.columbia.edu/~gelman/arm/examples/speed.dating/Speed%20Dating%20Data.csv"
+# How Couples Meet and Stay Together 2017-2022 (Stanford) — breakup rates. Data use agreement: cite it, don't
+# try to identify anyone, tell the contact person (mrosenfe@stanford.edu) about work that uses it.
+mkdir -p hcmst
+[ -s hcmst/hcmst.dta ] || curl -fsSL -o hcmst/hcmst.dta "https://stacks.stanford.edu/file/druid:hg921sg6829/HCMST%202017%20to%202022%20small%20public%20version%202.2.dta"
 
 # ATUS 2024 (BLS) — activity file has where/when, summary file has age/sex/day.
 # BLS 403s any request whose User-Agent lacks a contact email.

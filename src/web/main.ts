@@ -276,6 +276,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       case "stood_up": return e.a === me ? `${who(e.b)} stood you up.` : `You stood up ${who(e.a)}.`;
       case "hookup": return `Went home with ${who(other(e))}.`;
       case "couple": return `You and ${who(other(e))} are official now.`;
+      case "breakup": return `You and ${who(other(e))} called it off.`;
       case "gossip": return `${who(e.b)} told you about their night with ${who(e.about!)}.`; // other cases grouped in show()
     }
   }
@@ -299,6 +300,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       case "stood_up": return e.a === me ? { emoji: "🪑", title: "Stood up", tone: "meh" } : { emoji: "👻", title: "You ghosted", tone: "meh" };
       case "hookup": return { emoji: "💋", title: "Went home together", tone: "love" };
       case "couple": return { emoji: "💘", title: "It's official", tone: "love" };
+      case "breakup": return { emoji: "💔", title: "It's over", tone: "meh" };
       case "gossip": return e.a === me ? { emoji: "👂", title: "Heard some gossip", tone: "gossip" } : { emoji: "🗣️", title: "Word gets around", tone: "gossip" };
     }
   }
@@ -328,9 +330,9 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     const li = card(e.tick, outcome(e), describe(e));
     feed.append(li);
     feedItems.set(eventKey(e), li);
-    if (["hookup", "spark", "match", "rejected", "couple"].includes(e.type)) {
-      tagName.textContent = `${spec.name} ${{ hookup: "💋", spark: "✨", match: "📱", rejected: "🙅", couple: "💘" }[e.type as string]}`;
-      if (e.type !== "rejected" || e.a === me) people.emote(e.type !== "rejected"); // nod at good news, head-shake at a no
+    if (["hookup", "spark", "match", "rejected", "couple", "breakup"].includes(e.type)) {
+      tagName.textContent = `${spec.name} ${{ hookup: "💋", spark: "✨", match: "📱", rejected: "🙅", couple: "💘", breakup: "💔" }[e.type as string]}`;
+      if (e.type !== "rejected" || e.a === me) people.emote(e.type !== "rejected" && e.type !== "breakup"); // nod at good news, head-shake at bad
       setTimeout(() => tagName.textContent = spec.name, 2500);
     }
   }

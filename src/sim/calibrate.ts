@@ -5,7 +5,7 @@ import { DEFAULT_TUNING, type Tuning } from "./engine.ts";
 import { loss, report, runYear } from "./stats.ts";
 import { buildWorld } from "./world.ts";
 
-const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8]; // fewer is too noisy: one changed draw reshuffles the whole year
+const SEEDS = Array.from({ length: 16 }, (_, k) => k + 1); // fewer is too noisy: one changed draw reshuffles the whole year
 const CAPS: Partial<Record<keyof Tuning, number>> = { openPartnered: 1, openMarried: 1 };
 
 const world = buildWorld();
@@ -19,7 +19,6 @@ for (let step = Math.log(1.5); step > Math.log(1.05); step /= 2) {
   while (improved) {
     improved = false;
     for (const k of Object.keys(best) as (keyof Tuning)[]) {
-      if (k === "openPartnered") continue; // no clean target, see DEFAULT_TUNING
       for (const dir of [1, -1]) {
         const v = +Math.min(CAPS[k] ?? Infinity, best[k] * Math.exp(dir * step)).toPrecision(3); // score what we save
         if (v === best[k]) continue;

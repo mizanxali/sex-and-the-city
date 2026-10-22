@@ -1,5 +1,5 @@
-// Compare a simulated year against GSS: partners last year for people who started single,
-// and "someone on the side" rates for people who started married / partnered.
+// Compare a simulated year against GSS: partners last year for people single at the end of it,
+// and "2+ partners" rates for people married / partnered at the end.
 import calibrationJson from "../../data/calibration.json" with { type: "json" };
 import { type SimResult, type Tuning, simulate } from "./engine.ts";
 import { type World, ageBand } from "./world.ts";
@@ -17,17 +17,19 @@ export const gssSingles: Record<string, Dist> = Object.fromEntries(
 export const gssExtra = calibrationJson.extra_partner_rate as Record<string, { n: number; rate: number }>;
 
 export function summarize(world: World, results: SimResult[]) {
+  // Grouped like GSS: by status at the end of the year (the interview), counting a starting partner who lives
+  // out of town (everyone not single at the start has one), so a breakup leaves a "single with 1 partner".
   const singles: Record<string, Dist> = {}, extra: Record<string, { n: number; rate: number }> = {};
   for (const res of results) {
     for (const a of world.agents) {
       if (a.isPlayer) continue;
-      const n = res.partners[a.id].length;
-      if (a.status === "single") {
+      const n = res.partners[a.id].length + (a.status === "single" ? 0 : 1), now = res.status[a.id];
+      if (now === "single") {
         const d = singles[`${a.sex}|${ageBand(a.age)}`] ??= { n: 0, p: [0, 0, 0, 0] };
         d.n++; d.p[bucket(n)]++;
       } else {
-        const e = extra[`${a.sex}|${a.status}`] ??= { n: 0, rate: 0 };
-        e.n++; e.rate += n > 0 ? 1 : 0;
+        const e = extra[`${a.sex}|${now}`] ??= { n: 0, rate: 0 };
+        e.n++; e.rate += n > 1 ? 1 : 0;
       }
     }
   }
@@ -45,7 +47,7 @@ export function loss(s: ReturnType<typeof summarize>) {
     w += target.n;
   }
   let extraErr = 0;
-  for (const [g, t] of Object.entries(gssExtra)) if (g.endsWith("married")) extraErr += ((s.extra[g]?.rate ?? 0) - t.rate) ** 2;
+  for (const [g, t] of Object.entries(gssExtra)) extraErr += ((s.extra[g]?.rate ?? 0) - t.rate) ** 2;
   return total / w + 50 * extraErr; // affairs are rare (2%), so weight them up or the fit ignores them
 }
 
