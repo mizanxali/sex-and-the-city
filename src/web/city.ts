@@ -5,14 +5,15 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import type { Place, World } from "../sim/world.ts";
 
-// One character per block. C office core, H houses (bars, shops and gyms are mixed in), P park, S college, W churches.
+// One character per block. C offices, H houses, L houses plus one labelled place (bar, shop, gym, library…), P park,
+// S college, W churches. Labelled blocks sit on a checkerboard so names spread evenly; downtown zig-zags around two of them.
 const MAP = [
-  "HHHHHH",
-  "HHHHPH",
-  "HHCCHH",
-  "HSCCWH",
-  "HHPHHH",
-  "HHHHHH",
+  "HLHLHL",
+  "LHSHPH",
+  "HLCLCL",
+  "LCLCLH",
+  "HPHWHL",
+  "LHLHLH",
 ];
 const CELL = 2; // a lot or a road square, the size of one KayKit tile
 const CELLS = MAP.length * 3 + 1; // each block is 2×2 lots, then a road; roads on every edge
@@ -119,17 +120,15 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
   const churchLots = lots.filter(l => l.block === "W");
   let parks = 0, churches = 0;
 
-  // Labelled places go one per house block, every other block, kinds interleaved so bars don't share a corner of town.
+  // Labelled places go one per L block, kinds interleaved so bars don't share a corner of town.
   const labelled = world.venues.filter(v => ["restaurant_bar", "store", "gym", "other"].includes(v.kind));
   const rank = (v: (typeof labelled)[number]) => { const same = labelled.filter(u => u.kind === v.kind); return same.indexOf(v) / same.length; };
   labelled.sort((a, b) => rank(a) - rank(b));
-  const houseBlocks = [...new Set(lots.filter(l => l.block === "H").map(l => l.blockId))];
-  const venueLot = new Map(labelled.map((v, k) => {
-    const block = lots.filter(l => l.blockId === houseBlocks[Math.floor(k * houseBlocks.length / labelled.length)]);
-    return [v.id, block[k % block.length]];
-  }));
+  const labelBlocks = [...new Set(lots.filter(l => l.block === "L").map(l => l.blockId))];
+  if (labelBlocks.length < labelled.length) throw new Error(`MAP has ${labelBlocks.length} L blocks for ${labelled.length} labelled places`);
+  const venueLot = new Map(labelled.map((v, k) => [v.id, lots.filter(l => l.blockId === labelBlocks[k])[k % 4]]));
   const taken = new Set(venueLot.values());
-  const houses = lots.filter(l => l.block === "H" && !taken.has(l));
+  const houses = lots.filter(l => (l.block === "H" || l.block === "L") && !taken.has(l));
 
   // Friends live near each other: hand out houses in circle order.
   const homeOwners = world.agents.slice().sort((a, b) => a.circle - b.circle);
@@ -146,7 +145,7 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
       lot = venueLot.get(v.id)!;
       place(pick(kind === "work" ? TALL : SHORT, v.id), lot.x, lot.z, rot(lot));
     } else if (kind === "worship") {
-      lot = churchLots[churches++ * 2];
+      lot = churchLots[churches++ * 3]; // opposite corners, facing opposite roads
       place(pick(HOUSES, v.id + 7), lot.x, lot.z, rot(lot), 1.25, 3);
     }
     if (lot) { anchor[v.id] = front(lot); indoor[v.id] = kind === "home" || kind === "work"; spread[v.id] = 0.5; continue; }
@@ -170,7 +169,7 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
     place(TREES[0], l.x - 0.4, l.z - 0.3, 0, 2.2); place(TREES[1], l.x + 0.5, l.z + 0.4, 1, 2.2); place("kaykit/bush", l.x + 0.3, l.z - 0.6);
   }
   downtown.slice(world.venues.filter(v => v.kind === "work").length).forEach((l, k) => k === 0 ? place("kaykit/watertower", l.x, l.z, 0, 1.6) : place(pick(SHORT, k + 3), l.x, l.z, rot(l)));
-  for (const l of churchLots.filter((_, k) => k % 2)) { place(TREES[0], l.x, l.z, 0, 2.4); place("kaykit/bench", l.x, l.z + 0.8); }
+  for (const l of churchLots.filter((_, k) => k % 3)) { place(TREES[0], l.x, l.z, 0, 2.4); place("kaykit/bench", l.x, l.z + 0.8); }
   lots.filter(l => l.block === "S").forEach((l, k) => k === 0 ? place(TALL[3], l.x, l.z, rot(l)) : place(TREES[k % 2], l.x, l.z, k, 2.4));
   for (const l of lots.filter(l => l.block === "P")) {
     for (let t = 0; t < 4; t++) place(TREES[t % 2], l.x + (t % 2 ? 0.55 : -0.55), l.z + (t < 2 ? 0.55 : -0.55), t, 2);
