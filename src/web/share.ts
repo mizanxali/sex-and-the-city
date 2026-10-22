@@ -2,14 +2,14 @@
 // Phones get the native share sheet with the image attached; desktops download it and copy the text.
 export interface ShareData {
   name: string; score: number; rank: number | null; total: number | null;
-  matches: number; dates: number; headline: string | null; reality: string; url: string;
+  matches: number; dates: number; headline: string | null; url: string;
 }
 
 const W = 1080, H = 1350, PAD = 90;
 const DISPLAY = '"Bricolage Grotesque Variable", system-ui, sans-serif', BODY = '"Inter Variable", system-ui, sans-serif';
 
 export const shareText = (d: ShareData) =>
-  `${d.name} got ${d.score} 💋 in one month in Sex and the City${d.rank ? `, #${d.rank.toLocaleString()} on the leaderboard` : ""}. Make a character and beat that:`;
+  `${d.name} hit a body count of ${d.score} 💋 in one month in Sex and the City${d.rank ? `, #${d.rank.toLocaleString()} on the leaderboard` : ""}. Make a character and beat that:`;
 
 export async function drawCard(d: ShareData): Promise<Blob> {
   await Promise.all([`800 100px ${DISPLAY}`, `600 40px ${BODY}`].map(f => document.fonts.load(f)));
@@ -60,7 +60,6 @@ export async function drawCard(d: ShareData): Promise<Blob> {
   }
   g.font = `600 40px ${BODY}`; g.fillText(`📱 ${d.matches} matches   🍷 ${d.dates} dates`, PAD, y); y += 80;
   if (d.headline && y + 54 < BOTTOM) y = wrap(`“${d.headline}”`, y, `italic 700 42px ${DISPLAY}`, 54, W - 2 * PAD, y + 108 < BOTTOM ? 2 : 1) + 16;
-  if (y + 36 < BOTTOM) { g.globalAlpha = 0.85; wrap(d.reality, Math.max(y, BOTTOM - 42), `500 30px ${BODY}`, 40, W - 2 * PAD, 1); g.globalAlpha = 1; }
 
   fit(`Beat ${d.name.split(" ")[0]} → ${d.url.replace(/^https?:\/\//, "")}`, PAD, FOOTER, 800, 44, DISPLAY);
   return new Promise(resolve => c.toBlob(b => resolve(b!), "image/png"));

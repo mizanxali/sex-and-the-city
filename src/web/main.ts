@@ -1,11 +1,11 @@
 // Character form → simulate the month up front → replay it in three.js with an event feed.
 import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
-import calibrationJson from "../../data/calibration.json" with { type: "json" };
 import personasJson from "../../data/town.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Affinity, eventKey, type SimEvent, SLOTS, type Tuning, simulate } from "../sim/engine.ts";
-import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATING_BUDGET, type Sex, ageBand, buildWorld } from "../sim/world.ts";
+import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATING_BUDGET, type Sex, buildWorld } from "../sim/world.ts";
 import "@fontsource-variable/bricolage-grotesque";
 import "@fontsource-variable/inter";
 import { type ShareData, share, xIntent } from "./share.ts";
@@ -15,6 +15,8 @@ import { loadPeople, PERSON_SCALE } from "./people.ts";
 const DAYS = 30;
 const SPEEDS = [1, 4, 16, 64]; // × half an hour per 2 seconds
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+// Same queries as the CSS: small screens measure the score and HUD; portrait ones stack the feed at the bottom.
+const COMPACT = "(max-width: 900px), (max-height: 500px)", STACKED = "(max-width: 900px) and (orientation: portrait)";
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
 
 // ---------------------------------------------------------------- the stage
@@ -45,8 +47,12 @@ const stage = (async () => {
       v.set(x, y, z).applyMatrix4(camera.matrixWorldInverse);
       x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
     }
-    const side = playing && innerWidth > 900 ? 360 : 0, top = playing ? 80 : 16, margin = 16; // feed panel, HUD
-    const w = innerWidth - side - 2 * margin, h = innerHeight - top - margin;
+    // Desktop: feed on the right, score top-left. Small screens: town between the score bar and the HUD (and feed, in portrait).
+    const compact = playing && matchMedia(COMPACT).matches, margin = 16;
+    const side = playing && !matchMedia(STACKED).matches ? 360 : 0;
+    const top = compact ? $("#score").getBoundingClientRect().bottom + 8 : playing ? 80 : margin;
+    const bottom = compact ? innerHeight - $("#hud").getBoundingClientRect().top + 8 : margin;
+    const w = innerWidth - side - 2 * margin, h = innerHeight - top - bottom;
     const s = Math.max((x1 - x0) / w, (y1 - y0) / h); // world units per pixel
     const px = margin + w / 2, py = top + h / 2, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2; // city centre → this pixel
     Object.assign(camera, { left: cx - px * s, right: cx + (innerWidth - px) * s, top: cy + py * s, bottom: cy - (innerHeight - py) * s });
@@ -54,6 +60,12 @@ const stage = (async () => {
     declutter();
   };
   frame();
+  // Zoom and pan, never rotate: wheel or pinch zooms toward the cursor, drag pans, the view stays over the town.
+  const controls = new OrbitControls(camera, renderer.domElement);
+  Object.assign(controls, { enableRotate: false, zoomToCursor: true, minZoom: 1, maxZoom: 6, maxTargetRadius: CITY_SIZE / 2 });
+  controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+  controls.touches.ONE = THREE.TOUCH.PAN;
+  controls.addEventListener("change", () => declutter());
   const hemi = new THREE.HemisphereLight(0xdff2ff, 0x6a7a4a, 1);
   const sun = new THREE.DirectionalLight(0xffffff, 2);
   sun.castShadow = true;
@@ -241,16 +253,15 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   const res = simulate(world, tuningJson as Tuning, { days: DAYS, seed, focus: me, trackLocations: true, affinity });
   // Words arrive while the month plays; canned text covers anything not back yet.
   let story: { lines: Record<string, string>; recap: { headline: string; recap: string } | null } = { lines: {}, recap: null };
-  const feedItems = new Map<string, HTMLLIElement>();
+  const feedItems = new Map<string, [HTMLLIElement, SimEvent]>();
   if (runId) api<typeof story>("/api/story", { runId, seed }).then(s => {
     story = s;
-    for (const [key, li] of feedItems) if (s.lines[key]) li.querySelector("p")!.textContent = s.lines[key];
+    for (const [key, [li, e]] of feedItems) if (s.lines[key]) cast(li, s.lines[key], [e.a, e.b, e.about ?? -1]);
   }).catch(() => {});
   const locations = res.locations!;
   const ticks = DAYS * SLOTS;
 
   const { renderer, labels, scene, camera, hemi, sun, city, frame } = await stage;
-  frame(true);
   // The player's home: next door to someone in their friend circle (the town was laid out without them).
   const mate = world.circles[world.agents[me].circle].find(id => id !== me)!;
   city.anchor[world.agents[me].home] = city.anchor[world.agents[mate].home].clone().add(new THREE.Vector3(0.45, 0, 0.2));
@@ -306,6 +317,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   }));
   $("#pause").onclick = () => { paused = !paused; $("#pause").textContent = paused ? "Play" : "Pause"; };
   $("#skip").onclick = () => { t = ticks; };
+  frame(true); // after the HUD is up: on phones the framing measures it
 
   const who = (i: number) => {
     const p = personasJson[i];
@@ -330,10 +342,10 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   const n = (k: number, one: string, many = one + "s") => `${k} ${k === 1 ? one : many}`;
   const friends = (k: number) => n(k, "friend");
   const gossipLines = new Map<string, { li: HTMLLIElement; mine: number; theirs: number }>();
-  const clock = (tick: number) => {
+  const clock = (tick: number, ofMonth = false) => { // the HUD says "Day 3/30", cards just "Day 3"
     const day = Math.floor(tick / SLOTS), mins = 240 + (tick % SLOTS) * 30;
     const wd = WEEKDAYS[(day + (mins >= 1440 ? 1 : 0)) % 7], hh = Math.floor(mins / 60) % 24, mm = mins % 60;
-    return `Day ${day + 1} · ${wd} ${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+    return `Day ${day + 1}${ofMonth ? `/${DAYS}` : ""} · ${wd} ${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
   };
   const feed = $("#feed ol");
   // Every outcome gets a card: big emoji, a title in the player's terms, then the story line.
@@ -351,11 +363,25 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       case "gossip": return e.a === me ? { emoji: "👂", title: "Heard some gossip", tone: "gossip" } : { emoji: "🗣️", title: "Word gets around", tone: "gossip" };
     }
   }
-  function card(tick: number, o: ReturnType<typeof outcome>, text: string) {
+  // A card's text with its people picked out: names in the card's colour, "(age, job)" quieter. Plain text nodes, never HTML.
+  function cast(li: HTMLLIElement, text: string, ids: number[]) {
+    const names = ids.flatMap(i => personasJson[i] ? [personasJson[i].name, personasJson[i].name.split(" ")[0]] : []); // full name wins
+    const alts = names.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+    const p = li.querySelector("p")!, re = new RegExp(`\\b(${alts})\\b( \\(\\d+, [^)]*\\))?`, "g");
+    p.replaceChildren();
+    let i = 0;
+    for (const m of names.length ? text.matchAll(re) : []) {
+      p.append(text.slice(i, m.index), Object.assign(document.createElement("strong"), { textContent: m[1] }));
+      if (m[2]) p.append(Object.assign(document.createElement("small"), { textContent: m[2] }));
+      i = m.index + m[0].length;
+    }
+    p.append(text.slice(i));
+  }
+  function card(tick: number, o: ReturnType<typeof outcome>, text: string, ids: number[]) {
     const li = document.createElement("li");
     li.className = `card ${o.tone}`;
     li.innerHTML = `<span class="emoji" aria-hidden="true">${o.emoji}</span><div><header><b>${o.title}</b><time>${clock(tick)}</time></header><p></p></div>`;
-    li.querySelector("p")!.textContent = text;
+    cast(li, text, ids);
     return li;
   }
 
@@ -366,17 +392,17 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     tally();
     if (e.type === "gossip" && e.a !== me) { // one card per night: who told how many friends, both sides
       const them = e.b === me ? e.about! : e.b, key = `${e.tick}|${them}`;
-      const g = gossipLines.get(key) ?? { li: card(e.tick, outcome(e), ""), mine: 0, theirs: 0 };
+      const g = gossipLines.get(key) ?? { li: card(e.tick, outcome(e), "", []), mine: 0, theirs: 0 };
       if (!gossipLines.has(key)) { feed.append(g.li); gossipLines.set(key, g); }
       if (e.b === me) g.mine++; else g.theirs++;
       const name = personasJson[them]?.name.split(" ")[0] ?? "they";
-      g.li.querySelector("p")!.textContent = [g.mine && `You told ${friends(g.mine)} about your night with ${who(them)}.`,
-        g.theirs && `${g.mine ? name : who(them)} told ${friends(g.theirs)}.`].filter(Boolean).join(" ");
+      cast(g.li, [g.mine && `You told ${friends(g.mine)} about your night with ${who(them)}.`,
+        g.theirs && `${g.mine ? name : who(them)} told ${friends(g.theirs)}.`].filter(Boolean).join(" "), [them]);
       return;
     }
-    const li = card(e.tick, outcome(e), describe(e));
+    const li = card(e.tick, outcome(e), describe(e), [e.a, e.b, e.about ?? -1]);
     feed.append(li);
-    feedItems.set(eventKey(e), li);
+    feedItems.set(eventKey(e), [li, e]);
     if (["hookup", "spark", "match", "rejected", "couple", "breakup"].includes(e.type)) {
       tagName.textContent = `${spec.name} ${{ hookup: "💋", spark: "✨", match: "📱", rejected: "🙅", couple: "💘", breakup: "💔" }[e.type as string]}`;
       if (e.type !== "rejected" || e.a === me) people.emote(e.type !== "rejected" && e.type !== "breakup"); // nod at good news, head-shake at bad
@@ -385,8 +411,6 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   }
 
   function recap() {
-    const band = ageBand(spec.age), gss = calibrationJson.partners_last_year_single[`${spec.sex}|${band}` as keyof typeof calibrationJson.partners_last_year_single];
-    const anyInYear = Math.round(100 * (1 - gss["0"]));
     const count = (type: string) => res.events.filter(e => e.type === type && (type !== "rejected" || e.a === me)).length;
     const el = $("#recap");
     const esc = (t: string) => t.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!);
@@ -395,14 +419,12 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       <h3>💋 ${esc(spec.name)}'s month: ${partners.size} ${partners.size === 1 ? "partner" : "partners"}</h3>
       <ul>${[...partners].map(p => `<li>${who(p)}</li>`).join("") || "<li>Nobody. The city was not ready.</li>"}</ul>
       <div class="stats"><span>✨ ${n(count("spark"), "spark")}</span><span>📱 ${n(count("match"), "match", "matches")}</span><span>🍷 ${n(count("date"), "date")}</span><span>🙅 ${n(count("rejected"), "rejection")}</span><span>🪑 stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}</span></div>
-      <p class="reality">For scale: only ${anyInYear}% of real single ${spec.sex === "female" ? "women" : "men"} aged ${band} had <em>any</em> partner in a whole year (GSS 2022-24).</p>
       <p class="ranked" id="ranked">${runId ? "🏆 Ranking…" : "Unranked: the API is off, so this run isn't on the leaderboard."}</p>
       <div class="share"><button id="share">📸 Share your month</button> <a id="post-x" class="button ghost" target="_blank" rel="noopener">Post on 𝕏</a> <span id="share-status"></span></div>
       <button id="again">Run it back</button> <button id="board-recap" class="ghost">🏆 Leaderboard</button> <button id="new" class="ghost">New character</button>`;
     el.style.display = "block";
     const card: ShareData = { name: spec.name, score: partners.size, rank: null, total: null, matches: count("match"), dates: count("date"),
-      headline: story.recap?.headline ?? null, url: location.origin,
-      reality: `Real single ${spec.sex === "female" ? "women" : "men"} aged ${band}: only ${anyInYear}% had anyone in a whole year.` };
+      headline: story.recap?.headline ?? null, url: "https://sexandthecity.fun" };
     const postX = $<HTMLAnchorElement>("#post-x");
     postX.href = xIntent(card);
     if (runId) api<{ you: Row | null; total: number }>("/api/leaderboard", { limit: 0, run: runId }).then(({ you, total }) => {
@@ -452,7 +474,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
     scene.background = sky.copy(night).lerp(day, light);
     hemi.intensity = 0.9 + 0.9 * light; sun.intensity = 0.3 + 2.6 * light; // never too dark to see the colours
     sun.position.set(Math.cos((hour / 24) * 2 * Math.PI) * 20, 25, 12);
-    $("#clock").textContent = clock(k);
+    $("#clock").textContent = clock(k, true);
     const here = locations[k * N + me];
     if (here !== shownVenue) { shownVenue = here; tagWhere.textContent = here === world.agents[me].home ? "home" : world.venues[here].name; }
 

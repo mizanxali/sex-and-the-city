@@ -8,10 +8,10 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="%SITE_URL%/" />
+  <meta property="og:url" content="https://sexandthecity.fun/" />
   <meta property="og:title" content="Sex and the City" />
   <meta property="og:description" content="Create the most irresistible character you can. A town of 1,000 people decides. Climb the leaderboard." />
-  <meta property="og:image" content="%SITE_URL%/og.png" />
+  <meta property="og:image" content="https://sexandthecity.fun/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Sex and the City: create the most irresistible character, a town of 1,000 people decides. Climb the leaderboard." />
@@ -34,8 +34,7 @@
     button[aria-pressed=true] { background: var(--ink); color: white; }
 
     /* character form: a game's character creator, over the town */
-    #setup { inset: 0; margin: auto; width: min(1120px, 96vw); height: fit-content; max-height: 94vh; overflow: auto; padding: 30px 34px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 34px; background: rgba(255, 253, 251, 0.82); backdrop-filter: blur(14px) saturate(1.2); }
-    @media (max-width: 860px) { #setup { grid-template-columns: 1fr; } }
+    #setup { inset: 0; margin: auto; width: min(1120px, 96vw); height: fit-content; max-height: 94dvh; overflow: auto; padding: 30px 34px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 34px; background: rgba(255, 253, 251, 0.82); backdrop-filter: blur(14px) saturate(1.2); }
     #setup .col { display: grid; align-content: start; gap: 14px; min-width: 0; }
     #setup h1 { margin: 0; font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; background: linear-gradient(100deg, #e0245e, #ff7a45 55%, #8a3ffc); -webkit-background-clip: text; background-clip: text; color: transparent; }
     #setup p.sub { margin: 0; color: var(--muted); line-height: 1.45; font-size: 15px; }
@@ -99,11 +98,14 @@
     .card.date { --tint: #eadcff; --accent: #6b35c9; }
     .card.meh { --tint: #eeeef2; --accent: #6b6578; }
     .card.meh p { color: var(--muted); }
+    .card p strong { color: var(--accent); font-weight: 700; }
+    .card.meh p strong { color: var(--ink); }
+    .card p small { color: var(--muted); font-size: 12px; }
     .card.gossip { --tint: #d9f2ea; --accent: #13795b; }
     @keyframes arrive { from { opacity: 0; transform: translateY(-8px) scale(0.98); } }
 
     /* end of month */
-    #recap { inset: 0; margin: auto; width: min(560px, 92vw); height: fit-content; max-height: 90vh; overflow: auto; padding: 28px 32px; display: none; }
+    #recap { inset: 0; margin: auto; width: min(560px, 92vw); height: fit-content; max-height: 90dvh; overflow: auto; padding: 28px 32px; display: none; }
     #recap .headline { margin: 0 0 10px; font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
     #recap h3 { font-size: 20px; margin: 18px 0 8px; }
     #recap > :first-child { margin-top: 0; }
@@ -112,7 +114,6 @@
     #recap li { padding: 8px 12px; border-radius: 10px; background: #fff4f8; border: 1px solid #ffc9dc; }
     .stats { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
     .stats span { padding: 5px 11px; border-radius: 999px; background: #f4f1f7; font-size: 13px; font-weight: 600; }
-    .reality { color: var(--muted); font-size: 14px; }
     .ranked { font-family: var(--display); font-size: 18px; font-weight: 700; }
     .share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 12px; }
     a.button { display: inline-block; font-weight: 600; padding: 9px 16px; border-radius: 999px; text-decoration: none; color: var(--ink); background: #f1edf5; }
@@ -120,7 +121,7 @@
 
     /* leaderboard: every run, best first */
     .board-open { position: fixed; top: 14px; right: 14px; z-index: 11; box-shadow: 0 6px 18px rgba(224, 36, 94, 0.3); }
-    #board { inset: 0; margin: auto; z-index: 20; width: min(440px, 92vw); height: min(640px, 86vh); padding: 18px 16px 14px; display: none; flex-direction: column; gap: 8px; }
+    #board { inset: 0; margin: auto; z-index: 20; width: min(440px, 92vw); height: min(640px, 86dvh); padding: 18px 16px 14px; display: none; flex-direction: column; gap: 8px; }
     #board header { display: flex; align-items: baseline; gap: 10px; }
     #board h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
     #board .total { color: var(--muted); font-size: 13px; flex: 1; }
@@ -138,6 +139,33 @@
     .place { font-size: 10.5px; font-weight: 600; color: var(--ink); background: rgba(255, 255, 255, 0.88); padding: 2px 7px; border-radius: 999px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18); }
     .you { display: grid; justify-items: center; font-family: var(--display); font-size: 14px; background: var(--rose); padding: 3px 10px; border-radius: 999px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); }
     .you small { font-family: "Inter Variable", sans-serif; font-size: 10px; font-weight: 500; opacity: 0.9; }
+
+    /* phones and narrow windows: one-column form, clear of the leaderboard button */
+    @media (max-width: 900px) {
+      .panel { box-sizing: border-box; } /* padding inside the vw widths, not on top */
+      #setup { grid-template-columns: 1fr; inset: 64px 0 0; max-height: calc(100dvh - 76px); padding: 20px 18px; gap: 18px; }
+      #setup h1 { font-size: 40px; }
+      .describe textarea { font-size: 16px; } /* iOS zooms into inputs under 16px */
+      #recap { padding: 20px 18px; }
+      #recap .headline { font-size: 26px; }
+    }
+    /* short screens (phones on their side): score in a row, slimmer HUD. Keep in sync with COMPACT in main.ts */
+    @media (max-width: 900px), (max-height: 500px) {
+      #score { flex-direction: row; flex-wrap: wrap; padding: 6px; }
+      #score span { padding: 2px 10px; }
+      #score b { font-size: 18px; }
+      #clock { min-width: 0; font-size: 15px; }
+      #hud button { padding: 6px 11px; }
+    }
+    /* portrait: the feed becomes a bottom sheet, HUD above it, score across the top. Keep in sync with STACKED in main.ts */
+    @media (max-width: 900px) and (orientation: portrait) {
+      #score { top: 10px; left: 10px; right: 10px; justify-content: center; }
+      #feed { top: auto; left: 10px; right: 10px; bottom: 10px; width: auto; height: 38dvh; padding: 12px 10px 10px; }
+      #feed h2 { font-size: 18px; margin-bottom: 8px; }
+      #hud { left: 10px; right: 10px; bottom: calc(38dvh + 18px); transform: none; max-width: none; justify-content: center; padding: 6px 8px; }
+      .card { grid-template-columns: 40px 1fr; gap: 10px; }
+      .card .emoji { font-size: 26px; line-height: 40px; width: 40px; height: 40px; }
+    }
   </style>
 </head>
 <body>
