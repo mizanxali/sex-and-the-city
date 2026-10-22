@@ -2,6 +2,7 @@
 // Houses and trees: Kenney City Kit Suburban (CC0), recoloured per house with its variation textures.
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import type { Place, World } from "../sim/world.ts";
 
 // One character per block. C office core, H houses (bars, shops and gyms are mixed in), P park, S college, W churches.
@@ -55,11 +56,12 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
     if (!recoloured.has(key)) recoloured.set(key, Object.assign(base.clone(), { map: palettes[k] }));
     m.material = recoloured.get(key)!;
   };
+  const town = new THREE.Group(); // every prop, merged into one mesh per material once placed
   const place = (name: string, x: number, z: number, rotY = 0, scale = 1, palette = -1) => {
     const m = loaded.get(name)!.clone();
     m.position.set(x, 0, z); m.rotation.y = rotY; m.scale.setScalar(scale);
     if (palette >= 0) m.traverse(o => { if ((o as THREE.Mesh).isMesh) recolour(o as THREE.Mesh, palette); });
-    scene.add(m);
+    town.add(m);
   };
   const hash = (x: number, z: number) => Math.abs(Math.round(x * 73 + z * 151));
   const pick = <T>(list: T[], k: number) => list[((k % list.length) + list.length) % list.length];
@@ -167,6 +169,22 @@ export async function buildCity(scene: THREE.Scene, world: World): Promise<City>
   for (const l of lots.filter(l => l.block === "P")) {
     for (let t = 0; t < 4; t++) place(TREES[t % 2], l.x + (t % 2 ? 0.55 : -0.55), l.z + (t < 2 ? 0.55 : -0.55), t, 2);
     place("kaykit/bench", l.x, l.z, l.facing > 0 ? 0 : Math.PI); place("kaykit/bush", l.x + 0.2, l.z + 0.2);
+  }
+
+  // The town never moves: bake each prop's transform in and draw one mesh per material (~1,100 draw calls → ~100).
+  town.updateMatrixWorld(true);
+  const byMaterial = new Map<string, { material: THREE.Material; parts: THREE.BufferGeometry[] }>();
+  town.traverse(o => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const g = mesh.geometry, material = mesh.material as THREE.Material; // glTF gives one material per mesh
+    const key = `${material.uuid}|${Object.keys(g.attributes).sort()}|${!!g.index}`; // merge needs matching attributes
+    (byMaterial.get(key) ?? byMaterial.set(key, { material, parts: [] }).get(key)!).parts.push(g.clone().applyMatrix4(mesh.matrixWorld));
+  });
+  for (const { material, parts } of byMaterial.values()) {
+    const merged = new THREE.Mesh(mergeGeometries(parts)!, material);
+    merged.castShadow = merged.receiveShadow = true;
+    scene.add(merged);
   }
 
   return { anchor, indoor, spread };
