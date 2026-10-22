@@ -14,9 +14,7 @@ export const shareText = (d: ShareData) =>
 export async function drawCard(d: ShareData): Promise<Blob> {
   await Promise.all([`800 100px ${DISPLAY}`, `600 40px ${BODY}`].map(f => document.fonts.load(f)));
   const c = Object.assign(document.createElement("canvas"), { width: W, height: H }), g = c.getContext("2d")!;
-  const bg = g.createLinearGradient(0, 0, W, H);
-  bg.addColorStop(0, "#ff5a7a"); bg.addColorStop(1, "#b0124a");
-  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#e0245e"; g.fillRect(0, 0, W, H);
   g.fillStyle = "white"; g.textBaseline = "alphabetic";
 
   // Wrap `text` to `width`, at most `lines` lines (the last one ellipsised); returns the y after it.

@@ -36,7 +36,7 @@
     /* character form: a game's character creator, over the town */
     #setup { inset: 0; margin: auto; width: min(1120px, 96vw); height: fit-content; max-height: 94dvh; overflow: auto; padding: 30px 34px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 34px; background: rgba(255, 253, 251, 0.82); backdrop-filter: blur(14px) saturate(1.2); }
     #setup .col { display: grid; align-content: start; gap: 14px; min-width: 0; }
-    #setup h1 { margin: 0; font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; background: linear-gradient(100deg, #e0245e, #ff7a45 55%, #8a3ffc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #setup h1 { margin: 0; font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 0.95; color: var(--rose); }
     #setup p.sub { margin: 0; color: var(--muted); line-height: 1.45; font-size: 15px; }
     #setup fieldset { border: 0; padding: 14px 16px 16px; margin: 0; border-radius: 16px; background: rgba(247, 243, 250, 0.85); display: grid; gap: 10px; }
     legend { float: left; width: 100%; display: flex; justify-content: space-between; align-items: baseline; font-size: 17px; font-weight: 700; margin-bottom: 2px; padding: 0; }
@@ -76,7 +76,7 @@
     #interests { grid-template-columns: none; display: flex !important; flex-wrap: wrap; gap: 6px; }
     #interests legend { margin-bottom: 4px; }
     #interests .chip span { padding: 6px 11px; font-size: 13px; }
-    .go { font-family: var(--display); font-size: 20px; font-weight: 800; padding: 16px 20px; border-radius: 16px; background: linear-gradient(100deg, #e0245e, #ff5a6a); box-shadow: 0 6px 18px rgba(224, 36, 94, 0.35); }
+    .go { font-family: var(--display); font-size: 20px; font-weight: 800; padding: 16px 20px; border-radius: 16px; background: var(--rose); box-shadow: 0 6px 18px rgba(224, 36, 94, 0.35); }
 
     /* playback HUD */
     #hud { bottom: 14px; left: calc((100vw - 388px) / 2); transform: translateX(-50%); padding: 8px 10px 8px 18px; display: none; gap: 8px; align-items: center; flex-wrap: wrap; max-width: calc(100vw - 416px); }

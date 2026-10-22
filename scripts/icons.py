@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC, CACHE = ROOT / "public", ROOT / "data/raw/noto"
 NOTO = "https://raw.githubusercontent.com/googlefonts/noto-emoji/main/2D"
-ROSE, DEEP = (255, 90, 122), (176, 18, 74)
+ROSE = (224, 36, 94)  # --rose in index.html
 
 
 def fetch(path):
@@ -32,25 +32,15 @@ def font(package, file, size, weight):
     return f
 
 
-def gradient(w, h):
-    img = Image.new("RGB", (w, h))
-    px = img.load()
-    for x in range(w):
-        for y in range(h):
-            t = (x / w + y / h) / 2
-            px[x, y] = tuple(round(a + (b - a) * t) for a, b in zip(ROSE, DEEP))
-    return img
-
-
 def main():
     kiss = Image.open(fetch("png/512/emoji_u1f48b.png")).convert("RGBA")
     (PUBLIC / "favicon.svg").write_bytes(fetch("svg/emoji_u1f48b.svg").read_bytes())
 
-    icon = Image.new("RGB", (180, 180), "white")  # red lips vanish on the pink gradient; white keeps them crisp
+    icon = Image.new("RGB", (180, 180), "white")  # red lips vanish on the rose; white keeps them crisp
     icon.paste(k := kiss.resize((136, 136), Image.LANCZOS), (22, 22), k)
     icon.save(PUBLIC / "apple-touch-icon.png")
 
-    og = gradient(1200, 630)
+    og = Image.new("RGB", (1200, 630), ROSE)
     d = ImageDraw.Draw(og)
     title = font("bricolage-grotesque", "bricolage-grotesque-latin-wght-normal.woff2", 104, 800)
     body = font("inter", "inter-latin-wght-normal.woff2", 36, 500)
