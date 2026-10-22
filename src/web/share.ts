@@ -1,11 +1,11 @@
-// The share card: the month's result as a 1080×1350 PNG (portrait fits X, Instagram, WhatsApp), drawn in the browser.
+// The share card: the month's result as a 1080×1080 PNG (square fits X, Instagram, WhatsApp), drawn in the browser.
 // Phones get the native share sheet with the image attached; desktops download it and copy the text.
 export interface ShareData {
   name: string; score: number; rank: number | null; total: number | null;
   matches: number; dates: number; headline: string | null; url: string;
 }
 
-const W = 1080, H = 1350, PAD = 90;
+const W = 1080, H = 1080, PAD = 80;
 const DISPLAY = '"Bricolage Grotesque Variable", system-ui, sans-serif', BODY = '"Inter Variable", system-ui, sans-serif';
 
 export const shareText = (d: ShareData) =>
@@ -14,7 +14,9 @@ export const shareText = (d: ShareData) =>
 export async function drawCard(d: ShareData): Promise<Blob> {
   await Promise.all([`800 100px ${DISPLAY}`, `600 40px ${BODY}`].map(f => document.fonts.load(f)));
   const c = Object.assign(document.createElement("canvas"), { width: W, height: H }), g = c.getContext("2d")!;
-  g.fillStyle = "#e0245e"; g.fillRect(0, 0, W, H);
+  const bg = g.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, "#ff5a7a"); bg.addColorStop(1, "#b0124a");
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
   g.fillStyle = "white"; g.textBaseline = "alphabetic";
 
   // Wrap `text` to `width`, at most `lines` lines (the last one ellipsised); returns the y after it.
@@ -38,28 +40,28 @@ export async function drawCard(d: ShareData): Promise<Blob> {
     do g.font = `${weight} ${size}px ${family}`; while (g.measureText(text).width > width && (size -= 2) > 20);
     g.fillText(text, x, y);
   };
-  const FOOTER = H - 80, BOTTOM = FOOTER - 70; // nothing above the footer may pass BOTTOM
+  const FOOTER = H - 72, BOTTOM = FOOTER - 64; // nothing above the footer may pass BOTTOM
 
-  g.globalAlpha = 0.85; g.font = `700 40px ${DISPLAY}`; g.fillText("Sex and the City", PAD, 140); g.globalAlpha = 1;
-  let y = wrap(`${d.name}'s month`, 250, `800 68px ${DISPLAY}`, 76, W - 2 * PAD, 2);
+  g.globalAlpha = 0.85; g.font = `700 36px ${DISPLAY}`; g.fillText("Sex and the City", PAD, 116); g.globalAlpha = 1;
+  let y = wrap(`${d.name}'s month`, 196, `800 64px ${DISPLAY}`, 72, W - 2 * PAD, 2);
 
-  g.font = `800 360px ${DISPLAY}`;
+  g.font = `800 300px ${DISPLAY}`;
   const big = String(d.score), bigW = g.measureText(big).width;
-  g.fillText(big, PAD - 10, y + 300);
-  g.font = "140px system-ui"; g.fillText("💋", PAD + bigW + 10, y + 270);
-  g.font = `600 42px ${BODY}`; g.globalAlpha = 0.9; g.fillText("body count in 30 days", PAD, y + 370); g.globalAlpha = 1;
-  y += 470;
+  g.fillText(big, PAD - 8, y + 200); // the digits' tops sit ~60px under the name
+  g.font = "120px system-ui"; g.fillText("💋", PAD + bigW + 10, y + 178);
+  g.font = `600 40px ${BODY}`; g.globalAlpha = 0.9; g.fillText("body count in 30 days", PAD, y + 262); g.globalAlpha = 1;
+  y += 360;
 
   if (d.rank) {
-    g.fillStyle = "white"; g.beginPath(); g.roundRect(PAD, y - 62, W - 2 * PAD, 92, 46); g.fill();
+    g.fillStyle = "white"; g.beginPath(); g.roundRect(PAD, y - 58, W - 2 * PAD, 86, 43); g.fill();
     g.fillStyle = "#c2185b";
-    fit(`🏆 #${d.rank.toLocaleString()} of ${d.total!.toLocaleString()} on the leaderboard`, PAD + 34, y, 800, 46, DISPLAY, W - 2 * PAD - 68);
-    g.fillStyle = "white"; y += 100;
+    fit(`🏆 #${d.rank.toLocaleString()} of ${d.total!.toLocaleString()} on the leaderboard`, PAD + 32, y, 800, 44, DISPLAY, W - 2 * PAD - 64);
+    g.fillStyle = "white"; y += 88;
   }
-  g.font = `600 40px ${BODY}`; g.fillText(`📱 ${d.matches} matches   🍷 ${d.dates} dates`, PAD, y); y += 80;
-  if (d.headline && y + 54 < BOTTOM) y = wrap(`“${d.headline}”`, y, `italic 700 42px ${DISPLAY}`, 54, W - 2 * PAD, y + 108 < BOTTOM ? 2 : 1) + 16;
+  g.font = `600 38px ${BODY}`; g.fillText(`📱 ${d.matches} matches   🍷 ${d.dates} dates`, PAD, y); y += 68;
+  if (d.headline && y + 50 < BOTTOM) y = wrap(`“${d.headline}”`, y, `italic 700 40px ${DISPLAY}`, 50, W - 2 * PAD, y + 100 < BOTTOM ? 2 : 1) + 16;
 
-  fit(`Beat ${d.name.split(" ")[0]} → ${d.url.replace(/^https?:\/\//, "")}`, PAD, FOOTER, 800, 44, DISPLAY);
+  fit(`Beat ${d.name.split(" ")[0]} → ${d.url.replace(/^https?:\/\//, "")}`, PAD, FOOTER, 800, 42, DISPLAY);
   return new Promise(resolve => c.toBlob(b => resolve(b!), "image/png"));
 }
 

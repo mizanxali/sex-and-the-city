@@ -467,7 +467,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       <div class="recap-story">${story.recap ? `<h2 class="headline">${esc(story.recap.headline)}</h2><p>${esc(story.recap.recap)}</p>`
         : writing ? `<p class="writing">✍️ Writing your recap…</p>` : ""}</div>
       <div class="recap-side">
-      <details${open}><summary>💋 ${esc(spec.name)}'s month: ${partners.size} ${partners.size === 1 ? "partner" : "partners"}</summary>
+      <details${open}><summary>💋 ${esc(spec.name)}'s body count: ${partners.size}</summary>
         <ul>${[...partners].map(p => `<li>${who(p)}</li>`).join("") || "<li>Nobody. The city was not ready.</li>"}</ul></details>
       <div class="stats"><span>✨ ${n(count("spark"), "spark")}</span><span>📱 ${n(count("match"), "match", "matches")}</span><span>🍷 ${n(count("date"), "date")}</span><span>🙅 ${n(count("rejected"), "rejection")}</span><span>🪑 stood up ${n(res.events.filter(e => e.type === "stood_up" && e.a === me).length, "time")}</span></div>
       <p class="ranked" id="ranked">${runId ? "🏆 Ranking…" : "Unranked: the API is off, so this run isn't on the leaderboard."}</p>
