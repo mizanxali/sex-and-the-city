@@ -196,6 +196,37 @@ def personas(cal):
           f"age {s.age.min()}-{s.age.max()} median {s.age.median():.0f}")
 
 
+# The town has 17 single gay men and 19 single gay women: too few for a gay player to compete on the leaderboard.
+# Visitors are gay singles from the wider region, drawn from the persona rows the town didn't use, weighted toward
+# the ages Gallup says identify as LGBTQ+. They only meet the player, on the apps; the town never sees them.
+# Ids follow the town's; `prep.py visitors` re-runs this step alone and leaves the town untouched.
+VISITORS_PER_SEX = 120
+
+
+def visitors():
+    town = [p for p in json.loads((OUT / "personas.json").read_text()) if not p.get("visitor")]
+    seen, rng = {p["uuid"] for p in town}, random.Random(SEED + 3)
+    pool = [r for f in ["rows.json", "rows2.json"] for r in json.loads((RAW / "nemotron" / f).read_text())
+            if int(r["age"]) >= MIN_AGE and r["uuid"] not in seen]
+    rows = []
+    for sex in ["male", "female"]:
+        cands = [r for r in pool if r["sex"].lower() == sex]
+        keys = {r["uuid"]: rng.random() ** (1 / lgbtq_share(int(r["age"]))) for r in cands}  # weighted sample
+        rows += sorted(cands, key=lambda r: -keys[r["uuid"]])[:VISITORS_PER_SEX]
+    out = [{"id": len(town) + k, "uuid": r["uuid"], "visitor": True,
+            "name": guess_name(" ".join(r[f] for f in ["persona", "professional_persona", "hobbies_and_interests", "cultural_background"])),
+            "sex": r["sex"].lower(), "age": int(r["age"]), "orientation": "gay", "status": "single",
+            "marital_status": r["marital_status"], "education": r["education_level"], "occupation": r["occupation"],
+            "hometown": f"{r['city']}, {r['state']}", "persona": r["persona"], "professional": r["professional_persona"],
+            "hobbies": r["hobbies_and_interests"], "culture": r["cultural_background"]} for k, r in enumerate(rows)]
+    assert all(p["age"] >= MIN_AGE for p in out), "minor in visitor sample"
+    write("personas.json", town + out)
+    slim = json.loads((OUT / "town.json").read_text())[:len(town)]
+    write("town.json", slim + [{k: p[k] for k in ["id", "name", "sex", "age", "orientation", "status", "occupation", "visitor"]} for p in out])
+    ages = sorted(p["age"] for p in out)
+    print(f"   {len(out)} visitors, age median {ages[len(ages) // 2]}, under 45: {sum(a < 45 for a in ages)}")
+
+
 # ------------------------------------------------------------ ATUS → schedules
 # TEWHERE codes (ATUS 2024 codebook; checked against activity codes: exercise→31, eating out→4, work→2).
 # -1 = location not asked (sleep, grooming), which happens at home.

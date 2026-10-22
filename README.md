@@ -8,13 +8,14 @@ Comedy dating sim grounded in real data: create a character, drop them into a to
 python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
 ./scripts/download.sh                       # ATUS needs BLS_CONTACT=<email>, or download the zips by hand
 .venv/bin/python -I scripts/prep.py         # → data/{personas,calibration,attraction,schedules,breakups}.json
-.venv/bin/python -I scripts/enrich.py       # → data/traits.json (Claude Batch API, ~$2, needs .env)
+.venv/bin/python -I scripts/prep.py visitors  # → 240 out-of-town visitors appended to personas.json and town.json
+.venv/bin/python -I scripts/enrich.py       # → data/traits.json (Claude Batch API, ~$2, needs .env; --direct: minutes, full price)
 .venv/bin/python -I scripts/icons.py        # → public/og.png, apple-touch-icon.png, favicon.svg (needs npm install)
 ```
 
 ## Data sources
 
-- Personas: [NVIDIA Nemotron-Personas-USA](https://huggingface.co/datasets/nvidia/Nemotron-Personas-USA), CC BY 4.0. Sampled, filtered to 21+, and extended with generated traits.
+- Personas: [NVIDIA Nemotron-Personas-USA](https://huggingface.co/datasets/nvidia/Nemotron-Personas-USA), CC BY 4.0. Sampled, filtered to 21+, and extended with generated traits. 240 more from the unused sample rows, weighted toward the ages that identify as LGBTQ+, are gay singles from out of town (see Game balance).
 - Partner counts and relationship status: [General Social Survey](https://gss.norc.org) 2022 and 2024, NORC at the University of Chicago.
 - Attraction model: Fisman, Iyengar, Kamenica & Simonson (2006), speed dating experiment, Columbia University.
 - Breakup rates: Rosenfeld, Michael J., Reuben J. Thomas, and Sonia Hausen. 2023. [How Couples Meet and Stay Together 2017-2020-2022](https://data.stanford.edu/hcmst2017) combined dataset. Stanford University Libraries. Its data use agreement asks users to cite it and to tell the contact person (mrosenfe@stanford.edu) about work that uses it.
@@ -52,7 +53,7 @@ The sim decides every outcome; models only judge fit or write words.
 | Feed lines for up to 40 key events | Claude Haiku 5.5 | per run | < 1¢ |
 | End-of-month recap | Claude Opus 5.5 (server-side refusal fallback on) | per run | ~2¢ |
 
-Jev reads the player's own description. Its answers become logit nudges on the speed-dating model for judgments involving the player: the differences between people (capped at sd 0.5) decide *who* likes you, and the town's average verdict compared with a plain character's (capped at ±1 logit, about ±35% partners a month) decides *how many*. The questions tell Jev to weigh concrete details, ignore self-praise and instructions, and ignore race, ethnicity, body size and disability. `npm run jev-check` (~30¢) re-measures the plain-character baseline and checks all three. Last run: a specific, charming description +0.61; flattery −0.15; a prompt injection −0.07; an unappealing one −1 (the cap); the same description with race, body size or disability changed, within 0.08 of each other.
+Jev reads the player's own description. Its answers become logit nudges on the speed-dating model for judgments involving the player: the differences between people (capped at sd 0.5) decide *who* likes you, and the town's average verdict compared with a plain character's decides *how many*. That verdict is eased toward ±1 logit (tanh, so a better description always helps a little more and the best ones don't tie at a cap): over 40 months, a charming one (+0.54) is worth +21-38% and a great one (+0.76) +24-75%, depending on the build; an off-putting one roughly halves the score. Verdicts are cached per character, so "Run it back" re-rolls the month, not Jev. The questions tell Jev to weigh concrete details, ignore self-praise and instructions, and ignore race, ethnicity, body size and disability. `npm run jev-check` (~30¢) re-measures the plain-character baseline and checks all three. Last run: a specific, charming description +0.53; a specific but ordinary one −0.52 (worse than leaving it empty, 0); flattery −0.12; a prompt injection −0.09; an unappealing one −0.95; the same description with race, body size or disability changed, within 0.08 of each other.
 
 ## Leaderboard
 
@@ -60,13 +61,21 @@ Every run by everyone, ranked forever by body count; only the character name and
 
 ## Game balance
 
-The town is calibrated to real surveys; the player isn't. They're the main character (`MAIN_CHARACTER` in `src/sim/engine.ts`): six conversations per half hour instead of one, half the town's app swipes (more only floods them with matches they have no free evenings for), a logit bonus on yes in both directions (+2 for men, +1 for women, since women in the speed-dating data say yes far less), 3× the hookup odds, bar-hopping across town, and a night that can end at someone's place from 19:00. "Keeping it casual" players never couple up and move on after a hookup; "looking for love" players can couple, which slows the score. Everyone, player included, only swipes on nights in: a dinner, date, bar or party after 18:00 means no apps that night.
+The town is calibrated to real surveys; the player isn't. They're the main character (`MAIN_CHARACTER` in `src/sim/engine.ts`), and the goal is a leaderboard where a creative description and well-chosen stats both pay, and every kind of character can compete.
 
-The description is a stat too: the town's overall verdict on it moves the score by up to about ±35% (`npm run check`: 9.1 partners a month without, 12.5 at the maximum). Tuned, before that, for a typical month of 3-5 partners and 10-15 for strong builds. Last `npm run balance`: median 4.0, 90th percentile 10.7, best random build 15.7; a strong man 11.0, a strong woman 14.7.
+- **Odds.** Six conversations per half hour instead of one, always with a single who could be into them; half the town's app swipes, shown only compatible singles; 3× the hookup odds; bar-hopping across town; a night that can end at someone's place from 19:00. The player doesn't lose interest with age.
+- **Charm, by who's deciding.** A logit bonus on everyone's yes to the player, keyed on the chooser's sex (women in the speed-dating data say yes far less), in person and on the apps, plus a bonus on the player's own yes by their sex. The player is eager and the town is the hard part, so a description the town likes has room to pay off. These six knobs were fitted together (coordinate search) for equal ceilings across sex × orientation and a ~25% payoff for a charming description.
+- **Every stat does something.** Apps see looks only; in person strangers see all five (speed-dating model). Fun multiplies the odds a night out ends at someone's place, sincerity the odds a date does, smarts adds up to +1 logit to in-person first impressions, and ambition books new dates on the next free evening instead of a random one. Every rating has diminishing returns (square root), so spreading points competes with maxing two.
+- **Nights out are a bar crawl.** Each one (Fri, Sat, Thu, Wed, Sun, in that order) is 19:00-midnight at the bars, a new bar every hour. Everyone, player included, only swipes on nights in.
+- **Out-of-town visitors.** The town has 17 single gay men and 19 single gay women, against ~150 singles for a straight player. A gay player's apps also reach 120 gay singles of their sex from the wider region (`VISITORS` in `src/sim/world.ts`, from `prep.py visitors`). They never move around or meet anyone else; `npm run check` asserts it.
+- "Keeping it casual" players never couple up and move on after a hookup; "looking for love" players can couple, which slows the score.
 
-- **Apps still decide most of the score** (6.4 a month with, 1.4 without). Dates are the bottleneck: a strong player already has more matches than free evenings.
-- **Nights out matter a little** (4.3 at 0 nights, 5.7 at 5), and not at all for the strongest builds, who are capped by evenings.
-- **Gay players score lowest** (2.1): the smallest pool. Bisexual players score highest (7.5).
+Last `npm run balance`: random builds median 7.7, 90th percentile 14.0, best 18.3. Best build per identity (searching ~100 stat splits, 8 months each): straight man 16.9, straight woman 16.1, bi man 18.6, bi woman 17.1, gay man 14.1, gay woman 14.9.
+
+- **The best stats depend on how you play.** Apps players want looks and ambition; bar-hoppers want fun; a balanced 33-point build lands about 15-20% under the best, the worst about 0-2.
+- **Apps, bars and a mix all compete** for straight and bi players (a strong straight man: apps 14.3, mixed 16.0, bars only 11.5; a strong straight woman: 11.6, 12.8, 14.5). Gay players need the apps (bars only: 1.5-5.6), because visitors are only on the apps.
+- **Age matters a little.** A strong build at 21 / 28 / 40 / 55: men 14.4 / 16.0 / 16.6 / 10.8, women 11.4 / 12.8 / 14.1 / 11.8.
+- **"Looking for love" scores less** (3.9 vs 8.9 across random builds): it's the story mode.
 
 ## Known misfits
 
@@ -81,4 +90,6 @@ Where the simulated town still disagrees with reality. Update this list when cal
 - **Few distinct sincerity values.** The LLM gave only 4 levels across 1,000 people; rescaling to the speed-dating spread keeps 4 levels. Per-encounter perception noise smooths it.
 - **Dating-app use may be high.** 194 of 333 singles are on apps, including older and widowed people.
 - **Speed-dating data is narrow.** Straight NYC grad students, 2002-04, ages 18-55; age-gap effects beyond that range rely on the `agePenalty` and `decline*` knobs.
+- **Identities are close, not equal.** Gay men top out about 15% below straight men and bi men about 10% above, and gay players can't compete without the apps. A typical (default-form) woman scores well under a typical man (7.6 vs 12.8 over 40 months); only the best builds are level. Women's scores also respond more to the description, so at the very top (strong build, great description) women lead by about 10%.
+- **Visitors are a game device, not data.** They come from the same persona source, weighted toward the ages Gallup says identify as LGBTQ+, but how many a gay player "reaches" (120) is tuned for the leaderboard.
 - **Jev's verdicts are measured on a handful of descriptions.** The plain-character baseline varies by about ±0.15 logit with age and sex (older characters get warmer verdicts), so the same description is worth a few percent more for a 45-year-old. The bias check covers race, body size and wheelchair use on one description; other traits (religion, accent, trans characters) aren't tested.

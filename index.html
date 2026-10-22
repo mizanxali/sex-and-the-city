@@ -65,6 +65,7 @@
     .chip input:focus-visible + span, .pip input:focus-visible + span { outline: 2px solid var(--rose); outline-offset: 2px; }
     .stat { display: grid; grid-template-columns: 112px 1fr 26px; align-items: center; gap: 10px; }
     .stat-name { font-size: 14px; font-weight: 700; }
+    .stat-name small { display: block; font-size: 11px; font-weight: 500; line-height: 1.25; opacity: 0.65; }
     .stat output { font-family: var(--display); font-size: 18px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
     .stat input[type=range] { appearance: none; -webkit-appearance: none; height: 12px; border-radius: 999px; background: linear-gradient(to right, #ff7a45, var(--rose) var(--pct, 50%), #e7e1ee var(--pct, 50%)); cursor: pointer; }
     .stat input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: white; border: 3px solid var(--rose); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); }
@@ -120,8 +121,10 @@
     #share-status { color: var(--muted); font-size: 13px; }
 
     /* leaderboard: every run, best first */
-    .board-open { position: fixed; top: 14px; right: 14px; z-index: 11; box-shadow: 0 6px 18px rgba(224, 36, 94, 0.3); }
-    #board { inset: 0; margin: auto; z-index: 20; width: min(440px, 92vw); height: min(640px, 86dvh); padding: 18px 16px 14px; display: none; flex-direction: column; gap: 8px; }
+    .corner { position: fixed; top: 14px; right: 14px; z-index: 11; display: flex; gap: 8px; }
+    .board-open { box-shadow: 0 6px 18px rgba(224, 36, 94, 0.3); }
+    .corner .ghost { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
+    #board, #how { inset: 0; margin: auto; z-index: 20; width: min(440px, 92vw); height: min(640px, 86dvh); padding: 18px 16px 14px; display: none; flex-direction: column; gap: 8px; }
     #board header { display: flex; align-items: baseline; gap: 10px; }
     #board h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
     #board .total { color: var(--muted); font-size: 13px; flex: 1; }
@@ -133,6 +136,18 @@
     #board li.mine { background: #fff4f8; border-color: var(--rose); }
     #board .rank { color: var(--muted); font-weight: 600; }
     #board .who { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    /* how it works: same panel as the leaderboard */
+    #how { width: min(560px, 92vw); height: min(720px, 86dvh); }
+    #how header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    #how h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+    #how header button { padding: 5px 11px; }
+    #how .how-body { overflow: auto; flex: 1; padding-right: 4px; font-size: 14px; line-height: 1.5; }
+    #how h3 { margin: 16px 0 4px; font-size: 16px; font-weight: 800; }
+    #how h3:first-child { margin-top: 4px; }
+    #how p, #how ul { margin: 0 0 6px; }
+    #how ul { padding-left: 20px; }
+    #how li { margin-bottom: 3px; }
+    #how .fine { color: var(--muted); font-size: 12.5px; }
 
     /* in-world labels */
     .label { font-size: 10px; color: white; background: rgba(20, 20, 30, 0.6); padding: 1px 5px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
@@ -197,7 +212,7 @@
         <label class="chip"><input type="radio" name="looking" value="casual" checked /><span>🔥 Keeping it casual</span></label>
         <label class="chip"><input type="radio" name="looking" value="love" /><span>💘 Love</span></label>
       </div>
-      <fieldset class="life"><legend>Your week</legend>
+      <fieldset class="life"><legend>Your week <small>a night out is a night off the apps</small></legend>
         <div class="pips"><span class="group-label">🍸 Nights out</span><label class="pip"><input type="radio" name="nightlife" value="0" /><span>0</span></label><label class="pip"><input type="radio" name="nightlife" value="1" /><span>1</span></label><label class="pip"><input type="radio" name="nightlife" value="2" checked /><span>2</span></label><label class="pip"><input type="radio" name="nightlife" value="3" /><span>3</span></label><label class="pip"><input type="radio" name="nightlife" value="4" /><span>4</span></label><label class="pip"><input type="radio" name="nightlife" value="5" /><span>5</span></label></div>
         <div class="pips"><span class="group-label">🏋️ Gym visits</span><label class="pip"><input type="radio" name="gym" value="0" /><span>0</span></label><label class="pip"><input type="radio" name="gym" value="1" checked /><span>1</span></label><label class="pip"><input type="radio" name="gym" value="2" /><span>2</span></label><label class="pip"><input type="radio" name="gym" value="3" /><span>3</span></label><label class="pip"><input type="radio" name="gym" value="4" /><span>4</span></label><label class="pip"><input type="radio" name="gym" value="5" /><span>5</span></label><label class="pip"><input type="radio" name="gym" value="6" /><span>6</span></label></div>
         <div class="group">
@@ -208,11 +223,11 @@
     </section>
     <section class="col">
       <fieldset id="ratings"><legend>How strangers see you <span id="budget"></span></legend>
-        <label class="stat"><span class="stat-name">👀 Looks</span><input name="attr" type="range" min="1" max="10" value="6" /><output>6</output></label>
-        <label class="stat"><span class="stat-name">💗 Sincerity</span><input name="sinc" type="range" min="1" max="10" value="7" /><output>7</output></label>
-        <label class="stat"><span class="stat-name">🧠 Smarts</span><input name="intel" type="range" min="1" max="10" value="7" /><output>7</output></label>
-        <label class="stat"><span class="stat-name">🎉 Fun</span><input name="fun" type="range" min="1" max="10" value="6" /><output>6</output></label>
-        <label class="stat"><span class="stat-name">🚀 Ambition</span><input name="amb" type="range" min="1" max="10" value="7" /><output>7</output></label>
+        <label class="stat"><span class="stat-name">👀 Looks<small>apps and first impressions</small></span><input name="attr" type="range" min="1" max="10" value="6" /><output>6</output></label>
+        <label class="stat"><span class="stat-name">💗 Sincerity<small>dates end at your place</small></span><input name="sinc" type="range" min="1" max="10" value="7" /><output>7</output></label>
+        <label class="stat"><span class="stat-name">🧠 Smarts<small>conversations click</small></span><input name="intel" type="range" min="1" max="10" value="7" /><output>7</output></label>
+        <label class="stat"><span class="stat-name">🎉 Fun<small>nights out end at your place</small></span><input name="fun" type="range" min="1" max="10" value="6" /><output>6</output></label>
+        <label class="stat"><span class="stat-name">🚀 Ambition<small>books dates fast, no clashes</small></span><input name="amb" type="range" min="1" max="10" value="7" /><output>7</output></label>
       </fieldset>
       <fieldset id="interests"><legend>Loves <small>up to 5</small></legend></fieldset>
       <button type="submit" class="go">Release them into the city 🏙️</button>
@@ -228,7 +243,64 @@
   </div>
   <aside id="feed" class="panel"><h2>Your month</h2><ol></ol></aside>
   <div id="recap" class="panel"></div>
-  <button id="board-open" class="board-open">🏆 Leaderboard</button>
+  <div id="corner" class="corner">
+    <button id="how-open" class="ghost">❓ How it works</button>
+    <button id="board-open" class="board-open">🏆 Leaderboard</button>
+  </div>
+  <aside id="how" class="panel" aria-labelledby="how-title">
+    <header><h2 id="how-title">❓ How it works</h2><button id="how-close" class="ghost" aria-label="Close">✕</button></header>
+    <div class="how-body">
+      <h3>🏙️ A town built from real people</h3>
+      <p>Your character moves into a town of 1,000 made-up but realistic adults, built from real US data: who they are and what they do (NVIDIA's synthetic personas), who's single or married (the General Social Survey), who's gay, straight or bi (Gallup), and where people spend every half hour of a normal day (the government's American Time Use Survey).</p>
+
+      <h3>⏱️ A month, half an hour at a time</h3>
+      <p>The game plays out 30 days in half-hour steps. Everyone goes about their life: work, the gym, the shops, dinner, a bar, home. When people end up in the same place, they might start talking.</p>
+
+      <h3>💘 First impressions</h3>
+      <p>When two people meet, each one quietly decides: would I see them again? That decision comes from a real experiment, where thousands of strangers went on 4-minute speed dates and said yes or no. Looks count the most, then being fun, then having things in common. Strangers misjudge each other a little, so luck plays a part.</p>
+
+      <h3>🍷 From spark to sleepover</h3>
+      <ul>
+        <li><b>Both say yes</b> and it's late at a bar: you might go home together that night.</li>
+        <li>Otherwise you set up a <b>date</b> sometime in the next week, and a date can end at someone's place.</li>
+        <li>Book two dates for the same night and someone gets <b>stood up</b>.</li>
+        <li>On nights in, you <b>swipe on the apps</b> at 10pm. Profiles only show looks. A match becomes a date.</li>
+        <li>People <b>gossip</b>: sleep with someone's friend and that friend might cool on you.</li>
+      </ul>
+
+      <h3>⭐ You're the main character</h3>
+      <p>Everyone else lives by real-life odds, and in real life most single people have zero or one partner in a whole year. You get movie odds: you talk to more people, only to singles who could be into you, and you have better luck all round. A big score here would be very unusual in real life.</p>
+
+      <h3>🎚️ What your stats do</h3>
+      <p>You have 33 points to share out, and each extra point is worth a bit less than the one before, so piling everything into one stat rarely wins.</p>
+      <ul>
+        <li><b>👀 Looks:</b> the apps and every first impression.</li>
+        <li><b>🎉 Fun:</b> first impressions, and the odds a night out ends at someone's place.</li>
+        <li><b>💗 Sincerity:</b> the odds a date ends at someone's place. (Strangers barely notice it at first.)</li>
+        <li><b>🧠 Smarts:</b> conversations click when you meet in person.</li>
+        <li><b>🚀 Ambition:</b> you book dates on your next free night, with no double-booking.</li>
+      </ul>
+
+      <h3>📅 Your week</h3>
+      <ul>
+        <li><b>Nights out:</b> each one is a bar crawl from 7pm to midnight. It's a night off the apps.</li>
+        <li><b>On the apps:</b> a steady stream of dates, as long as you have free nights for them.</li>
+        <li><b>Keeping it casual</b> means one night and on to the next. <b>Love</b> means you might settle down with someone, which is sweet, but your count stops climbing.</li>
+        <li>Your <b>interests</b> help you click with people who share them, in person.</li>
+      </ul>
+      <p>Apps-only players, bar-hoppers and a mix of both can all do well, but they want different stats.</p>
+
+      <h3>✍️ Your description</h3>
+      <p>Before your month starts, an AI called Jev reads what you wrote and asks, for each person in town who could be into you: would they want a date with this character? Their answers decide <i>who</i> likes you, and the town's overall verdict decides how many: a charming description can lift your score by a third or more, and an off-putting one can halve it. Specific and charming beats bragging. "A perfect 10" gets you nothing, and nor do instructions aimed at the AI. Race, ethnicity, body size and disability are ignored.</p>
+
+      <h3>🏳️‍🌈 Gay characters</h3>
+      <p>A town of 1,000 has only a handful of gay singles, so for gay characters the apps also reach singles from out of town. That makes the apps their best bet, and every kind of character has a real shot at the top.</p>
+
+      <h3>🎲 Fair dice</h3>
+      <p>Your score is the number of different people you went home with in 30 days. The server rolls the dice and runs your month, so nobody can fake a score. "Run it back" is the same character with new dice. The AI never decides what happens: the simulation does, and afterwards Claude writes the feed and your recap.</p>
+      <p class="fine">Sources: General Social Survey 2022–24 (NORC), Fisman &amp; Iyengar speed-dating experiment (Columbia), How Couples Meet and Stay Together (Stanford), American Time Use Survey 2024 (BLS), Gallup, NVIDIA Nemotron-Personas-USA.</p>
+    </div>
+  </aside>
   <aside id="board" class="panel">
     <header><h2>🏆 Leaderboard</h2><span class="total"></span><button id="board-close" class="ghost" aria-label="Close">✕</button></header>
     <p class="you-line"></p>

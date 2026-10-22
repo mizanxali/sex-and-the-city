@@ -2,7 +2,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { CSS2DObject, CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
-import personasJson from "../../data/town.json" with { type: "json" };
 import tuningJson from "../../data/tuning.json" with { type: "json" };
 import { type Affinity, eventKey, type SimEvent, SLOTS, type Tuning, simulate } from "../sim/engine.ts";
 import { INTERESTS, MAX_INTERESTS, type Orientation, type PlayerSpec, RATING_BUDGET, type Sex, buildWorld } from "../sim/world.ts";
@@ -202,7 +201,7 @@ form.addEventListener("submit", async e => {
       return;
     } // otherwise offline: the calibrated sim still runs, unranked, without Jev's read on who likes whom
   }
-  form.style.display = "none"; $("#board-open").style.display = "none";
+  form.style.display = "none"; $("#corner").style.display = "none";
   start(spec, bio, seed, affinity, runId);
   sessionStorage.setItem("last", JSON.stringify({ spec, bio, description }));
 });
@@ -242,8 +241,10 @@ function openBoard() {
   $("#board").style.display = "flex";
   loadBoard();
 }
-$("#board-open").onclick = openBoard;
+$("#board-open").onclick = () => { $("#how").style.display = "none"; openBoard(); };
 $("#board-close").onclick = () => ($("#board").style.display = "none");
+$("#how-open").onclick = () => { $("#board").style.display = "none"; $("#how").style.display = "flex"; };
+$("#how-close").onclick = () => ($("#how").style.display = "none");
 $("#board-more").onclick = () => loadBoard(true);
 
 // ---------------------------------------------------------------- the month
@@ -266,6 +267,9 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   const mate = world.circles[world.agents[me].circle].find(id => id !== me)!;
   city.anchor[world.agents[me].home] = city.anchor[world.agents[mate].home].clone().add(new THREE.Vector3(0.45, 0, 0.2));
   city.indoor[world.agents[me].home] = true; city.spread[world.agents[me].home] = 0.5;
+  for (const v of world.venues) if (v.name === "out of town") { // visitors wait, hidden, at the end of Main Street
+    city.anchor[v.id] = new THREE.Vector3(0, 0, CITY_SIZE / 2); city.indoor[v.id] = true; city.spread[v.id] = 0;
+  }
 
   // People: Kenney mini characters. Crowd instanced; the player animated, a bit bigger, with a ring and a name tag.
   const people = await loadPeople(scene, world.agents.slice(0, -1).map(a => a.sex), spec.sex);
@@ -319,8 +323,9 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   $("#skip").onclick = () => { t = ticks; };
   frame(true); // after the HUD is up: on phones the framing measures it
 
+  const person = (i: number) => (i === me ? undefined : world.agents[i]); // everyone but the player
   const who = (i: number) => {
-    const p = personasJson[i];
+    const p = person(i);
     return p ? `${p.name} (${p.age}, ${p.occupation.replaceAll("_", " ").replace("not in workforce", "not working")})` : "someone";
   };
   const at = (v: number) => world.venues[v].name;
@@ -365,7 +370,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
   }
   // A card's text with its people picked out: names in the card's colour, "(age, job)" quieter. Plain text nodes, never HTML.
   function cast(li: HTMLLIElement, text: string, ids: number[]) {
-    const names = ids.flatMap(i => personasJson[i] ? [personasJson[i].name, personasJson[i].name.split(" ")[0]] : []); // full name wins
+    const names = ids.flatMap(i => { const p = person(i); return p ? [p.name, p.name.split(" ")[0]] : []; }); // full name wins
     const alts = names.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
     const p = li.querySelector("p")!, re = new RegExp(`\\b(${alts})\\b( \\(\\d+, [^)]*\\))?`, "g");
     p.replaceChildren();
@@ -395,7 +400,7 @@ async function start(spec: PlayerSpec, bio: string, seed: number, affinity?: Aff
       const g = gossipLines.get(key) ?? { li: card(e.tick, outcome(e), "", []), mine: 0, theirs: 0 };
       if (!gossipLines.has(key)) { feed.append(g.li); gossipLines.set(key, g); }
       if (e.b === me) g.mine++; else g.theirs++;
-      const name = personasJson[them]?.name.split(" ")[0] ?? "they";
+      const name = person(them)?.name.split(" ")[0] ?? "they";
       cast(g.li, [g.mine && `You told ${friends(g.mine)} about your night with ${who(them)}.`,
         g.theirs && `${g.mine ? name : who(them)} told ${friends(g.theirs)}.`].filter(Boolean).join(" "), [them]);
       return;

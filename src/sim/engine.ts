@@ -55,16 +55,32 @@ const CHAT_RATE: Partial<Record<Place, number>> = {
   worship: 0.05, other: 0.03,
 };
 // The player is the main character: the town stays calibrated to real surveys, the player gets game odds.
-// Tuned with `npm run balance` for a typical month of 3-5 partners and 10-15 for strong builds.
+// Tuned with `npm run balance`: every sex × orientation gets about the same ceiling, and every rating pays somewhere.
 export const MAIN_CHARACTER = {
-  chats: 6,   // conversations the player starts per half hour (everyone else: at most one)
-  swipes: 0.5, // × appSwipes: more just floods the player with matches they have no free evenings for
-  // Logit bonus on everyone's yes to the player and the player's yes to them, by the player's sex: women in the
-  // speed-dating data say yes far less often, so men need more to compete on the same leaderboard.
-  charm: { male: 2, female: 1 } as Record<Sex, number>,
+  chats: 6,   // conversations the player starts per half hour, always with a single who could be into them
+  // Each night out (Fri, Sat, Thu, Wed, Sun, in that order) is 19:00-midnight at the bars, a new one every hour.
+  swipes: 0.5, // × appSwipes, shown only compatible singles (like a real app)
+  // Logit bonus on everyone's yes to the player, by the sex of whoever is deciding: women in the speed-dating data
+  // say yes far less often, so courting women needs more. Keyed on the chooser, not the player, so straight, gay and
+  // bi players face the same odds. In person, then on the apps, where men already say yes to most profiles.
+  charm: { male: -0.1, female: 3.55 } as Record<Sex, number>,
+  swipeCharm: { male: -2.7, female: -0.45 } as Record<Sex, number>,
+  // Logit bonus on the player's own yes, by their sex. The player is eager and the town is the hard part, so a
+  // description the town likes has room to pay off. Charm, swipeCharm and keen were fitted together (6 knobs,
+  // coordinate search) so every sex × orientation tops out about the same and a charming description is worth ~25%.
+  keen: { male: 4.8, female: 2.15 } as Record<Sex, number>,
   hookup: 3,  // × hookupNight and hookupDate when the player is on the date
-  // and the player's night can end at someone's place from 19:00, not 22:00 (the town's bars empty out after dinner)
+  // What each rating does for the player. Apps see looks only; in person strangers see all five (speed-dating model).
+  // Fun × the odds a night out ends at someone's place, sincerity × the odds a date does, each by perk().
+  wit: 1,     // smarts: up to this much logit on in-person first impressions
+  // Ambition: the chance of booking a new date on the next free evening rather than a random one (no double-booking).
+  // Every rating has diminishing returns, looks too (eased()): spreading points competes with maxing one.
+  // The player doesn't lose interest with age like the town does, and their night can end at someone's place
+  // from 19:00, not 22:00 (the town's bars empty out after dinner).
 };
+const NIGHTS_OUT = [4, 5, 3, 2, 6], OUT_UNTIL = 40; // weekdays (0 = Monday); 00:00
+const perk = (rating: number) => Math.sqrt(rating / 10); // 0.32 at 1, 1 at 10: each point is worth less than the last
+const eased = (rating: number) => 1 + 9 * Math.sqrt((rating - 1) / 9); // the player's looks as strangers see them, same idea
 const NIGHT_HOOKUP_PLACES = new Set<Place>(["restaurant_bar", "friends_home"]);
 
 const sigmoid = (z: number) => 1 / (1 + Math.exp(-z));
@@ -82,7 +98,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
   const model = attractionJson.by_chooser;
   const aff = opts.affinity;
   const star = agents.findIndex(a => a.isPlayer), casual = star >= 0 && agents[star].casual;
-  const boost = (i: number, j: number) => (i === star || j === star ? MAIN_CHARACTER.hookup : 1);
+  const boost = (i: number, j: number, rating: "fun" | "sinc") => (i === star || j === star ? MAIN_CHARACTER.hookup * perk(agents[star][rating]) : 1);
 
   // Shared-interest rating: interest overlap rescaled to the speed-dating "shar" distribution.
   const overlap = (a: Agent, b: Agent) => popcount(a.interests & b.interests) / Math.max(1, Math.min(popcount(a.interests), popcount(b.interests)));
@@ -92,7 +108,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
 
   const status = agents.map(a => a.status);
   const partnerOf = new Int32Array(N).fill(-1), coupledOn = new Int32Array(N); // day the couple formed
-  const seeking = agents.map(a => Math.exp(-(a.sex === "female" ? tuning.declineFemale : tuning.declineMale) * Math.max(0, a.age - 30) / 10));
+  const seeking = agents.map(a => a.isPlayer ? 1 : Math.exp(-(a.sex === "female" ? tuning.declineFemale : tuning.declineMale) * Math.max(0, a.age - 30) / 10));
   const openness = (i: number) => seeking[i] * (status[i] === "single" ? 1 : status[i] === "married" ? tuning.openMarried : tuning.openPartnered);
   const heard = agents.map(() => new Set<number>()); // people i heard hooked up with i's friend
   const partners = agents.map(() => new Set<number>());
@@ -107,12 +123,14 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
   function judge(i: number, j: number, swipe = false) { // P(i wants to see j again)
     const a = agents[i], b = agents[j], m = model[a.sex], c = m.coef, mean = m.feature_mean;
     const see = (v: number) => Math.max(1, Math.min(10, v + PERCEPTION_SD * (swipe ? 1.5 : 1) * gauss(r)));
+    const photo = swipe && j === star; // a profile shows the player's looks, not the rest
+    const met = (v: number, k: "sinc" | "intel" | "fun" | "amb") => (photo ? mean[k] : see(v));
     const shar = swipe ? mean.shar : Math.max(1, Math.min(10, mean.shar + m.feature_sd.shar * (overlap(a, b) - ovMean) / ovSd));
     const gap = Math.abs(a.age - b.age);
-    const z = m.intercept + c.attr * see(b.attr) + c.sinc * see(b.sinc) + c.intel * see(b.intel) + c.fun * see(b.fun)
-      + c.amb * see(b.amb) + c.shar * shar + c.int_corr * mean.int_corr + c.samerace * mean.samerace + c.age_gap * gap
+    const z = m.intercept + c.attr * see(j === star ? eased(b.attr) : b.attr) + c.sinc * met(b.sinc, "sinc") + c.intel * met(b.intel, "intel") + c.fun * met(b.fun, "fun")
+      + c.amb * met(b.amb, "amb") + c.shar * shar + (j === star && !swipe ? MAIN_CHARACTER.wit * Math.sqrt((b.intel - 1) / 9) : 0) + c.int_corr * mean.int_corr + c.samerace * mean.samerace + c.age_gap * gap
       - tuning.agePenalty * (gap / 10) ** 2 - (heard[i].has(j) ? GOSSIP_PENALTY : 0)
-      + (aff ? (j === aff.agent ? aff.toward[i] : i === aff.agent ? aff.from[j] : 0) : 0) + (i === star || j === star ? MAIN_CHARACTER.charm[agents[star].sex] : 0);
+      + (aff ? (j === aff.agent ? aff.toward[i] : i === aff.agent ? aff.from[j] : 0) : 0) + (j === star ? (swipe ? MAIN_CHARACTER.swipeCharm : MAIN_CHARACTER.charm)[a.sex] : i === star ? MAIN_CHARACTER.keen[a.sex] : 0);
     return sigmoid(z) * openness(i);
   }
 
@@ -127,7 +145,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
   const wentOut = new Int32Array(N).fill(-1); // last day someone was out at a bar or party (or on a date) in the evening
   const agenda = new Map<number, Action[]>();
   const schedule = (tick: number, act: Action) => (agenda.get(tick) ?? agenda.set(tick, []).get(tick)!).push(act);
-  const byKind = PLACES.map(kind => venues.filter(v => v.kind === kind).map(v => v.id));
+  const byKind = PLACES.map(kind => venues.filter(v => v.kind === kind).map(v => v.id)), BAR = PLACES.indexOf("restaurant_bar");
   const venueFor = (a: Agent, k: number): number => {
     const kind = PLACES[k];
     if (kind === "home") return a.home;
@@ -151,7 +169,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
     const until = (Math.floor(tick / SLOTS) + 1) * SLOTS + MORNING_SLOT;
     for (const x of [i, j]) { busyUntil[x] = until; busyVenue[x] = agents[host].home; }
     for (const [teller, about] of first ? [[i, j], [j, i]] : []) { // news only travels the first time
-      for (const f of circles[agents[teller].circle]) {
+      for (const f of circles[agents[teller].circle] ?? []) { // visitors have no friends in town
         if (f === i || f === j || r() >= agents[teller].gossip) continue;
         heard[f].add(about);
         emit({ tick, type: "gossip", a: f, b: teller, venue, about });
@@ -163,10 +181,15 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
     }
   }
 
+  const booked = new Set<number>(); // days the player has a date
   function startDate(i: number, j: number, tick: number) {
-    const daysAhead = 1 + (r() * 7 | 0);
-    const at = (Math.floor(tick / SLOTS) + daysAhead) * SLOTS + DATE_SLOT;
-    schedule(at, { kind: "date", a: i, b: j, venue: agents[i].favorites.restaurant_bar![0] });
+    const today = Math.floor(tick / SLOTS);
+    let day = today + 1 + (r() * 7 | 0);
+    if (i === star || j === star) {
+      if (r() < Math.sqrt((agents[star].amb - 1) / 9)) for (let d = today + 1; d <= today + 7; d++) if (!booked.has(d)) { day = d; break; }
+      booked.add(day);
+    }
+    schedule(day * SLOTS + DATE_SLOT, { kind: "date", a: i, b: j, venue: agents[i].favorites.restaurant_bar![0] });
   }
 
   function spark(i: number, j: number, pij: number, pji: number, tick: number, venue: number, viaApp: boolean) {
@@ -174,7 +197,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
     p.m = pij * pji;
     emit({ tick, type: viaApp ? "match" : "spark", a: i, b: j, venue });
     const slot = tick % SLOTS;
-    if (!viaApp && slot >= (i === star || j === star ? DATE_SLOT : LATE_SLOT) && NIGHT_HOOKUP_PLACES.has(venues[venue].kind) && r() < tuning.hookupNight * p.m * boost(i, j)) {
+    if (!viaApp && slot >= (i === star || j === star ? DATE_SLOT : LATE_SLOT) && NIGHT_HOOKUP_PLACES.has(venues[venue].kind) && r() < tuning.hookupNight * p.m * boost(i, j, "fun")) {
       hookup(i, j, tick, venue);
     } else startDate(i, j, tick);
   }
@@ -192,7 +215,9 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
   const ticks = opts.days * SLOTS;
   const locations = opts.trackLocations ? new Uint16Array(ticks * N) : undefined;
   const present = new Map<number, number[]>();
-  const appUsers = agents.filter(a => a.apps).map(a => a.id);
+  const appUsers = agents.filter(a => a.apps && !a.visitor).map(a => a.id);
+  const starApps = star < 0 ? [] : agents.filter(a => a.apps && !a.isPlayer && compatible(a, agents[star])).map(a => a.id);
+  for (const a of agents) if (a.visitor) loc[a.id] = a.home;
 
   for (let tick = 0; tick < ticks; tick++) {
     const day = Math.floor(tick / SLOTS), slot = tick % SLOTS, wd = (startWeekday + day) % 7;
@@ -222,7 +247,7 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
         emit({ tick, type: "date", a, b, venue });
         schedule(tick + DATE_LEN, { kind: "dateEnd", a, b, venue });
       } else {
-        if (r() < Math.min(0.95, tuning.hookupDate * p.m * boost(a, b) * (1 + 0.5 * (p.dates - 1)))) hookup(a, b, tick, venue);
+        if (r() < Math.min(0.95, tuning.hookupDate * p.m * boost(a, b, "sinc") * (1 + 0.5 * (p.dates - 1)))) hookup(a, b, tick, venue);
         const movesOn = casual && (a === star || b === star) && partners[a].has(b); // casual: one night, then next
         if (partnerOf[a] !== b && !movesOn && p.dates < 4 && r() < ANOTHER_DATE) startDate(a, b, tick);
       }
@@ -231,10 +256,14 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
     present.clear();
     for (let i = 0; i < N; i++) {
       if (busyUntil[i] > tick) { loc[i] = busyVenue[i]; cat[i] = -1; }
+      else if (agents[i].visitor) loc[i] = agents[i].home; // out of town unless on a date with the player
       else {
         const a = agents[i], c = cat[i];
         let next = c;
-        if (c === -1 || tick === 0) next = pick(a.probs, off);
+        if (i === star && slot >= DATE_SLOT && slot < OUT_UNTIL && NIGHTS_OUT.slice(0, a.nightlife).includes(wd)) {
+          next = BAR; // a night out, and a fresh bar every hour
+          if (c === BAR && slot % 2 === 0) loc[i] = venueFor(a, BAR);
+        } else if (c === -1 || tick === 0) next = pick(a.probs, off);
         else {
           const pp = a.probs[prevOff + c], pn = a.probs[off + c];
           if (pp > pn && r() >= pn / pp) { // leave: go where people are arriving (keeps the schedule's marginals)
@@ -257,10 +286,11 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
       if (here.length < 2) continue;
       const rate = CHAT_RATE[venues[venue].kind]! * tuning.chat;
       for (const i of here) {
+        const pool = i === star ? here.filter(j => j !== star && status[j] === "single" && compatible(agents[star], agents[j])) : here;
         for (let c = i === star ? MAIN_CHARACTER.chats : 1; c > 0; c--) {
           if (r() >= rate) continue;
-          const j = here[r() * here.length | 0];
-          if (j !== i && compatible(agents[i], agents[j])) meet(i, j, tick, venue, false);
+          const j = pool[r() * pool.length | 0];
+          if (j !== undefined && j !== i && compatible(agents[i], agents[j])) meet(i, j, tick, venue, false);
         }
       }
     }
@@ -270,7 +300,8 @@ export function simulate(world: World, tuning: Tuning, opts: SimOptions): SimRes
         if (status[i] !== "single" || wentOut[i] === day || busyUntil[i] > tick) continue; // swipe on nights in
         for (let s = tuning.appSwipes * (i === star ? MAIN_CHARACTER.swipes : 1); s > 0; s--) {
           if (s < 1 && r() >= s) break;
-          const j = appUsers[r() * appUsers.length | 0];
+          const pool = i === star ? starApps : appUsers;
+          const j = pool[r() * pool.length | 0];
           if (j !== i && status[j] === "single" && compatible(agents[i], agents[j])) meet(i, j, tick, agents[i].home, true);
         }
       }

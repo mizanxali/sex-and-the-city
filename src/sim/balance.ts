@@ -1,7 +1,9 @@
-// Game balance for the player's month (npm run balance): score spread across random builds, and what pays off.
-// Target: a typical build averages 3-5 partners a month, strong builds 10-15. Knobs: MAIN_CHARACTER in engine.ts.
+// Game balance for the player's month (npm run balance): score spread across random builds, what pays off, and
+// whether every identity, age and play style can reach the top. Knobs: MAIN_CHARACTER in engine.ts, VISITORS in world.ts.
+// Targets: strong builds about 15 a month for every sex × orientation and ages 21-55, apps, bars and a mix all
+// competitive, and a description Jev likes worth about a third more.
 import tuningJson from "../../data/tuning.json" with { type: "json" };
-import { type Tuning, simulate } from "./engine.ts";
+import { type Affinity, type Tuning, simulate } from "./engine.ts";
 import { INTERESTS, RATINGS, RATING_BUDGET, type PlayerSpec, buildWorld, clampSpec, rng } from "./world.ts";
 
 const BUILDS = 240, SEEDS = [1, 2, 3], DAYS = 30;
@@ -19,9 +21,10 @@ function randomBuild(k: number): PlayerSpec {
   });
 }
 
-function score(spec: PlayerSpec) {
+function score(spec: PlayerSpec, seeds = SEEDS, appeal = 0) { // appeal: Jev's verdict on the description, as in ai.ts
   const world = buildWorld(spec), me = world.agents.length - 1;
-  const runs = SEEDS.map(seed => simulate(world, tuning, { days: DAYS, seed, focus: me }).partners[me].length);
+  const affinity: Affinity | undefined = appeal ? { agent: me, toward: world.agents.map(() => appeal), from: world.agents.map(() => appeal) } : undefined;
+  const runs = seeds.map(seed => simulate(world, tuning, { days: DAYS, seed, focus: me, affinity }).partners[me].length);
   return runs.reduce((a, b) => a + b, 0) / runs.length;
 }
 
@@ -48,13 +51,21 @@ by("casual", s => String(s.casual));
 by("looks", s => (s.attr <= 5 ? "1-5" : s.attr <= 7 ? "6-7" : "8-10"));
 by("fun", s => (s.fun <= 5 ? "1-5" : s.fun <= 7 ? "6-7" : "8-10"));
 
-// Strong builds: what a player optimising would try.
-const strong = (sex: "male" | "female", over: Partial<PlayerSpec> = {}) => clampSpec({
-  name: "Max", sex, age: 25, orientation: "straight", employed: true, apps: true, casual: true, nightlife: 5, gym: 3,
-  attr: 10, fun: 9, sinc: 5, intel: 5, amb: 4, interests: ["live music", "craft beer", "dancing"].filter(i => INTERESTS.includes(i)), ...over,
-});
-for (const [label, spec] of [["strong man", strong("male")], ["strong woman", strong("female")],
-  ["strong bi man", strong("male", { orientation: "bisexual" })], ["looks-only man", strong("male", { attr: 10, fun: 6, nightlife: 2 })],
-  ["no-apps man", strong("male", { apps: false })], ["no-apps woman", strong("female", { apps: false })],
-  ["homebody woman", strong("female", { nightlife: 0 })], ["looking for love", strong("female", { casual: false })]] as const)
-  console.log(`${label.padEnd(14)} ${score(spec).toFixed(1)}`);
+// Strong builds, one per play style; an identity's best is the best of the three (8 months each).
+const MORE = [1, 2, 3, 4, 5, 6, 7, 8];
+const styles = {
+  apps: { nightlife: 0, apps: true, attr: 10, sinc: 7, intel: 4, fun: 1, amb: 10 },
+  mixed: { nightlife: 3, apps: true, attr: 10, sinc: 4, intel: 7, fun: 4, amb: 7 },
+  bars: { nightlife: 5, apps: false, attr: 7, sinc: 4, intel: 4, fun: 10, amb: 7 },
+};
+const strong = (over: Partial<PlayerSpec>) => clampSpec({ name: "Max", sex: "male", age: 28, orientation: "straight", employed: true,
+  casual: true, gym: 1, interests: ["live music", "craft beer", "dancing"], ...styles.mixed, ...over });
+for (const sex of ["male", "female"] as const) for (const orientation of ["straight", "gay", "bisexual"] as const) {
+  const by = Object.entries(styles).map(([k, st]) => `${k} ${score(strong({ sex, orientation, ...st }), MORE).toFixed(1)}`);
+  console.log(`${`${sex} ${orientation}`.padEnd(17)} ${by.join("  ")}`);
+}
+for (const sex of ["male", "female"] as const)
+  console.log(`${`${sex} by age`.padEnd(17)} ${[21, 28, 40, 55].map(age => `${age}: ${score(strong({ sex, age }), MORE).toFixed(1)}`).join("  ")}`);
+// Jev's verdict on the description: 0.54 ≈ the "specific, charming" sample in npm run jev-check.
+for (const [label, spec] of [["typical", clampSpec({ name: "T", sex: "male", age: 28, orientation: "straight", employed: true, casual: true, apps: true, nightlife: 2, gym: 1, attr: 6, sinc: 7, intel: 7, fun: 6, amb: 7, interests: ["live music"] })], ["strong", strong({})]] as const)
+  console.log(`description ${label.padEnd(8)} ${[-0.54, 0, 0.54, 0.76].map(a => `${a > 0 ? "+" : ""}${a}: ${score(spec, MORE, a).toFixed(1)}`).join("  ")}`);

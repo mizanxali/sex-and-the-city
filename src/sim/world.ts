@@ -33,8 +33,10 @@ export interface Agent {
   attr: number; sinc: number; intel: number; fun: number; amb: number; interests: number; // bitmask
   home: number; work: number; circle: number; favorites: Partial<Record<Place, number[]>>;
   probs: Float32Array; // [daytype][slot][place], schedule shaped by this agent's habits
+  occupation: string; persona: number; // row in personas.json / traits.json, -1 for the player
   isPlayer: boolean;
   casual?: boolean; // player only
+  visitor?: boolean; // out of town: only on the apps, only for a gay player (see VISITORS)
 }
 
 export interface Venue { id: number; kind: Place; name: string }
@@ -68,6 +70,9 @@ const SECTORS: [string, RegExp][] = [
 ];
 const OFFICES = ["Initech Offices", "Vandelay Industries", "Synergy Partners LLC"];
 const CIRCLE_SIZE = 12;
+// The town's gay singles are too few for a gay player to compete (17 men, 19 women vs ~150 for straight players), so a
+// gay player's apps also reach this many gay singles of their sex from the wider region. Tuned with `npm run balance`.
+export const VISITORS = 120;
 
 export function rng(seed: number) { // mulberry32
   let a = seed >>> 0;
@@ -129,7 +134,8 @@ export function buildWorld(player?: PlayerSpec): World {
   const workFor = (occupation: string) => workplace.get(
     SECTORS.find(([, rx]) => rx.test(occupation))?.[0] ?? OFFICES[hash(occupation) % OFFICES.length])!;
 
-  const agents: Agent[] = personasJson.map(p => {
+  const town = personasJson.filter(p => !("visitor" in p));
+  const agents: Agent[] = town.map(p => {
     const t = traits[String(p.id)];
     const employed = !["not_in_workforce", "no_occupation"].includes(p.occupation);
     return {
@@ -139,7 +145,7 @@ export function buildWorld(player?: PlayerSpec): World {
       fun: t.fun, amb: t.ambition, interests: interestMask(t.interests),
       home: addVenue("home", `${p.name}'s place`), work: workFor(p.occupation),
       circle: -1, favorites: {}, probs: shapeSchedule(employed, p.age, t.nightlife, t.gym, avgNight, avgGym),
-      isPlayer: false,
+      occupation: p.occupation, persona: p.id, isPlayer: false,
     };
   });
   for (const a of agents) {
@@ -164,9 +170,23 @@ export function buildWorld(player?: PlayerSpec): World {
   // without them: they move into an existing friend circle of people their age.
   if (player) {
     if (player.age < MIN_AGE) throw new Error(`player must be ${MIN_AGE}+`);
+    if (player.orientation === "gay") { // before the player, who stays last; their own stream, so the town is unchanged
+      const vr = rng(WORLD_SEED + 2), away = addVenue("home", "out of town");
+      for (const p of personasJson.filter(p => "visitor" in p && p.sex === player.sex).slice(0, VISITORS)) {
+        const t = traits[String(p.id)];
+        if (p.age < MIN_AGE) throw new Error(`visitor ${p.id} is under ${MIN_AGE}`);
+        agents.push({
+          id: agents.length, name: p.name, sex: p.sex as Sex, age: p.age, orientation: "gay", status: "single",
+          employed: true, nightlife: t.nightlife, gym: t.gym, apps: true, gossip: t.gossip,
+          attr: clamp(attrDist.mean + attrDist.sd * gauss(vr), 1, 10), sinc: t.sincerity, intel: t.intelligence,
+          fun: t.fun, amb: t.ambition, interests: interestMask(t.interests), home: away, work: away, circle: -1,
+          favorites: {}, probs: new Float32Array(0), occupation: p.occupation, persona: p.id, isPlayer: false, visitor: true,
+        });
+      }
+    }
     const pr = rng(WORLD_SEED + 1);
     const me: Agent = {
-      ...player, id: agents.length, status: "single", gossip: 0.5, interests: interestMask(player.interests),
+      ...player, id: agents.length, status: "single", gossip: 0.5, interests: interestMask(player.interests), occupation: "", persona: -1,
       home: addVenue("home", `${player.name}'s place`), work: workplace.get(OFFICES[pr() * OFFICES.length | 0])!, circle: 0,
       favorites: {}, probs: shapeSchedule(player.employed, player.age, player.nightlife, player.gym, avgNight, avgGym),
       isPlayer: true,

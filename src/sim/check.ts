@@ -30,6 +30,14 @@ assert(a.events.every(e => e.a === me || e.b === me || e.about === me), "focus f
 console.log(`player month: ${a.partners[me].length} partners, ${a.events.length} events`,
   Object.fromEntries(Object.entries(Object.groupBy(a.events, e => e.type)).map(([k, v]) => [k, v!.length])));
 
+// 2b. Out-of-town visitors (gay players only) never meet anyone but the player.
+const gay = buildWorld({ ...player, orientation: "gay" }), gayMe = gay.agents.length - 1;
+const visitors = new Set(gay.agents.filter(a => a.visitor).map(a => a.id));
+assert(visitors.size > 0 && gay.agents.every(a => a.age >= MIN_AGE));
+const gayMonth = simulate(gay, tuning, { days: 30, seed: 7, recordAll: true });
+assert(gayMonth.events.every(e => !(visitors.has(e.a) || visitors.has(e.b)) || e.a === gayMe || e.b === gayMe), "a visitor met someone other than the player");
+console.log(`gay player month: ${gayMonth.partners[gayMe].length} partners, ${gayMonth.partners[gayMe].filter(i => visitors.has(i)).length} from out of town`);
+
 // 3. A year of the town matches GSS on seeds the calibration never saw.
 const s = runYear(world, tuning, HELD_OUT);
 console.log(report(s));

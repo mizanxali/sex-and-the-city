@@ -4,10 +4,14 @@ Run: .venv/bin/python -I scripts/enrich.py   (needs ANTHROPIC_API_KEY in .env)
 Reads data/personas.json, writes data/traits.json keyed by persona id.
 data/raw/enrich_batch.txt lists the batches so far (one id per line): re-running only pays for personas no batch
 has covered yet (the town grew from 500 to 1000), then rescales everyone together. Delete the file to redo all.
+`enrich.py --direct` fills the gaps with ordinary requests instead: minutes rather than up to a day, at full price.
+Their raw answers are kept in data/raw/enrich_direct.json, so later runs reuse them.
 """
 import json
 import os
+import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from statistics import NormalDist
 from pathlib import Path
 
@@ -17,6 +21,7 @@ from anthropic.types.messages.batch_create_params import Request
 
 ROOT = Path(__file__).resolve().parent.parent
 BATCH_FILE = ROOT / "data/raw/enrich_batch.txt"
+DIRECT_FILE = ROOT / "data/raw/enrich_direct.json"
 
 for line in (ROOT / ".env").read_text().splitlines() if (ROOT / ".env").exists() else []:
     k, _, v = line.partition("=")
@@ -76,36 +81,56 @@ def clamp(t):  # schema can't express ranges; enforce them here
             **{k: c(t[k], 1, 10) for k in ["sincerity", "intelligence", "fun", "ambition"]}}
 
 
-def rescale(traits):
+def rescale(traits, town):
     """The LLM ranks people sensibly but squeezes ratings (sincerity came back 7-9, mean 8.2).
-    Keep its ordering, map ranks onto the speed-dating rating distribution (mean/sd of both chooser sexes)."""
+    Keep its ordering, map ranks onto the speed-dating rating distribution (mean/sd of both chooser sexes).
+    Ranks come from the town only, so adding visitors never moves a resident; visitors take the town's value for
+    the same raw rating (or the nearest one the town has)."""
     att = json.loads((ROOT / "data/attraction.json").read_text())["by_chooser"].values()
     for ours, theirs in [("sincerity", "sinc"), ("intelligence", "intel"), ("fun", "fun"), ("ambition", "amb")]:
         dist = NormalDist(sum(a["feature_mean"][theirs] for a in att) / 2, sum(a["feature_sd"][theirs] for a in att) / 2)
-        ids = sorted(traits, key=lambda i: traits[i][ours])
+        ids = sorted((i for i in traits if i in town), key=lambda i: traits[i][ours])
         ranks = {}
         for v in {traits[i][ours] for i in ids}:  # ties share their average rank
             pos = [k for k, i in enumerate(ids) if traits[i][ours] == v]
             ranks[v] = (sum(pos) / len(pos) + 0.5) / len(ids)
-        for i in ids:
-            traits[i][ours] = round(max(1.0, min(10.0, dist.inv_cdf(ranks[traits[i][ours]]))), 2)
+        for i in traits:
+            raw = min(ranks, key=lambda v: abs(v - traits[i][ours]))
+            traits[i][ours] = round(max(1.0, min(10.0, dist.inv_cdf(ranks[raw]))), 2)
+
+
+def params(p):
+    return MessageCreateParamsNonStreaming(
+        model="claude-opus-5-5",
+        max_tokens=4000,
+        system=[{"type": "text", "text": SYSTEM, "cache_control": {"type": "ephemeral"}}],
+        messages=[{"role": "user", "content": prompt(p)}],
+        output_config={"effort": "low", "format": {"type": "json_schema", "schema": SCHEMA}},
+    )
 
 
 def main():
     personas = json.loads((ROOT / "data/personas.json").read_text())
     client = anthropic.Anthropic()
     batches = BATCH_FILE.read_text().split() if BATCH_FILE.exists() else []
+    direct = json.loads(DIRECT_FILE.read_text()) if DIRECT_FILE.exists() else {}
     running = any(client.messages.batches.retrieve(b).processing_status != "ended" for b in batches)
-    covered = set() if running else {r.custom_id for b in batches for r in client.messages.batches.results(b)}
-    if not running and (todo := [p for p in personas if str(p["id"]) not in covered]):  # running: wait, don't pay twice
+    covered = set(direct) | (set() if running else {r.custom_id for b in batches for r in client.messages.batches.results(b)
+                                                    if r.result.type == "succeeded"})
+    todo = [] if running else [p for p in personas if str(p["id"]) not in covered]  # running: wait, don't pay twice
+    if todo and "--direct" in sys.argv:
+        def one(p):
+            msg = client.messages.create(**params(p))
+            return str(p["id"]), (json.loads(next(b.text for b in msg.content if b.type == "text"))
+                                  if msg.stop_reason == "end_turn" else None)
+        with ThreadPoolExecutor(16) as pool:
+            got = dict(pool.map(one, todo))
+        direct |= {k: v for k, v in got.items() if v is not None}
+        DIRECT_FILE.write_text(json.dumps(direct, indent=1, ensure_ascii=False))
+        print(f"{len(todo)} direct requests, {sum(v is None for v in got.values())} declined")
+    elif todo:
         batches.append(client.messages.batches.create(requests=[
-            Request(custom_id=str(p["id"]), params=MessageCreateParamsNonStreaming(
-                model="claude-opus-5-5",
-                max_tokens=4000,
-                system=[{"type": "text", "text": SYSTEM, "cache_control": {"type": "ephemeral"}}],
-                messages=[{"role": "user", "content": prompt(p)}],
-                output_config={"effort": "low", "format": {"type": "json_schema", "schema": SCHEMA}},
-            )) for p in todo]).id)
+            Request(custom_id=str(p["id"]), params=params(p)) for p in todo]).id)
         BATCH_FILE.write_text("\n".join(batches) + "\n")
         print(f"new batch {batches[-1]} for {len(todo)} personas")
 
@@ -122,8 +147,9 @@ def main():
                 failed.append((r.custom_id, r.result.type, msg and msg.stop_reason))
                 continue
             traits[r.custom_id] = clamp(json.loads(next(b.text for b in msg.content if b.type == "text")))
+    traits |= {k: clamp(v) for k, v in direct.items()}
     traits = {k: traits[k] for k in sorted(traits, key=int)}
-    rescale(traits)
+    rescale(traits, {str(p["id"]) for p in personas if not p.get("visitor")})
     (ROOT / "data/traits.json").write_text(json.dumps(traits, indent=1, ensure_ascii=False))
     print(f"wrote data/traits.json: {len(traits)} ok, {len(failed)} failed {failed[:10]}")
 

@@ -19988,5 +19988,4802 @@
   "type": "His wife of many decades, who still laughs at his slide-rule jokes and tolerates the model railway taking over the spare room.",
   "dealbreaker": "Anyone who says 'I'm just not a tech person' and then refuses to let him show them how to fix it.",
   "flirting_style": "He offers to recalibrate your thermostat and explains the efficiency gains with a twinkle in his eye, then hurries home to tell his wife about the nice person he helped."
+ },
+ "1000": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "live music",
+   "volunteering",
+   "pets"
+  ],
+  "type": "A steady, kind-hearted guy who doesn't mind boots in the hallway or a 3 a.m. calving call.",
+  "dealbreaker": "Anyone who calls store-bought barbecue sauce 'basically the same thing' is getting walked to the door.",
+  "flirting_style": "He offers you a plate of brisket, then nervously asks three times if it's too smoky."
+ },
+ "1001": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "cooking",
+   "gardening",
+   "outdoors",
+   "reading",
+   "board games"
+  ],
+  "type": "Steady, kind men who'd rather share a home-cooked meal and a trail hike than hit a club.",
+  "dealbreaker": "Anyone who calls store-bought jarred salsa 'basically the same thing' as his abuela's recipe.",
+  "flirting_style": "He quietly shows up with a container of homemade tamales and a garden tomato, then calmly de-escalates his own nervousness mid-sentence."
+ },
+ "1002": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "diy and crafts",
+   "movies and tv",
+   "volunteering"
+  ],
+  "type": "Steady, low-drama guys who show up on time and appreciate a properly seasoned cast-iron pan.",
+  "dealbreaker": "Anyone who washes a cast-iron skillet with soap and then lets it air-dry is dead to him.",
+  "flirting_style": "He skips the small talk, invites you on a 5 a.m. fishing trip, and considers grilling your catch a love letter."
+ },
+ "1003": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 4.4,
+  "interests": [
+   "reading",
+   "gardening",
+   "religion",
+   "volunteering",
+   "diy and crafts"
+  ],
+  "type": "A steady, well-read gentleman his own age who appreciates a good story and shows up on time.",
+  "dealbreaker": "Anyone who calls a family Bible 'just an old book' or tosses out shoeboxes of photographs is shown the door.",
+  "flirting_style": "He offers to trace your family tree and lets an hour of pier-side stories do the courting, though he'll fret for days afterward that he talked too much."
+ },
+ "1004": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 4.32,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "art and museums",
+   "live music",
+   "tech",
+   "outdoors",
+   "cooking"
+  ],
+  "type": "Creative, curious guys who can talk about a gallery show and then debate tabs versus spaces.",
+  "dealbreaker": "Anyone who calls his data visualizations 'just some charts.'",
+  "flirting_style": "Over-caffeinated enthusiasm, sending you photos of street art he thinks you'd like, with way too much context about the artist."
+ },
+ "1005": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 2.95,
+  "ambition": 7.98,
+  "interests": [
+   "diy and crafts",
+   "outdoors",
+   "cooking",
+   "reading",
+   "yoga and wellness"
+  ],
+  "type": "Steady, kind men who show up on time and don't mind a quiet evening by the lake.",
+  "dealbreaker": "Anyone who says 'let's just wing it' about a dinner reservation he spent three days researching.",
+  "flirting_style": "He builds you a perfectly sanded cutting board and hopes you'll figure out the rest."
+ },
+ "1006": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "dancing",
+   "cooking",
+   "volunteering",
+   "reading"
+  ],
+  "type": "Kind, culturally curious men who'll happily spend a Saturday at a gallery and then split enchiladas.",
+  "dealbreaker": "Anyone who walks past a Diego Rivera print without stopping, or asks if the museum has a gift shop first.",
+  "flirting_style": "He invites you to a salsa class, then nervously recounts the budget for his next pop-up show between missteps."
+ },
+ "1007": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 2.95,
+  "ambition": 6.74,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "reading",
+   "video games",
+   "outdoors"
+  ],
+  "type": "A steady, low-drama guy who'd rather fix a fence together than go out to a club.",
+  "dealbreaker": "Anyone who keeps receipts in a crumpled pile instead of a labeled folder.",
+  "flirting_style": "He nervously offers to fix something of yours, then talks about fishing lures for ten minutes before realizing he forgot to ask your name."
+ },
+ "1008": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "outdoors",
+   "volunteering",
+   "video games",
+   "diy and crafts"
+  ],
+  "type": "Warm, easygoing guys who'll show up to pickup volleyball and stay for a bowl of homemade pho.",
+  "dealbreaker": "Anyone who calls his mom's pho 'basically just soup' is getting walked out like an unsafe pallet.",
+  "flirting_style": "Offers to help you move a couch, then invites you over for banh mi as 'payment' and hopes you get the hint."
+ },
+ "1009": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.25,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 2.95,
+  "ambition": 5.58,
+  "interests": [
+   "diy and crafts",
+   "gardening",
+   "outdoors",
+   "reading",
+   "volunteering"
+  ],
+  "type": "He goes for steady, kind men who show up on time and know how to use a level.",
+  "dealbreaker": "He quietly ended a promising date after watching the guy mop a spill in circles instead of a figure-eight.",
+  "flirting_style": "He shows interest by offering to fix your wobbly table and then lingering a little too long to make sure it stays fixed."
+ },
+ "1010": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 4.4,
+  "interests": [
+   "art and museums",
+   "diy and crafts",
+   "volunteering",
+   "reading",
+   "gardening"
+  ],
+  "type": "Gentle, grounded men who'll happily spend a Saturday at the Art Institute and then help build a birdhouse.",
+  "dealbreaker": "Anyone who calls his color-sorted pallets 'a mess' or suggests a bonsai is just a sad little tree.",
+  "flirting_style": "Shyly offers to paint you a watercolor, then spends twenty minutes apologizing that it isn't finished yet."
+ },
+ "1011": {
+  "nightlife": 1,
+  "gym": 4,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "running",
+   "cooking",
+   "reading",
+   "volunteering",
+   "fitness"
+  ],
+  "type": "Grounded, family-oriented guys who show up on time and call their mothers.",
+  "dealbreaker": "Anyone who says insurance is a scam and then asks him to explain their deductible.",
+  "flirting_style": "Offers to cook you pupusas, then accidentally reviews your coverage gaps over dessert."
+ },
+ "1012": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "art and museums",
+   "diy and crafts",
+   "craft beer",
+   "live music"
+  ],
+  "type": "Outdoorsy, curious guys who can hold their own at trivia and don't flinch at a little salt spray.",
+  "dealbreaker": "Anyone who says 'it's just a fun fact' after being wrong at trivia and refuses to concede the point.",
+  "flirting_style": "He invites you sailing, then spends the whole trip explaining how he'd safely demolish every lighthouse you pass."
+ },
+ "1013": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 4.32,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "video games",
+   "reading",
+   "board games",
+   "live music"
+  ],
+  "type": "Thoughtful creative guys who can debate sci-fi plots and still enjoy a quiet hike.",
+  "dealbreaker": "Anyone who uses Comic Sans unironically or rage-quits board game night.",
+  "flirting_style": "Sends you a custom indie playlist and a doodle of you, then overanalyzes whether it was too much."
+ },
+ "1014": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "reading",
+   "diy and crafts",
+   "craft beer"
+  ],
+  "type": "Steady, outdoorsy men who can hold a conversation about history and don't mind quiet weekends.",
+  "dealbreaker": "Anyone who puts a socket wrench back in the wrong labeled drawer of his pegboard.",
+  "flirting_style": "Offers you a bottle of his home brew and then explains the fermentation curve in loving detail."
+ },
+ "1015": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "reading",
+   "board games",
+   "cooking",
+   "tech"
+  ],
+  "type": "Curious, emotionally literate guys who can talk Stoicism on a trail ride and don't flinch at a spreadsheet.",
+  "dealbreaker": "Anyone who says 'therapy is a scam' while asking him for free advice on their ex.",
+  "flirting_style": "Asks thoughtful open-ended questions, reflects your answers back warmly, then realizes mid-date he's basically running an intake session."
+ },
+ "1016": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "art and museums",
+   "board games",
+   "reading",
+   "yoga and wellness",
+   "live music"
+  ],
+  "type": "Thoughtful, artsy guys who can debate a Rothko and won't flip the board when they lose at Go.",
+  "dealbreaker": "Anyone who calls a gallery opening 'just free wine and weird paintings.'",
+  "flirting_style": "He drafts three versions of every text, picks the wittiest, then spends an hour worrying the joke was too obscure."
+ },
+ "1017": {
+  "nightlife": 3,
+  "gym": 3,
+  "dating_apps": true,
+  "gossip": 0.8,
+  "sincerity": 4.32,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 7.98,
+  "interests": [
+   "running",
+   "fitness",
+   "eating out",
+   "watching sports",
+   "cooking"
+  ],
+  "type": "Easygoing, witty guys who can keep up at a comedy show and still show up on time for brunch.",
+  "dealbreaker": "Anyone who RSVPs 'maybe' to his themed dinner party and then shows up without dressing for the theme.",
+  "flirting_style": "Turns every conversation into an improv scene, then nervously overthinks it in his journal later."
+ },
+ "1018": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "watching sports",
+   "volunteering",
+   "diy and crafts"
+  ],
+  "type": "Down-to-earth guys who don't mind dirt under their fingernails and can hold their own at a cookout.",
+  "dealbreaker": "Anyone who puts ketchup on brisket is getting walked right back to their car.",
+  "flirting_style": "Offers you the best rib off the grill and then talks way too long about his '72 Chevy's carburetor."
+ },
+ "1019": {
+  "nightlife": 1,
+  "gym": 3,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "dancing",
+   "cooking",
+   "watching sports",
+   "outdoors",
+   "board games"
+  ],
+  "type": "He falls for steady, family-minded guys who can keep up on the salsa floor and don't mind a boyfriend who's gone four days a week.",
+  "dealbreaker": "Anyone who calls his abuela's ropa vieja 'basically sloppy joes' is getting dropped off at the next exit.",
+  "flirting_style": "He offers to teach you a salsa step, then gets flustered and starts explaining his truck's new chrome trim instead."
+ },
+ "1020": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "gardening",
+   "tech",
+   "craft beer",
+   "reading",
+   "outdoors"
+  ],
+  "type": "Calm, outdoorsy guys who appreciate a good heirloom tomato and don't mind comfortable silence.",
+  "dealbreaker": "Anyone who leaves the walk-in cooler door open, even metaphorically.",
+  "flirting_style": "Shyly offers a homebrewed beer and then explains its fermentation curve in loving detail."
+ },
+ "1021": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "cooking",
+   "reading",
+   "volunteering",
+   "board games"
+  ],
+  "type": "Steady, kind guys who show up on time and don't mind a quiet night with a puzzle and pot pie.",
+  "dealbreaker": "Anyone who 'forgets' to pay their share of dinner, because he will, professionally, follow up.",
+  "flirting_style": "He brings a homemade pie and gently over-explains the model train schedule, hoping you'll find the precision charming."
+ },
+ "1022": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "board games",
+   "diy and crafts",
+   "outdoors",
+   "volunteering",
+   "watching sports"
+  ],
+  "type": "Steady, handy guys who can laugh at his puns and hold their own at Settlers of Catan.",
+  "dealbreaker": "Anyone who stands on the top rung of a ladder, ignoring the sticker that clearly says not to.",
+  "flirting_style": "Turns small talk into a charming but overlong TED talk, then nervously invites you to game night."
+ },
+ "1023": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "running",
+   "cooking",
+   "craft beer",
+   "live music",
+   "reading"
+  ],
+  "type": "Steady, grounded men in their 40s or 50s who show up on time and know the difference between a rub and a marinade.",
+  "dealbreaker": "Anyone who wears a quartz watch and calls it 'basically the same thing.'",
+  "flirting_style": "He offers to explain his brisket timeline in detail and considers a second craft-beer recommendation a bold romantic gesture."
+ },
+ "1024": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "diy and crafts",
+   "outdoors",
+   "gardening",
+   "watching sports",
+   "volunteering"
+  ],
+  "type": "Steady, low-drama guys who show up on time and don't mind a 5 a.m. fishing trip.",
+  "dealbreaker": "Anyone who double-books a date and then calls it 'just a scheduling thing.'",
+  "flirting_style": "He offers to build you a spice rack and considers that a declaration of intent."
+ },
+ "1025": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "reading",
+   "outdoors",
+   "volunteering",
+   "board games"
+  ],
+  "type": "Gentle, thoughtful guys who'll happily hike the White Mountains and then argue about Ursula K. Le Guin over cocoa.",
+  "dealbreaker": "Anyone who calls his sketchbooks 'clutter' and suggests he 'just use an iPad.'",
+  "flirting_style": "He shyly sketches you on a napkin mid-conversation and slides it across without making eye contact."
+ },
+ "1026": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "reading",
+   "video games",
+   "tech"
+  ],
+  "type": "Steady, thoughtful guys who'd rather watch a desert sunrise than a Strip sunrise after a bender.",
+  "dealbreaker": "Anyone who calls drywall 'basically cardboard' or tosses recyclables in the trash in front of him.",
+  "flirting_style": "Quietly shows you his scale model of a WWII destroyer and hopes you ask follow-up questions."
+ },
+ "1027": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "reading",
+   "cooking",
+   "gardening",
+   "volunteering",
+   "board games"
+  ],
+  "type": "A well-read, cultured gentleman who can hold his own in a debate and appreciates a home-cooked meal.",
+  "dealbreaker": "Anyone who calls store-bought mole 'basically the same' is dismissed before dessert.",
+  "flirting_style": "He recites a line of Mexican poetry, then challenges you to chess and refuses to let you win."
+ },
+ "1028": {
+  "nightlife": 1,
+  "gym": 4,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "tech",
+   "cooking",
+   "live music",
+   "volunteering"
+  ],
+  "type": "Grounded, outdoorsy guys who can keep up on a trail and still talk gadgets by the campfire.",
+  "dealbreaker": "Anyone who leaves a campfire smoldering and says 'it'll be fine.'",
+  "flirting_style": "Offers to cook you dinner, then spends ten minutes earnestly explaining his Arduino weather station."
+ },
+ "1029": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "tech",
+   "live music",
+   "reading",
+   "board games"
+  ],
+  "type": "Creative, curious men who can talk about a gallery show and a sci-fi novel in the same breath.",
+  "dealbreaker": "He once left a date who called his vinyl collection \"basically just Spotify with extra steps.\"",
+  "flirting_style": "Quietly offers to brew you a pour-over, then over-explains the water temperature until you realize that was the flirting."
+ },
+ "1030": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "live music",
+   "reading",
+   "cooking"
+  ],
+  "type": "Thoughtful creative guys who can hold a conversation about an obscure gallery show and don't mind quiet nights in with a record spinning.",
+  "dealbreaker": "Anyone who stacks his vinyl sleeves out of alphabetical order and calls it 'vibes.'",
+  "flirting_style": "Nervously over-curates the date itinerary, then wins you over by sketching you on a napkin while pretending he's just doodling."
+ },
+ "1031": {
+  "nightlife": 1,
+  "gym": 4,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "fitness",
+   "cooking",
+   "live music",
+   "volunteering",
+   "board games"
+  ],
+  "type": "Grounded, curious men who can hold a conversation about something real and don't flinch at a 7 a.m. run.",
+  "dealbreaker": "Anyone who stores their medications in the bathroom and gets defensive when he gently brings up humidity.",
+  "flirting_style": "Asks thoughtful follow-up questions, double-checks he heard your name right, and invites you to a jazz set like he's scheduling a consultation."
+ },
+ "1032": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 4.32,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "board games",
+   "diy and crafts",
+   "live music",
+   "volunteering"
+  ],
+  "type": "Outdoorsy, curious guys who'll paddle a kayak and argue about board-game rules with equal enthusiasm.",
+  "dealbreaker": "Anyone who calls a soldering iron 'that hot pen thing' and then touches the wrong end.",
+  "flirting_style": "Invites you to board-game night, then over-explains the rules with a grin he hopes reads as charming."
+ },
+ "1033": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "tech",
+   "board games",
+   "reading",
+   "cooking"
+  ],
+  "type": "He goes for grounded, kind guys who'll happily trade a club night for a sunrise trailhead and a thermos of coffee.",
+  "dealbreaker": "Anyone who says 'it works on my machine' about their emotional baggage.",
+  "flirting_style": "He overprepares thoughtful questions, then nervously sends three follow-up texts double-checking that the first one didn't sound weird."
+ },
+ "1034": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "gardening",
+   "cooking",
+   "yoga and wellness",
+   "volunteering",
+   "tech"
+  ],
+  "type": "Steady, kind men in their 40s or 50s who show up on time and appreciate a home-cooked dal.",
+  "dealbreaker": "Anyone who says 'let's just play it by ear' about dinner plans, or about their retirement savings.",
+  "flirting_style": "He sends a well-researched follow-up text within 24 hours and invites you to see his tomato plants, which he considers extremely forward."
+ },
+ "1035": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "reading",
+   "gardening",
+   "watching sports",
+   "yoga and wellness"
+  ],
+  "type": "He goes for steady, kind men who call their mom and won't flinch at a five-chili salsa.",
+  "dealbreaker": "Anyone who calls store-bought mole from a jar 'basically the same thing.'",
+  "flirting_style": "He quietly brings you a tupperware of homemade pozole and then spends a week overanalyzing your thank-you text in a spreadsheet."
+ },
+ "1036": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.25,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "tech",
+   "craft beer",
+   "watching sports"
+  ],
+  "type": "A steady, low-drama guy who can handle a fishing rod and doesn't mind sawdust on the couch.",
+  "dealbreaker": "Anyone who calls a 1952 Farmall 'just an old tractor' is getting dropped off at the end of the gravel road.",
+  "flirting_style": "He offers to fix something of yours, then quietly hopes you'll notice he did it twice as well as needed."
+ },
+ "1037": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.8,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "board games",
+   "cooking",
+   "outdoors",
+   "yoga and wellness",
+   "volunteering"
+  ],
+  "type": "He goes for calm, steady guys who laugh at his bits and don't mind a color-coded shared calendar.",
+  "dealbreaker": "Anyone who shows up to trivia night without a team name already decided is dead to him.",
+  "flirting_style": "He opens with a rapid-fire improv bit, then panics and over-apologizes, then invites you to three different events that same week."
+ },
+ "1038": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "board games",
+   "tech",
+   "outdoors",
+   "volunteering",
+   "cooking"
+  ],
+  "type": "Kind, curious guys who can hold their own in a game of Catan and don't mind a trail-mix-and-hiking-boots kind of weekend.",
+  "dealbreaker": "Anyone who trades with him for wheat and then immediately builds the longest road against him.",
+  "flirting_style": "He explains projectile motion with a little too much enthusiasm, then invites you to a potluck as if it were a casual afterthought."
+ },
+ "1039": {
+  "nightlife": 1,
+  "gym": 3,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 7.98,
+  "interests": [
+   "fitness",
+   "cooking",
+   "video games",
+   "religion",
+   "reading"
+  ],
+  "type": "Confident, family-oriented guys who can hold their own in a pickup game and still show up to Sunday dinner.",
+  "dealbreaker": "He once ended a date because the guy left a sticky soda ring on the table and didn't even look for a napkin.",
+  "flirting_style": "Challenges you to a one-on-one, talks trash the whole time, then nervously offers to cook you fried chicken if you win."
+ },
+ "1040": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.25,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "cooking",
+   "gardening",
+   "reading",
+   "live music",
+   "yoga and wellness"
+  ],
+  "type": "Calm, curious men who will happily wake up at 6am for a farmers' market and don't need to talk the whole time.",
+  "dealbreaker": "Anyone who asks for ketchup before tasting the mole.",
+  "flirting_style": "Says almost nothing for twenty minutes, then quietly hands you a perfect taco and watches your face like it's a science experiment."
+ },
+ "1041": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "board games",
+   "art and museums",
+   "outdoors",
+   "reading",
+   "volunteering"
+  ],
+  "type": "Grounded, curious guys who'll happily lose a Catan game and then go on a sunrise bike ride.",
+  "dealbreaker": "Anyone who says 'it's just a game' while flipping the board.",
+  "flirting_style": "Sketches you on a delivery receipt and hands it over like it's a signature confirmation."
+ },
+ "1042": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 10.0,
+  "fun": 4.92,
+  "ambition": 4.4,
+  "interests": [
+   "reading",
+   "art and museums",
+   "gardening",
+   "volunteering",
+   "cooking"
+  ],
+  "type": "A well-read gentleman his own age who can discuss Faulkner over brisket and doesn't mind a quiet evening.",
+  "dealbreaker": "Anyone who fills in the crossword in pen and gets it wrong.",
+  "flirting_style": "He recommends a novel, lends you his own annotated copy, and waits patiently for you to notice the bookmark with his phone number."
+ },
+ "1043": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "live music",
+   "tech",
+   "volunteering",
+   "outdoors"
+  ],
+  "type": "Steady, family-minded men who'll show up to a cousin's quinceañera and actually dance.",
+  "dealbreaker": "Anyone who leaves the front door unlocked 'because it's a small town' is getting a lecture, not a second date.",
+  "flirting_style": "He shows up with a pot of pozole and a guitar, then gets nervous and talks about deadbolts for twenty minutes."
+ },
+ "1044": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "cooking",
+   "board games",
+   "reading"
+  ],
+  "type": "Thoughtful, curious guys who'll happily wait twenty minutes for the light to hit a mural just right.",
+  "dealbreaker": "Anyone who calls his carefully sourced single-origin pour-over 'just coffee.'",
+  "flirting_style": "Offers to take your photo at golden hour, then gets so absorbed in framing the shot that he forgets to actually ask for your number."
+ },
+ "1045": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 4.32,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "live music",
+   "watching sports",
+   "outdoors",
+   "diy and crafts",
+   "video games"
+  ],
+  "type": "Easygoing, handy guys who can hold their own on the court and don't mind a muddy riverbank date.",
+  "dealbreaker": "Anyone who calls his hand-built coffee table 'rustic' in that tone.",
+  "flirting_style": "Pulls out the guitar at the barbecue and pretends he wasn't planning to play your song all along."
+ },
+ "1046": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "video games",
+   "watching sports",
+   "diy and crafts",
+   "volunteering"
+  ],
+  "type": "Down-to-earth guys who can hold their own in a pickup game and don't mind a Saturday spent at Home Depot.",
+  "dealbreaker": "Anyone who calls the Cornhuskers 'just a corn team' or schedules dinner during a home game.",
+  "flirting_style": "Offers to fix something in your apartment, then trash-talks you affectionately over a round of online games."
+ },
+ "1047": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 2.95,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "gardening",
+   "cooking",
+   "yoga and wellness",
+   "volunteering"
+  ],
+  "type": "Calm, dependable men who show up on time and don't mind a 5 a.m. trailhead start.",
+  "dealbreaker": "Anyone who says 'let's just wing it' about a trip, a recipe, or a medication schedule.",
+  "flirting_style": "He asks thoughtful, slightly clinical follow-up questions, then nervously offers to cook you pho as a formal second date."
+ },
+ "1048": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 10.0,
+  "fun": 4.92,
+  "ambition": 4.4,
+  "interests": [
+   "art and museums",
+   "reading",
+   "cooking",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "Gentle, well-read men who can sit quietly through an entire gallery wall without checking their phone.",
+  "dealbreaker": "Anyone who calls a Frida Kahlo print 'that unibrow lady poster.'",
+  "flirting_style": "He writes you a short poem on a napkin in two languages, then apologizes for the meter."
+ },
+ "1049": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "diy and crafts",
+   "art and museums",
+   "gardening",
+   "reading",
+   "board games"
+  ],
+  "type": "Steady, curious men who can hold a conversation about a Rothko and hand him the right socket wrench without asking which one.",
+  "dealbreaker": "Anyone who calls duct tape a 'permanent fix' or brags about skipping the instruction manual.",
+  "flirting_style": "He offers to fix something of yours, then over-plans the repair into three dates and a materials spreadsheet."
+ },
+ "1050": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "religion",
+   "outdoors",
+   "art and museums",
+   "cooking",
+   "reading"
+  ],
+  "type": "A gentle, curious man who'll split a sunrise hike and a thermos of coffee and doesn't flinch at Sunday mornings being booked.",
+  "dealbreaker": "Anyone who calls the Hill Country 'basically just Austin traffic with cows' is getting prayed for, not texted back.",
+  "flirting_style": "He writes you a slightly too earnest poem on a potluck napkin, then panics and offers you more peach cobbler."
+ },
+ "1051": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 4.32,
+  "intelligence": 10.0,
+  "fun": 7.91,
+  "ambition": 10.0,
+  "interests": [
+   "watching sports",
+   "live music",
+   "art and museums",
+   "volunteering",
+   "tech"
+  ],
+  "type": "Driven, culturally curious men who can hold their own in a debate and on the dance floor.",
+  "dealbreaker": "Anyone who says 'I'm just not a numbers person' and then refuses to split the check by the spreadsheet he already made.",
+  "flirting_style": "He drops a custom playlist into your DMs, then spends three days overanalyzing whether track seven was too forward."
+ },
+ "1052": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "gardening",
+   "movies and tv",
+   "volunteering"
+  ],
+  "type": "Steady, outdoorsy men his own age who can sit quietly in a boat for three hours without needing to fill the silence.",
+  "dealbreaker": "Anyone who leaves a ladder unsecured or calls a John Wayne movie 'kind of slow.'",
+  "flirting_style": "Offers to fix something at your place, then double-checks it twice before working up the nerve to ask you to dinner."
+ },
+ "1053": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "diy and crafts",
+   "gardening",
+   "outdoors",
+   "live music",
+   "volunteering"
+  ],
+  "type": "Steady, kind men around his age who don't mind sawdust on the couch and can name every Eagles album.",
+  "dealbreaker": "Anyone who calls his hand-built oak dining table 'cute IKEA vibes.'",
+  "flirting_style": "He offers to fix your wobbly chair, then plays you a Fleetwood Mac record and hopes you get the hint."
+ },
+ "1054": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "volunteering",
+   "reading",
+   "watching sports"
+  ],
+  "type": "A steady, low-drama guy who doesn't mind a 5 a.m. fishing trip and can tell a carburetor from a radiator.",
+  "dealbreaker": "Anyone who calls his color-coded weekend spreadsheet 'a cry for help' and then double-books him anyway.",
+  "flirting_style": "He pitches himself like a reliable product line, with clear value propositions, a firm handshake, and a follow-up text within 24 hours."
+ },
+ "1055": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.6,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "cooking",
+   "outdoors",
+   "volunteering",
+   "board games"
+  ],
+  "type": "A kind, steady man who appreciates a home-cooked meal and can hum along to a Trio Los Panchos bolero.",
+  "dealbreaker": "Anyone who calls jarred salsa 'basically the same' as his homemade mole is shown the door, politely, with leftovers.",
+  "flirting_style": "He feeds you pozole until you're too full to leave, then dedicates a bolero to you while pretending it's just playing on the radio."
+ },
+ "1056": {
+  "nightlife": 2,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.9,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 4.4,
+  "interests": [
+   "cooking",
+   "dancing",
+   "gardening",
+   "board games",
+   "religion"
+  ],
+  "type": "A well-mannered gentleman his age who can keep up on the salsa floor and appreciates a home-cooked ropa vieja.",
+  "dealbreaker": "Anyone who shows up late to dinner without calling, because the rice does not wait for anybody.",
+  "flirting_style": "He feeds you, teaches you a dance step, and lets the whole domino table know about you before you've even said yes."
+ },
+ "1057": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "tech",
+   "cooking",
+   "reading",
+   "volunteering",
+   "dancing"
+  ],
+  "type": "Warm, patient guys who appreciate a home-cooked meal and don't mind a quiet night in with a Raspberry Pi project.",
+  "dealbreaker": "Anyone who calls ropa vieja 'basically pulled pork' is getting a polite but firm data-driven rebuttal and no second date.",
+  "flirting_style": "He quietly offers to make you a cafecito in his moka pot and then gets so absorbed explaining extraction pressure that he forgets to actually ask you out."
+ },
+ "1058": {
+  "nightlife": 0,
+  "gym": 3,
+  "dating_apps": false,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "cooking",
+   "board games",
+   "volunteering",
+   "pets"
+  ],
+  "type": "A gentle, well-read gentleman who appreciates a home-cooked paella and doesn't mind a dog hair or two.",
+  "dealbreaker": "Anyone who says his tomatoes look 'a little soggy' is uninvited from Sunday lunch.",
+  "flirting_style": "He insists on refilling your plate three times and then casually asks if you'd like to be his partner at bingo night."
+ },
+ "1059": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "cooking",
+   "outdoors",
+   "volunteering",
+   "live music",
+   "watching sports"
+  ],
+  "type": "Warm, family-oriented guys who can keep up on a hike and won't flinch at a loud Sunday tamale session.",
+  "dealbreaker": "Anyone who calls a perfectly good tile roof 'kinda ugly' or refuses seconds at his mom's table.",
+  "flirting_style": "He invites you to his block party, hands you a plate, and somehow forgets to mention it was meant to be a date."
+ },
+ "1060": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 2.95,
+  "ambition": 7.98,
+  "interests": [
+   "diy and crafts",
+   "gardening",
+   "cooking",
+   "reading",
+   "volunteering"
+  ],
+  "type": "Steady, kind guys who show up on time and don't mind a quiet evening shelling peas on the porch.",
+  "dealbreaker": "He once ended a date because the guy wrote his return address in the wrong corner of an envelope.",
+  "flirting_style": "He shows interest by quietly memorizing your schedule and having fresh tomatoes from his garden waiting on your doorstep, then never mentions it."
+ },
+ "1061": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "outdoors",
+   "live music",
+   "volunteering"
+  ],
+  "type": "Outdoorsy, family-oriented guys who'll hike at dawn and still help wash the pozole pot after.",
+  "dealbreaker": "Anyone who sends back the salsa because it's 'too spicy' and then asks for ketchup.",
+  "flirting_style": "He feeds you something he invented that afternoon and watches your face way too intently for a verdict."
+ },
+ "1062": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "running",
+   "cooking",
+   "volunteering",
+   "reading",
+   "outdoors"
+  ],
+  "type": "Grounded, kind men with a five-year plan who can hold a conversation about both Octavia Butler and Coltrane.",
+  "dealbreaker": "Anyone who calls his grandmother's oxtail recipe 'basically just beef stew' is getting walked to their car immediately.",
+  "flirting_style": "He invites you on a 6 a.m. Potomac jog, then wins you over by casually having made you jerk chicken for after."
+ },
+ "1063": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "live music",
+   "tech",
+   "reading",
+   "cooking"
+  ],
+  "type": "Creative, grounded men who can talk about a Basquiat print and a database schema in the same breath.",
+  "dealbreaker": "Anyone who calls jazz 'elevator music' is getting left on read and in the elevator.",
+  "flirting_style": "He asks thoughtful questions, offers to take your photo in good light, then accidentally spends ten minutes explaining his latest side project."
+ },
+ "1064": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 2.95,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "craft beer",
+   "outdoors",
+   "reading"
+  ],
+  "type": "A steady, unflashy man who shows up on time and appreciates a well-built birdhouse.",
+  "dealbreaker": "Anyone who says 'let's just play it by ear' about a dinner reservation.",
+  "flirting_style": "He offers you a bottle from his best home-brew batch and then nervously explains the fermentation schedule for twenty minutes."
+ },
+ "1065": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 2.95,
+  "ambition": 7.98,
+  "interests": [
+   "gardening",
+   "cooking",
+   "running",
+   "diy and crafts",
+   "board games"
+  ],
+  "type": "Steady, punctual men who return texts within a reasonable window and respect their mothers.",
+  "dealbreaker": "Anyone who merges cells in a spreadsheet or leaves the garden hose uncoiled.",
+  "flirting_style": "He offers to help you build a budgeting template, then quietly worries for three days about whether that counted as a date."
+ },
+ "1066": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "gardening",
+   "watching sports",
+   "cooking"
+  ],
+  "type": "Down-to-earth guys who don't mind a 5 a.m. fishing trip and can tell a Phillips from a flathead.",
+  "dealbreaker": "Anyone who calls the Bears 'a solid team' with a straight face.",
+  "flirting_style": "Offers to fix something of yours, then quietly hopes you notice he built the bench you're sitting on."
+ },
+ "1067": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 5.58,
+  "interests": [
+   "diy and crafts",
+   "art and museums",
+   "outdoors",
+   "reading",
+   "live music"
+  ],
+  "type": "Thoughtful, creative guys who can talk philosophy on a hiking trail and don't mind a little mortar dust.",
+  "dealbreaker": "Anyone who calls a hand-laid stone wall 'basically just fancy Legos' is getting left on read.",
+  "flirting_style": "He shyly sketches your profile on a napkin and then forgets to give you his number."
+ },
+ "1068": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 4.92,
+  "ambition": 9.35,
+  "interests": [
+   "outdoors",
+   "reading",
+   "tech",
+   "diy and crafts",
+   "board games"
+  ],
+  "type": "Thoughtful, outdoorsy guys who can sit comfortably in silence at a summit and don't mind a 6 a.m. trailhead start.",
+  "dealbreaker": "Anyone who names their final files 'final_FINAL_v3_actual.docx' and sees no problem with it.",
+  "flirting_style": "He offers to send you the RAW files of the sunset photo he took on your hike, which is the closest he gets to a love letter."
+ },
+ "1069": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "art and museums",
+   "reading",
+   "volunteering",
+   "outdoors",
+   "gardening"
+  ],
+  "type": "Gentle, curious men who'd happily spend a date stargazing in a cold backyard and talking about Ursula K. Le Guin.",
+  "dealbreaker": "Anyone who calls his watercolors 'cute little paintings' or is rude to a call-center worker on speakerphone.",
+  "flirting_style": "He listens so attentively it feels like a customer satisfaction survey, then nervously offers to show you a blurry photo of the Andromeda galaxy."
+ },
+ "1070": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.25,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "diy and crafts",
+   "outdoors",
+   "religion",
+   "reading",
+   "volunteering"
+  ],
+  "type": "A steady, soft-spoken man who knows his way around a toolbox and doesn't mind sitting quietly by a river.",
+  "dealbreaker": "Anyone who calls a 1967 Mustang 'just an old car' is getting politely walked back to the parking lot.",
+  "flirting_style": "He offers to take a look at your carburetor, then shows up at 6 a.m. with coffee and never quite says what he means."
+ },
+ "1071": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.25,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 2.95,
+  "ambition": 4.4,
+  "interests": [
+   "gardening",
+   "reading",
+   "diy and crafts",
+   "volunteering",
+   "cooking"
+  ],
+  "type": "A gentle, well-read gentleman who can hold a conversation about Neruda and appreciates a homemade mole.",
+  "dealbreaker": "Anyone who fills in a crossword in pen and gets it wrong.",
+  "flirting_style": "He brings a bag of his own heirloom tomatoes and gently corrects your Spanish grammar, which he considers deeply romantic."
+ },
+ "1072": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.55,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 10.0,
+  "interests": [
+   "art and museums",
+   "dancing",
+   "cooking",
+   "outdoors",
+   "volunteering"
+  ],
+  "type": "Creative, curious guys who can keep up on the salsa floor and won't mind a detour to photograph an old brick facade.",
+  "dealbreaker": "Anyone who calls a beige glass box 'timeless' is getting ghosted before the tortillas burn.",
+  "flirting_style": "He sketches your profile on a napkin mid-conversation and pretends it was just a structural study."
+ },
+ "1073": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "gardening",
+   "tech",
+   "reading"
+  ],
+  "type": "Thoughtful, gentle men who can sit quietly on a trail and actually notice the birds.",
+  "dealbreaker": "Anyone who says 'close enough' about a measurement is immediately out of tolerance.",
+  "flirting_style": "He offers to show you his watercolor of a red-tailed hawk, then nervously explains the paper weight for ten minutes."
+ },
+ "1074": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "art and museums",
+   "cooking",
+   "live music",
+   "diy and crafts",
+   "outdoors"
+  ],
+  "type": "Grounded, family-oriented guys who appreciate a good mural and don't mind sawdust on the couch.",
+  "dealbreaker": "Anyone who calls his vinyl collection 'just old Spotify' is getting shown the door he personally rehung.",
+  "flirting_style": "Quietly offers to fix your wobbly table, then plays you a rare record and hopes the music does the talking."
+ },
+ "1075": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "outdoors",
+   "reading",
+   "board games",
+   "live music",
+   "art and museums"
+  ],
+  "type": "Thoughtful outdoorsy men who can hold their own at trivia night and don't mind a 6 a.m. trailhead start.",
+  "dealbreaker": "Anyone who confidently misuses 'literally' and then refuses to accept a gentle correction.",
+  "flirting_style": "He challenges you to a board game, wins too hard, then tries to recover by reading you a poem about the Montana sky."
+ },
+ "1076": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "art and museums",
+   "reading",
+   "live music",
+   "video games",
+   "outdoors"
+  ],
+  "type": "Thoughtful, gentle guys who'd rather talk philosophy over café con leche than shout over a club DJ.",
+  "dealbreaker": "Anyone who skips the bridge of a Latin jazz track to get to 'the good part.'",
+  "flirting_style": "He sends you a carefully curated playlist instead of saying he likes you, then worries for three days about whether track seven was too much."
+ },
+ "1077": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 2.96,
+  "interests": [
+   "outdoors",
+   "gardening",
+   "diy and crafts",
+   "live music",
+   "reading"
+  ],
+  "type": "A steady, soft-spoken man his own age who can sit quietly in a boat at dawn without needing to fill the silence.",
+  "dealbreaker": "Anyone who borrows a tool and returns it dirty, or worse, not at all.",
+  "flirting_style": "He fixes your squeaky porch door without being asked and then mentions, very casually, that the blues festival is next weekend."
+ },
+ "1078": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "running",
+   "reading",
+   "cooking",
+   "volunteering",
+   "board games"
+  ],
+  "type": "Thoughtful, punctual men who can discuss Camus over homemade dal and show up on time for a 6 a.m. beach jog.",
+  "dealbreaker": "Anyone who calls pre-ground supermarket coffee 'basically the same thing.'",
+  "flirting_style": "He shares a color-coded spreadsheet of his favorite coffee beans and considers it a declaration of interest."
+ },
+ "1079": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.25,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "reading",
+   "diy and crafts",
+   "volunteering",
+   "live music"
+  ],
+  "type": "A steady, well-read gentleman who shows up on time and can appreciate a good historical plaque.",
+  "dealbreaker": "Anyone who calls a 1790s saltbox 'a cute old shed' or leaves a leaky faucet unreported.",
+  "flirting_style": "He offers a bag of homegrown tomatoes and a twenty-minute history of your street, then double-checks whether you actually enjoyed it."
+ },
+ "1080": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 9.53,
+  "ambition": 7.98,
+  "interests": [
+   "dancing",
+   "live music",
+   "art and museums",
+   "cooking",
+   "volunteering"
+  ],
+  "type": "Warm, cultured guys who can keep up on the salsa floor and don't mind a last-minute drive to Ojai.",
+  "dealbreaker": "Anyone who calls a 401(k) match 'free money they'll deal with later' and then orders bottle service.",
+  "flirting_style": "Spins you once on the dance floor, then casually asks about your retirement goals like it's pillow talk."
+ },
+ "1081": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "running",
+   "volunteering",
+   "diy and crafts",
+   "live music"
+  ],
+  "type": "A steady, family-minded guy who doesn't get seasick and will survive Sunday dinner with forty Sinagras.",
+  "dealbreaker": "Anyone who calls the boat's bow 'the pointy front part' after being corrected twice.",
+  "flirting_style": "He over-plans the perfect sunset cruise down to the tide tables, then gets so nervous he narrates the navigation instead of making a move."
+ },
+ "1082": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "diy and crafts",
+   "cooking",
+   "outdoors",
+   "reading"
+  ],
+  "type": "Steady, punctual guys with good hands and a working knowledge of grout.",
+  "dealbreaker": "Leaves wet towels on hardwood and calls it 'airing out.'",
+  "flirting_style": "Compliments your kitchen's workflow efficiency, then offers to re-caulk your shower as a second date."
+ },
+ "1083": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 2.96,
+  "interests": [
+   "diy and crafts",
+   "gardening",
+   "art and museums",
+   "board games"
+  ],
+  "type": "A kind, steady fellow who appreciates a well-made chair and a good story about his granddaddy.",
+  "dealbreaker": "Anyone who calls reclaimed barn wood \"just old junk\" is getting walked to the door.",
+  "flirting_style": "He offers to fix something in your house, then quietly hand-paints your initials on it."
+ },
+ "1084": {
+  "nightlife": 3,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.85,
+  "sincerity": 1.41,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 10.0,
+  "interests": [
+   "live music",
+   "board games",
+   "travel",
+   "eating out",
+   "watching sports"
+  ],
+  "type": "Confident, quick-witted guys who can keep up with his banter and don't mind a 2 a.m. taco detour.",
+  "dealbreaker": "Anyone who pays full price for coffee when there's a loyalty card sitting right there.",
+  "flirting_style": "He treats a first date like a discovery call, asking rapid-fire questions, overcoming objections, and trying to close on a second date before the check arrives."
+ },
+ "1085": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "watching sports",
+   "outdoors",
+   "diy and crafts",
+   "volunteering",
+   "board games"
+  ],
+  "type": "Steady, down-to-earth guys who show up on time and don't mind a Sox game on in the background.",
+  "dealbreaker": "Anyone who says 'we'll figure out the plan when we get there.'",
+  "flirting_style": "He talks your ear off about load-bearing walls, then shyly offers to build you a bookshelf."
+ },
+ "1086": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "diy and crafts",
+   "outdoors",
+   "watching sports",
+   "reading",
+   "tech"
+  ],
+  "type": "Steady, handy guys who can hold a conversation about carburetors and the Bears' quarterback situation.",
+  "dealbreaker": "Anyone who borrows a power tool and returns it without the battery charged.",
+  "flirting_style": "Offers to fix something of yours, then explains the fix in loving, step-by-step detail as if closing a support ticket."
+ },
+ "1087": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "art and museums",
+   "reading",
+   "volunteering"
+  ],
+  "type": "A gentle, well-read gentleman who appreciates a handmade birdhouse and a long porch conversation.",
+  "dealbreaker": "Anyone who calls his hand-carved walnut chess set 'cute furniture' is getting checkmated out of his life.",
+  "flirting_style": "He offers a guided tour of the regional heritage wing, then nervously hands over a handwritten note with his phone number and the current compost temperature."
+ },
+ "1088": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 3.35,
+  "fun": 7.91,
+  "ambition": 4.4,
+  "interests": [
+   "outdoors",
+   "gardening",
+   "volunteering",
+   "wine and cocktails",
+   "watching sports"
+  ],
+  "type": "A steady, down-to-earth fella who'd rather go fishing at dawn than brunch at noon.",
+  "dealbreaker": "Anyone who calls bowling 'not a real sport' within earshot of his league trophy.",
+  "flirting_style": "Offers to show you the proper wrist action on a bowling throw, then talks about safety compliance for twenty minutes."
+ },
+ "1089": {
+  "nightlife": 1,
+  "gym": 3,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 10.0,
+  "interests": [
+   "running",
+   "outdoors",
+   "cooking",
+   "volunteering",
+   "watching sports"
+  ],
+  "type": "He goes for grounded, quick-witted guys who can keep up on a trail run and still argue about peer-reviewed studies over brisket.",
+  "dealbreaker": "Anyone who says they 'did their own research' on vaccines from a TikTok is getting a polite referral elsewhere.",
+  "flirting_style": "He flirts like he's taking a thorough history: lots of attentive follow-up questions, a skeptical raised eyebrow, then a surprise offer to smoke him some ribs."
+ },
+ "1090": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "reading",
+   "outdoors",
+   "cooking",
+   "board games"
+  ],
+  "type": "Thoughtful, gentle guys who'd rather talk philosophy on a trail than shout over club music.",
+  "dealbreaker": "Anyone who asks him to 'run their plates' as a joke more than once.",
+  "flirting_style": "Nervously overthinks every text for an hour, then sends a watercolor of the place they met instead of an actual message."
+ },
+ "1091": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 2.95,
+  "ambition": 9.35,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "reading",
+   "board games",
+   "tech"
+  ],
+  "type": "Calm, punctual men who can hold their own in a debate about economic history and don't mind silent hikes.",
+  "dealbreaker": "Anyone who cites a 'study' they saw on social media and can't name the sample size.",
+  "flirting_style": "He asks probing follow-up questions like a quarterly review, then offers to teach you the Sicilian Defense as his idea of a grand romantic gesture."
+ },
+ "1092": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "art and museums",
+   "video games",
+   "diy and crafts",
+   "volunteering",
+   "cooking"
+  ],
+  "type": "Creative, quick-witted guys who can hold their own in a debate and still show up for a pickup game.",
+  "dealbreaker": "Anyone who calls his forklift a 'little car' is getting palletized and shrink-wrapped.",
+  "flirting_style": "He turns everything into a friendly competition, then nervously overthinks whether losing on purpose counts as flirting."
+ },
+ "1093": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "live music",
+   "board games",
+   "volunteering"
+  ],
+  "type": "Curious, kind guys who'll happily join a gallery crawl and then a sunrise hike.",
+  "dealbreaker": "Anyone who calls board-game night 'just Monopoly' is getting gently escorted out.",
+  "flirting_style": "Invites you to help set up folding chairs at his next community event and calls it a date halfway through."
+ },
+ "1094": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "live music",
+   "board games",
+   "volunteering"
+  ],
+  "type": "Steady, kind men in their fifties who show up on time and own at least one good pair of hiking boots.",
+  "dealbreaker": "Anyone who 'doesn't really do budgets' or calls a spreadsheet 'boring' on the first date.",
+  "flirting_style": "He offers to fix your wobbly bookshelf and send you tomatoes from his garden, then follows up with a neatly scheduled second date."
+ },
+ "1095": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "art and museums",
+   "live music",
+   "board games",
+   "volunteering",
+   "yoga and wellness"
+  ],
+  "type": "Creative, grounded men who can talk about a Basquiat and still split the check to the cent.",
+  "dealbreaker": "Anyone who calls a mural 'just graffiti' or keeps receipts in a shoebox.",
+  "flirting_style": "He sketches your profile on a napkin, then apologizes nervously for the proportions."
+ },
+ "1096": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "outdoors",
+   "diy and crafts",
+   "volunteering",
+   "reading"
+  ],
+  "type": "Steady, down-to-earth guys who'd rather spend Saturday at the food pantry than at brunch.",
+  "dealbreaker": "Anyone who rinses a spill with bleach and ammonia 'just to be thorough.'",
+  "flirting_style": "Shows up unannounced with a bag of homegrown tomatoes and hopes they figure out the rest."
+ },
+ "1097": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "religion",
+   "watching sports",
+   "volunteering"
+  ],
+  "type": "Steady, grown men who can hold a fishing rod, a conversation, and a church hymn without flinching.",
+  "dealbreaker": "Anyone who puts a Cardinals game on mute to play a podcast, or stacks his vinyl without sleeves.",
+  "flirting_style": "Invites you to a 'small' barbecue that turns out to be forty people and his entire church choir, then saves you the best rib."
+ },
+ "1098": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 9.53,
+  "ambition": 9.35,
+  "interests": [
+   "cooking",
+   "dancing",
+   "volunteering",
+   "reading",
+   "watching sports"
+  ],
+  "type": "Grounded, family-oriented guys who can keep up on the salsa floor and appreciate a home-cooked encebollado.",
+  "dealbreaker": "Anyone who says ceviche is 'basically just raw fish salad' is getting a polite but firm vendor rejection.",
+  "flirting_style": "He talks a mile a minute, cooks for you by the second date, and accidentally negotiates the check like it's a wholesale contract."
+ },
+ "1099": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 4.32,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "live music",
+   "tech",
+   "cooking",
+   "reading",
+   "outdoors"
+  ],
+  "type": "Curious, creative guys who can keep up with a rambling 2am conversation about synth patches and sci-fi.",
+  "dealbreaker": "Anyone who calls his twelve-minute generative ambient piece 'nice background noise.'",
+  "flirting_style": "Challenges you to a game of one-on-one, loses track of the score, and starts humming a melody he swears you inspired."
+ },
+ "1100": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 4.32,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "live music",
+   "craft beer",
+   "volunteering"
+  ],
+  "type": "Creative outdoorsy guys who'll hike a trail at sunrise and hit a gallery opening by evening.",
+  "dealbreaker": "Anyone who sighs when he stops mid-hike to reshoot the same sunset for the fourth time.",
+  "flirting_style": "Offers to take your photo 'for the lighting' and then casually asks if he can tag you."
+ },
+ "1101": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "diy and crafts",
+   "tech",
+   "outdoors",
+   "gardening",
+   "reading"
+  ],
+  "type": "Steady, curious men who appreciate a well-made dovetail joint and don't mind a quiet weekend at a state park.",
+  "dealbreaker": "Anyone who sets a hot coffee mug directly on unfinished walnut without a coaster.",
+  "flirting_style": "He shows you his Raspberry Pi garden-sensor dashboard and hopes you notice the effort behind it."
+ },
+ "1102": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 4.4,
+  "interests": [
+   "cooking",
+   "gardening",
+   "reading",
+   "diy and crafts",
+   "board games"
+  ],
+  "type": "A sharp-witted gentleman who can hold his own in a chess debate and appreciates a proper mole.",
+  "dealbreaker": "Anyone who calls store-bought salsa 'basically the same thing' is escorted off the balcony.",
+  "flirting_style": "He tells a long story from 1962 in two languages, then offers you a tamale and a rematch."
+ },
+ "1103": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "diy and crafts",
+   "gardening",
+   "live music"
+  ],
+  "type": "Steady, kind men around his age who can sit quietly on a dock and still appreciate a good folk art fair.",
+  "dealbreaker": "Anyone who stands behind a running excavator to take a selfie is getting a safety lecture, not a second date.",
+  "flirting_style": "He offers to build you a rustic bench, then overthinks whether that was too forward for three days."
+ },
+ "1104": {
+  "nightlife": 3,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "dancing",
+   "cooking",
+   "volunteering",
+   "live music",
+   "board games"
+  ],
+  "type": "Warm, family-oriented guys who can keep up on the salsa floor and will actually show up to the potluck.",
+  "dealbreaker": "Anyone who calls store-bought jarred salsa 'basically the same thing.'",
+  "flirting_style": "He invites you to help run the taco stall at a festival and calls it a date halfway through your shift."
+ },
+ "1105": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 4.4,
+  "interests": [
+   "diy and crafts",
+   "gardening",
+   "reading",
+   "volunteering",
+   "outdoors"
+  ],
+  "type": "A steady, kind-hearted man who can sit comfortably in a fishing boat for three hours without needing to fill the silence.",
+  "dealbreaker": "Anyone who leaves a tractor out in the rain with the hood up is dead to him.",
+  "flirting_style": "He offers to sharpen your lawnmower blades and considers that a declaration of intent."
+ },
+ "1106": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.2,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "reading",
+   "yoga and wellness",
+   "diy and crafts",
+   "outdoors"
+  ],
+  "type": "Thoughtful, well-read men who can sit through a jazz set without checking their phone.",
+  "dealbreaker": "Anyone who calls his model railroad 'a cute little train set' is permanently rerouted.",
+  "flirting_style": "He brews you an exquisite oolong and explains its supply chain, hoping you'll notice that's affection."
+ },
+ "1107": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "craft beer",
+   "art and museums",
+   "travel"
+  ],
+  "type": "Grounded, outdoorsy men who can talk about Danish modernism on a switchback trail.",
+  "dealbreaker": "Anyone who owns a grey vinyl sectional and calls it 'timeless.'",
+  "flirting_style": "He compliments your lighting, offers to photograph you in golden hour, then accidentally spends twenty minutes explaining biophilic design."
+ },
+ "1108": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "cooking",
+   "religion",
+   "volunteering",
+   "diy and crafts",
+   "outdoors"
+  ],
+  "type": "A steady, kind man who shows up on time, eats seconds, and doesn't mind a little sawdust.",
+  "dealbreaker": "Anyone who calls store-bought sweet potato pie 'basically the same' is getting walked to his car.",
+  "flirting_style": "He shows up with a foil-covered plate of smoked turkey and a too-long explanation of soil pH, hoping the food does the talking."
+ },
+ "1109": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 4.32,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "tech",
+   "outdoors",
+   "live music",
+   "volunteering",
+   "eating out"
+  ],
+  "type": "Easygoing, outdoorsy guys who can keep up on a hike and still talk shop about home automation afterward.",
+  "dealbreaker": "Anyone who leaves a smart bulb on the factory default password is not getting a second date.",
+  "flirting_style": "Challenges you to a game of one-on-one, loses on purpose, then forgets he was supposed to ask for your number."
+ },
+ "1110": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "reading",
+   "tech",
+   "volunteering"
+  ],
+  "type": "Grounded, outdoorsy men who can hold a conversation about solar panels on a six-mile switchback.",
+  "dealbreaker": "Anyone who microwaves coffee he spent twenty minutes dialing in to exactly 93 degrees Celsius.",
+  "flirting_style": "He offers to show you his custom Arduino humidity sensor and genuinely believes that counts as a move."
+ },
+ "1111": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 4.4,
+  "interests": [
+   "gardening",
+   "cooking",
+   "board games",
+   "diy and crafts",
+   "volunteering"
+  ],
+  "type": "A tidy, punctual gentleman who can hold his own at the bridge table and isn't afraid of a salsa step or two.",
+  "dealbreaker": "Anyone who lets the gutters go a full season without cleaning them is not husband material.",
+  "flirting_style": "He shows up with a labeled container of homemade tembleque and a printed schedule for your next date, then spends ten minutes looking for his reading glasses, which are on his head."
+ },
+ "1112": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 4.32,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 9.35,
+  "interests": [
+   "diy and crafts",
+   "cooking",
+   "yoga and wellness",
+   "live music",
+   "watching sports"
+  ],
+  "type": "Grounded, patient guys who can handle a loud karaoke duet and a quiet night of homemade dumplings.",
+  "dealbreaker": "Anyone who calls a professional paint job 'basically just spray paint' is getting towed out of his life.",
+  "flirting_style": "Talks a mile a minute about your car's paint condition, then nervously offers to buff out a scratch for free."
+ },
+ "1113": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "reading",
+   "cooking",
+   "board games",
+   "volunteering"
+  ],
+  "type": "Thoughtful, quietly nerdy guys who can debate Ursula K. Le Guin over a pot of homemade kimchi jjigae.",
+  "dealbreaker": "Anyone who calls his digital art 'just pressing buttons' or double-dips in the ssamjang.",
+  "flirting_style": "He sketches you on a napkin mid-conversation, then gets too embarrassed to actually show it to you."
+ },
+ "1114": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "live music",
+   "reading",
+   "video games",
+   "volunteering"
+  ],
+  "type": "Outdoorsy, low-key guys who'll happily trade a club night for a sunrise hike and a good pour-over.",
+  "dealbreaker": "Anyone who leaves a coffee cup on a Redwood trail is dead to him, no appeals process.",
+  "flirting_style": "He handles it like a support ticket, listening patiently, asking thoughtful follow-ups, and then forgetting to actually ask for your number."
+ },
+ "1115": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.25,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "reading",
+   "outdoors",
+   "volunteering",
+   "board games"
+  ],
+  "type": "Thoughtful, unpretentious men who can discuss Whitman over pie and don't mind a little paint under the fingernails.",
+  "dealbreaker": "Anyone who calls a hand-built model ship 'a cute little boat toy' is getting walked politely to their car.",
+  "flirting_style": "He quietly offers to show you his prairie sunrise photos, then spends ten minutes apologizing for the composition."
+ },
+ "1116": {
+  "nightlife": 3,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 4.32,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 5.58,
+  "interests": [
+   "outdoors",
+   "live music",
+   "video games",
+   "volunteering",
+   "cooking"
+  ],
+  "type": "Outdoorsy, easygoing guys who'll say yes to a last-minute hike or a trivia night without needing a week's notice.",
+  "dealbreaker": "Anyone who shares a Google Calendar invite for a second date.",
+  "flirting_style": "Recruits you onto his trivia team, then 'accidentally' needs your number for the group chat."
+ },
+ "1117": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.2,
+  "sincerity": 8.98,
+  "intelligence": 10.0,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "reading",
+   "art and museums",
+   "gardening",
+   "tech",
+   "volunteering"
+  ],
+  "type": "A gentle, well-read gentleman who can discuss Dickens and differential equations over tea.",
+  "dealbreaker": "Anyone who calls a soldering iron 'that hot pen thing' is out of the running.",
+  "flirting_style": "He offers to show you his hand-restored 1930s radio and then explains signal modulation for forty minutes, beaming the whole time."
+ },
+ "1118": {
+  "nightlife": 2,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "live music",
+   "diy and crafts",
+   "art and museums",
+   "gardening",
+   "cooking"
+  ],
+  "type": "A grown man with soul who can hold a conversation about Coltrane and doesn't flinch at a little sawdust.",
+  "dealbreaker": "If you call his reclaimed-dresser sculpture 'a nice dresser,' the date is over before the sweet tea arrives.",
+  "flirting_style": "He plays a few bars of sax in your direction, then checks his smartwatch to see if his heart rate noticed."
+ },
+ "1119": {
+  "nightlife": 1,
+  "gym": 3,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "reading",
+   "volunteering",
+   "cooking"
+  ],
+  "type": "Grounded, curious men who can hold a conversation about history and don't mind a muddy trail.",
+  "dealbreaker": "Anyone who calls his handmade oak bookshelf 'basically IKEA' is shown the door, which he also built.",
+  "flirting_style": "Casually assesses your posture, offers an unsolicited stretch, then invites you on a 14-mile hike as if it were a coffee date."
+ },
+ "1120": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.2,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "reading",
+   "gardening",
+   "cooking",
+   "diy and crafts",
+   "volunteering"
+  ],
+  "type": "A calm, well-read woman who appreciates a long sobremesa and won't rush the conversation.",
+  "dealbreaker": "Anyone who calls a gas grill an asado is dismissed with a structural integrity rating of zero.",
+  "flirting_style": "She quietly lends you a dog-eared Borges novel and waits three weeks to ask what you thought."
+ },
+ "1121": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "dancing",
+   "outdoors",
+   "diy and crafts",
+   "cooking",
+   "watching sports"
+  ],
+  "type": "Grounded, competent women who can keep up on the dance floor and on a trail.",
+  "dealbreaker": "She once ended a date because the woman stored the cereal on the spice shelf.",
+  "flirting_style": "She asks you to salsa, leads with total confidence, then ruins the moment by explaining load-bearing walls."
+ },
+ "1122": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 9.35,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "running",
+   "movies and tv",
+   "reading"
+  ],
+  "type": "Grounded, dependable women who show up on time and appreciate a home-cooked meal from homegrown tomatoes.",
+  "dealbreaker": "Anyone who calls a load-bearing wall 'just drywall' and suggests knocking it out for an open-concept vibe.",
+  "flirting_style": "Quietly offers to fix your wobbly shelf, then knits you a scarf three months later as her version of a confession."
+ },
+ "1123": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "reading",
+   "cooking",
+   "yoga and wellness",
+   "art and museums",
+   "gardening"
+  ],
+  "type": "Thoughtful, grounded women who can hold a long silence and a longer conversation about Toni Morrison.",
+  "dealbreaker": "Anyone who calls her vintage Hasselblad 'a cute little box' and then tries to put it on a wet bar.",
+  "flirting_style": "She quietly notices one tiny, perfect detail about you, mentions it three days later, and then panics about whether that was too much."
+ },
+ "1124": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "cooking",
+   "gardening",
+   "volunteering",
+   "reading"
+  ],
+  "type": "Grounded, creative women who can talk about art and won't mind a 4:30 a.m. alarm, even if Linda will sleep through it.",
+  "dealbreaker": "Anyone who says 'just take the scenic route' and then can't explain which one.",
+  "flirting_style": "She sketches you on a napkin mid-conversation and acts like it's no big deal, then quietly offers you a plate of her mama's collard greens."
+ },
+ "1125": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "reading",
+   "volunteering",
+   "cooking",
+   "yoga and wellness"
+  ],
+  "type": "Grounded, outdoorsy women who show up on time and can hold their own at a dinner party.",
+  "dealbreaker": "Anyone who RSVPs 'maybe' to her potluck and then shows up with nothing.",
+  "flirting_style": "She invites you to a hike, a book club, and an improv night in the same text, then sends a shared calendar link."
+ },
+ "1126": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "dancing",
+   "reading",
+   "cooking",
+   "gardening"
+  ],
+  "type": "Warm, creative women who can talk sci-fi for hours and won't flinch at paint-stained jeans.",
+  "dealbreaker": "If she calls her grandma's peach cobbler recipe 'a little dry,' it's over before dessert.",
+  "flirting_style": "She sketches you a tiny portrait on a napkin, then spends the next ten minutes anxiously apologizing for the proportions."
+ },
+ "1127": {
+  "nightlife": 1,
+  "gym": 3,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "dancing",
+   "cooking",
+   "fitness",
+   "volunteering",
+   "watching sports"
+  ],
+  "type": "Grounded, family-oriented women who can keep up on the dance floor and show up on time.",
+  "dealbreaker": "If you say 'I don't really plan things' she will quietly cross you out in her bullet journal with a color-coded pen.",
+  "flirting_style": "She invites you to a folkloric dance showcase, then pencils in a follow-up coffee date before you've even said yes."
+ },
+ "1128": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "reading",
+   "tech",
+   "gardening"
+  ],
+  "type": "She goes for grounded, curious women who can debate a gallery piece and still enjoy a muddy hike.",
+  "dealbreaker": "Anyone who lies about where they were last night, because she will absolutely figure it out from the timestamps.",
+  "flirting_style": "She studies you quietly for twenty minutes, then delivers one eerily accurate observation about your habits and calls it a compliment."
+ },
+ "1129": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "reading",
+   "gardening",
+   "tech"
+  ],
+  "type": "Calm, capable women who enjoy a quiet trail and won't mind sawdust on the couch.",
+  "dealbreaker": "Anyone who calls a load-bearing wall 'just a wall' and suggests knocking it down for an open concept.",
+  "flirting_style": "She offers to fix your wobbly table and considers this a confession of feelings."
+ },
+ "1130": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "reading",
+   "art and museums",
+   "volunteering"
+  ],
+  "type": "Warm, grounded women who'll show up to opening night and stay to help stack chairs.",
+  "dealbreaker": "Anyone who brings store-bought coleslaw to a potluck and calls it 'homemade-ish.'",
+  "flirting_style": "She pitches herself like a quarterly forecast, then over-commits by inviting you to book club, a hike, and a potluck all in the same breath."
+ },
+ "1131": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "reading",
+   "board games",
+   "outdoors",
+   "cooking"
+  ],
+  "type": "Curious, slightly nerdy women who can debate the nature of consciousness and still get lost on a hiking trail with her.",
+  "dealbreaker": "Anyone who does the crossword in pen and then refuses to admit they got 14-across wrong.",
+  "flirting_style": "She slides a hand-drawn logic puzzle across the table and gets visibly flustered if you solve it faster than she expected."
+ },
+ "1132": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "cooking",
+   "running",
+   "board games",
+   "volunteering",
+   "gardening"
+  ],
+  "type": "Dependable, warm women who show up on time and will happily duet a Heart song with her at karaoke.",
+  "dealbreaker": "Anyone who puts an empty pie tin back in the cupboard like it's still in stock.",
+  "flirting_style": "She dedicates a karaoke song in your general direction, then follows up with a homemade pie and a scheduled second date."
+ },
+ "1133": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "reading",
+   "gardening",
+   "diy and crafts",
+   "volunteering",
+   "outdoors"
+  ],
+  "type": "A grounded, curious woman who can talk colonial history on a long waterfront walk and shows up on time.",
+  "dealbreaker": "Anyone whose junk drawer has become a junk room and who insists it's 'organized chaos.'",
+  "flirting_style": "She offers to help reorganize your pantry and calls it a second date, then quietly hopes you notice it was a gesture of affection."
+ },
+ "1134": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 5.58,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "reading",
+   "movies and tv",
+   "gardening"
+  ],
+  "type": "Thoughtful, artsy women who'll happily tramp through a marsh at dawn and then argue about an indie film over herb-crusted grits.",
+  "dealbreaker": "Anyone who calls every shade of off-white 'just white' is dead to her.",
+  "flirting_style": "She offers to sketch you, then gets so absorbed in your jawline she forgets to actually say anything charming."
+ },
+ "1135": {
+  "nightlife": 1,
+  "gym": 4,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "cooking",
+   "outdoors",
+   "fitness",
+   "live music",
+   "volunteering"
+  ],
+  "type": "Grounded, warm women who show up on time and bring a dish to the potluck.",
+  "dealbreaker": "Anyone who 'doesn't really do calendars' or leaves the tupperware lid off on purpose.",
+  "flirting_style": "Invites you to her group hike, then proposes a second date with a laminated itinerary."
+ },
+ "1136": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 7.98,
+  "interests": [
+   "diy and crafts",
+   "volunteering",
+   "live music",
+   "outdoors",
+   "board games"
+  ],
+  "type": "She goes for grounded, warm women who can hold their own at a barbecue and don't mind sawdust on the couch.",
+  "dealbreaker": "Anyone who calls a professional contractor for a loose cabinet hinge is dead to her.",
+  "flirting_style": "She dedicates a karaoke power ballad to you, then forgets which table you were sitting at."
+ },
+ "1137": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "yoga and wellness",
+   "diy and crafts",
+   "reading"
+  ],
+  "type": "Grounded, outdoorsy women who can sit comfortably in silence on a long drive or a fishing dock.",
+  "dealbreaker": "Anyone who lets the gas light come on and calls it 'an adventure' — that's her job and she doesn't need it at home.",
+  "flirting_style": "Offers to check your tire pressure, then nervously pivots to which true-crime podcast you'd recommend."
+ },
+ "1138": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "reading",
+   "cooking",
+   "outdoors",
+   "volunteering"
+  ],
+  "type": "Curious, grounded women who can talk murals and labor-market trends over a homemade vegan meal.",
+  "dealbreaker": "If she says 'I'm just not a numbers person' and refuses to even look at the chart Karri made about it.",
+  "flirting_style": "She asks thoughtful follow-up questions like a career intake session, then forgets she was supposed to be flirting and invites you on a mural walk."
+ },
+ "1139": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "yoga and wellness",
+   "cooking",
+   "reading",
+   "outdoors",
+   "volunteering"
+  ],
+  "type": "Calm, grounded women who show up on time and think a beach clean-up counts as a great second date.",
+  "dealbreaker": "Anyone who brings plastic straws to a picnic and calls her color-coded itinerary 'a bit much.'",
+  "flirting_style": "She quietly hands you a piece of sea glass she found, then spends the next hour worrying it was too forward."
+ },
+ "1140": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 2.95,
+  "ambition": 10.0,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "reading",
+   "yoga and wellness",
+   "board games"
+  ],
+  "type": "Calm, outdoorsy women who can sit in comfortable silence on a summit and still beat her at chess.",
+  "dealbreaker": "Anyone who calls a pivot table 'that Excel thing' and then doesn't let her explain it for twenty minutes.",
+  "flirting_style": "She preps three conversation topics in advance, overanalyzes every text, and eventually confesses her feelings via a carefully proofread message with bullet points."
+ },
+ "1141": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.8,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 4.4,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "board games",
+   "religion",
+   "volunteering"
+  ],
+  "type": "A steady, kind-hearted woman who shows up on time for bridge night and appreciates a good casserole.",
+  "dealbreaker": "Anyone who 'forgets' to pay their share of the potluck fund gets struck from the sign-up sheet, permanently.",
+  "flirting_style": "She crochets you a scarf in your favorite color, then insists it was 'just leftover yarn.'"
+ },
+ "1142": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "board games",
+   "reading",
+   "live music",
+   "yoga and wellness"
+  ],
+  "type": "Thoughtful, artsy women who can hold their own in a debate and won't flip the Catan board when they lose.",
+  "dealbreaker": "Anyone who calls pour-over 'just coffee' or eyeballs the grind size is getting a polite but firm Southern 'bless your heart.'",
+  "flirting_style": "She quietly slips you a vintage matchbook with her number inside, then challenges you to a board game she's already analyzed for an hour."
+ },
+ "1143": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "tech",
+   "outdoors",
+   "reading",
+   "live music",
+   "cooking"
+  ],
+  "type": "Curious, grounded women who'll happily spend a Saturday kayaking and then debugging a Raspberry Pi with her.",
+  "dealbreaker": "Anyone who says 'I was never a science person' with pride instead of mild shame.",
+  "flirting_style": "She builds you a tiny blinking LED gadget and then panics and explains the circuit for twenty minutes instead of saying she likes you."
+ },
+ "1144": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "gardening",
+   "outdoors",
+   "cooking",
+   "yoga and wellness",
+   "reading"
+  ],
+  "type": "Grounded, emotionally steady women who can hike a ridge trail and then talk thrillers over a bottle of Napa red.",
+  "dealbreaker": "Anyone who calls a spreadsheet a database, or who has never once balanced a budget.",
+  "flirting_style": "She asks thoughtful follow-up questions, overplans the second date, and eventually signals interest by offering to cook you her famous shakshuka."
+ },
+ "1145": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "reading",
+   "volunteering",
+   "religion",
+   "diy and crafts"
+  ],
+  "type": "Steady, organized women who show up on time and have a five-year plan, bonus if they like soul music.",
+  "dealbreaker": "Anyone who says 'budgets are a vibe killer' or leaves dirty dishes overnight.",
+  "flirting_style": "She bakes you something from a color-coded recipe binder and hopes you notice it's your favorite flavor."
+ },
+ "1146": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "gardening",
+   "cooking",
+   "religion",
+   "diy and crafts"
+  ],
+  "type": "A grounded, kind woman who appreciates a home-cooked meal and doesn't mind paint on the furniture.",
+  "dealbreaker": "Anyone who calls a load-bearing wall 'just decoration' and tries to knock it out for an open concept.",
+  "flirting_style": "She shows up with a foil-covered plate of peach cobbler, then worries for three days about whether it was too forward."
+ },
+ "1147": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "gardening",
+   "volunteering",
+   "outdoors",
+   "yoga and wellness",
+   "reading"
+  ],
+  "type": "Grounded, punctual women who'll come to opening night and also help strike the set afterward.",
+  "dealbreaker": "She once ended a date because the woman said she 'doesn't really believe in calendars.'",
+  "flirting_style": "Warm stage-trained banter followed by an immediate, color-coded proposal for a second date."
+ },
+ "1148": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "yoga and wellness",
+   "gardening",
+   "live music"
+  ],
+  "type": "Artsy, earthy women who sketch in cafés and know the names of local muralists.",
+  "dealbreaker": "Anyone who uses bleach wipes on a wooden table and calls it 'clean.'",
+  "flirting_style": "Over-caffeinated rambling about a mural she loves, then shyly offering a jar of homemade lavender all-purpose spray as a token of affection."
+ },
+ "1149": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "cooking",
+   "reading",
+   "yoga and wellness",
+   "volunteering",
+   "art and museums"
+  ],
+  "type": "She goes for warm, grounded women who show up on time and laugh at her stage-crew stories.",
+  "dealbreaker": "Anyone who 'eyeballs' measurements while baking is dead to her.",
+  "flirting_style": "She invites you to a themed dinner night, then over-explains the menu with Toastmasters-level enthusiasm and nervous giggles."
+ },
+ "1150": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "diy and crafts",
+   "yoga and wellness",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "Curious, creative women who can talk about a gallery show and a data set in the same breath.",
+  "dealbreaker": "Anyone who alphabetizes their spice rack and expects her to keep it that way.",
+  "flirting_style": "Doodles a little portrait of you on a napkin mid-conversation, then forgets to give it to you because she's lost her keys again."
+ },
+ "1151": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "art and museums",
+   "cooking",
+   "yoga and wellness",
+   "reading",
+   "volunteering"
+  ],
+  "type": "Thoughtful, emotionally steady women who can debate a novel over a home-cooked meal and still show up on time.",
+  "dealbreaker": "Anyone who calls a spreadsheet 'just boxes' or leaves the fish sauce uncapped is immediately audited out of her life.",
+  "flirting_style": "She invites you to a potluck, overfeeds you with her best fusion dish, then overanalyzes your text reply for three days."
+ },
+ "1152": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "reading",
+   "yoga and wellness",
+   "outdoors",
+   "volunteering"
+  ],
+  "type": "Gentle, curious women who'd happily sit on a dark hillside in silence and get excited when she points out Jupiter.",
+  "dealbreaker": "Anyone who calls her abuela's mole 'basically chocolate sauce' or asks what her star sign says about her.",
+  "flirting_style": "Shows up with homemade tamales, then nervously over-explains the spectroscopy of starlight until she realizes she's been talking for twenty minutes."
+ },
+ "1153": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "live music",
+   "cooking",
+   "tech",
+   "volunteering",
+   "reading"
+  ],
+  "type": "Creative, grounded women who can keep up at a second-line and still talk sci-fi plot holes over beignets.",
+  "dealbreaker": "Anyone who puts tomatoes in gumbo and then argues about it.",
+  "flirting_style": "She schedules the second date before the first one ends, like it's a sprint planning meeting, then softens it with a homemade jambalaya invite."
+ },
+ "1154": {
+  "nightlife": 1,
+  "gym": 4,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "outdoors",
+   "live music",
+   "volunteering",
+   "yoga and wellness",
+   "cooking"
+  ],
+  "type": "Grounded, community-minded women who show up on time and can hold their own in a debate about jazz or justice.",
+  "dealbreaker": "Anyone who says 'let's just play it by ear' about a reservation she made three weeks ago.",
+  "flirting_style": "She asks thoughtful follow-up questions like she's scoping a project, then surprises you with a dry joke and an invite to a jazz night."
+ },
+ "1155": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "running",
+   "reading",
+   "gardening",
+   "yoga and wellness",
+   "volunteering"
+  ],
+  "type": "Calm, steady women who show up on time and don't mind a quiet night in with a puzzle.",
+  "dealbreaker": "She once ended a date early after spotting a space heater plugged into a daisy-chained power strip.",
+  "flirting_style": "She over-plans the date down to parking logistics, then gets flustered and compliments your smoke detector placement."
+ },
+ "1156": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.6,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 2.96,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "volunteering",
+   "cooking",
+   "reading"
+  ],
+  "type": "A steady, kind-hearted woman who shows up on time to the potluck and brings a dish that's actually homemade.",
+  "dealbreaker": "Anyone who brings store-bought cornbread to a church social and calls it 'from scratch.'",
+  "flirting_style": "She knits you a scarf, insists it's 'just extra yarn,' and then forgets which of you she made it for."
+ },
+ "1157": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "cooking",
+   "dancing",
+   "outdoors",
+   "reading",
+   "volunteering"
+  ],
+  "type": "Warm, grounded women who can keep up on the salsa floor and don't mind a date that starts at a truck stop diner.",
+  "dealbreaker": "Anyone who calls her homemade ceviche 'basically fish salsa' is getting dropped off at the next exit.",
+  "flirting_style": "She plans the date like a delivery route, then feeds you empanadas and teaches you a salsa step before you realize it was a date."
+ },
+ "1158": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "gardening",
+   "cooking",
+   "outdoors",
+   "reading",
+   "volunteering"
+  ],
+  "type": "Grounded, kind women who show up on time and can keep pace on a 6 a.m. trail.",
+  "dealbreaker": "Anyone who calls her abuela's mole recipe 'basically just chocolate chicken.'",
+  "flirting_style": "She invites you to her book club, then quietly evaluates your contributions against a mental rubric."
+ },
+ "1159": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "cooking",
+   "gardening",
+   "reading",
+   "volunteering",
+   "pets"
+  ],
+  "type": "Warm, steady women who show up on time and have seconds at dinner without being asked.",
+  "dealbreaker": "Anyone who calls store-bought biscuits 'basically the same thing' is getting walked to the door with a polite smile.",
+  "flirting_style": "She feeds you a peach cobbler, asks about your mama, then gets flustered and changes the subject to her golden retriever."
+ },
+ "1160": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 10.0,
+  "interests": [
+   "cooking",
+   "gardening",
+   "reading",
+   "volunteering",
+   "yoga and wellness"
+  ],
+  "type": "Grounded, warm women who can hold their own in a debate and still show up for the family carne asada.",
+  "dealbreaker": "Anyone who calls store-bought salsa 'basically the same thing' is getting a polite handshake and a calendar decline.",
+  "flirting_style": "She schedules the second date before the first one ends, then softens it by sending you home with a jar of her homegrown pickled jalapeños."
+ },
+ "1161": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": false,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 2.95,
+  "ambition": 9.35,
+  "interests": [
+   "video games",
+   "diy and crafts",
+   "outdoors",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "Calm, self-sufficient women who show up on time and don't need constant check-ins.",
+  "dealbreaker": "Anyone who says 'we'll just wing it' about travel plans is denied clearance for takeoff.",
+  "flirting_style": "She gives concise, precise compliments in a radio-calm voice, then changes the subject to crosswords before anyone can react."
+ },
+ "1162": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.25,
+  "sincerity": 4.32,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "reading",
+   "gardening",
+   "diy and crafts"
+  ],
+  "type": "Quiet, artsy women who can sit in comfortable silence on a mountain trail and don't need to fill it with small talk.",
+  "dealbreaker": "Anyone whose apartment has a 'Live Laugh Love' sign is instantly disqualified on aesthetic grounds.",
+  "flirting_style": "She sends you a vintage postcard with a tiny watercolor on it instead of texting back, then gets weirdly competitive if you try to out-postcard her."
+ },
+ "1163": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "dancing",
+   "cooking",
+   "volunteering",
+   "religion",
+   "outdoors"
+  ],
+  "type": "A grounded, community-minded woman who shows up on time and has her finances in order.",
+  "dealbreaker": "Anyone who says they 'don't really believe in insurance' is getting a polite handshake and a pamphlet.",
+  "flirting_style": "Warm and confident until she gets home and journals three pages analyzing whether 'see you around' meant anything."
+ },
+ "1164": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 4.32,
+  "intelligence": 8.79,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "volunteering",
+   "art and museums",
+   "tech"
+  ],
+  "type": "Curious, outdoorsy women who can keep up on a trail and laugh at a bad improv bit.",
+  "dealbreaker": "Anyone who says 'just use Google Maps' with a straight face.",
+  "flirting_style": "She launches into an animated yes-and riff about local history, then offers to show you the spot from her drone footage."
+ },
+ "1165": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "gardening",
+   "reading",
+   "diy and crafts",
+   "outdoors",
+   "cooking"
+  ],
+  "type": "Gentle, grounded women who'd rather spend Saturday at a farmers market than a bar.",
+  "dealbreaker": "Anyone who calls her heirloom tomatoes 'just tomatoes' is getting a polite Southern 'bless your heart' and nothing more.",
+  "flirting_style": "She knits you a scarf three months before admitting she likes you, then color-codes the date on her shared calendar and forgets to send the invite."
+ },
+ "1166": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "running",
+   "outdoors",
+   "board games",
+   "reading",
+   "diy and crafts"
+  ],
+  "type": "Thoughtful, slightly nerdy women who can hold their own in a strategy game and don't mind a 6 a.m. trail run.",
+  "dealbreaker": "Anyone who flips the board when losing at Catan or calls a pie chart 'basically the same' as a bar chart.",
+  "flirting_style": "She lets you win one round of a board game, then crushes you in the next and offers to knit you a consolation scarf."
+ },
+ "1167": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.45,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "cooking",
+   "gardening",
+   "religion",
+   "outdoors",
+   "movies and tv"
+  ],
+  "type": "A steady, kind woman who shows up on time and brings a dish to share.",
+  "dealbreaker": "She once ended a date after watching the woman walk across a freshly mopped floor without a single apology.",
+  "flirting_style": "She quietly packs you a container of her best tamales and insists it's just leftovers."
+ },
+ "1168": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "reading",
+   "cooking",
+   "volunteering"
+  ],
+  "type": "A grounded, kind woman who shows up on time, reads the book before book club, and can tell a cardinal from a tanager.",
+  "dealbreaker": "Anyone who calls her hand-pieced quilt a 'cute blanket' and then uses it as a picnic tarp.",
+  "flirting_style": "She shows up with a casserole and a jar of homemade pickles, then worries all week that it came across too forward."
+ },
+ "1169": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "art and museums",
+   "outdoors",
+   "gardening",
+   "reading"
+  ],
+  "type": "Grounded, curious women who appreciate a slow-cooked meal and can sit comfortably in silence on a mountain trail.",
+  "dealbreaker": "Anyone who calls store-bought salsa 'basically the same' or reorganizes her spice rack alphabetically instead of by region.",
+  "flirting_style": "She feeds you something she made, watches your face very closely, and considers that a confession."
+ },
+ "1170": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.6,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 4.4,
+  "interests": [
+   "gardening",
+   "cooking",
+   "volunteering",
+   "religion",
+   "reading"
+  ],
+  "type": "A warm, steady woman who can hold a conversation about family roots and doesn't mind getting dirt under her nails.",
+  "dealbreaker": "Anyone who throws away a perfectly good coupon or calls store-bought tomatoes 'just as good.'",
+  "flirting_style": "She shows up at your door with a homemade peach cobbler and a quilt she 'just happened to have extra of,' then talks about your great-grandparents for an hour."
+ },
+ "1171": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 9.35,
+  "interests": [
+   "dancing",
+   "outdoors",
+   "volunteering",
+   "diy and crafts",
+   "board games"
+  ],
+  "type": "Down-to-earth women who'll happily two-step at a honky-tonk and then help her re-tile a bathroom on Sunday.",
+  "dealbreaker": "Anyone who leaves a shopping cart in the middle of the parking lot instead of returning it to the corral.",
+  "flirting_style": "She treats it like an upsell, enthusiastically recommending a second date along with a matching board-game night and a farmers' market brunch."
+ },
+ "1172": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "reading",
+   "outdoors",
+   "cooking",
+   "board games",
+   "volunteering"
+  ],
+  "type": "Thoughtful, bookish women who'll happily split a farmers' market haul and debate the ending of a novel.",
+  "dealbreaker": "Anyone who dog-ears library books or calls a hike 'just walking uphill.'",
+  "flirting_style": "She lends you a carefully annotated paperback and then spends a week overanalyzing whether that counted as a move."
+ },
+ "1173": {
+  "nightlife": 2,
+  "gym": 3,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 10.0,
+  "interests": [
+   "dancing",
+   "diy and crafts",
+   "volunteering",
+   "eating out",
+   "watching sports"
+  ],
+  "type": "Confident, grounded women who can keep up on the dance floor and respect a woman who works with her hands.",
+  "dealbreaker": "If she calls laminate 'basically hardwood,' Maya is already reaching for her keys.",
+  "flirting_style": "Competitive banter that turns every date into a friendly challenge, then she overthinks every text she sent afterward."
+ },
+ "1174": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "reading",
+   "yoga and wellness",
+   "outdoors",
+   "volunteering"
+  ],
+  "type": "Creative, emotionally grounded women who can riff on a bit and also sit quietly at a gallery.",
+  "dealbreaker": "Anyone who calls improv 'just making stuff up' or uses 'synergy' unironically.",
+  "flirting_style": "She 'yes, ands' every comment into an elaborate bit, then panics afterward and rehearses the conversation in her journal."
+ },
+ "1175": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "tech",
+   "cooking",
+   "board games",
+   "gardening",
+   "outdoors"
+  ],
+  "type": "Clever, low-key women who can hold their own in a strategy game and appreciate a home-cooked meal.",
+  "dealbreaker": "Anyone who unplugs her smart hub to charge their phone is dead to her.",
+  "flirting_style": "Challenges you to a board game, crushes you, then makes you dinner as an apology."
+ },
+ "1176": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "diy and crafts",
+   "reading",
+   "yoga and wellness"
+  ],
+  "type": "Grounded, outdoorsy women who can hold a conversation about sci-fi and won't mind a 6 a.m. trailhead start.",
+  "dealbreaker": "Anyone who calls a wobbly IKEA shelf 'basically level.'",
+  "flirting_style": "She invites you over for homemade pasta, then nervously re-asks three times whether you actually liked it."
+ },
+ "1177": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "running",
+   "outdoors",
+   "cooking",
+   "gardening",
+   "yoga and wellness"
+  ],
+  "type": "Grounded, kind women who'll lace up for a sunrise trail run and then help shell peas on the porch.",
+  "dealbreaker": "Anyone who calls store-bought dried basil 'basically the same thing.'",
+  "flirting_style": "She de-escalates her own nerves with calm eye contact, then invites you to a 'casual' supper that turns out to be six courses of herb-crusted everything."
+ },
+ "1178": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "cooking",
+   "reading",
+   "yoga and wellness",
+   "volunteering"
+  ],
+  "type": "Thoughtful, creative women who can debate a Fellini film and still show up for Sunday family dinner.",
+  "dealbreaker": "Anyone who calls an arepa 'basically a corn pancake' is getting a strongly worded memo with supporting charts.",
+  "flirting_style": "She invites you to a gallery opening, then quietly sketches you while pretending to take notes on the art."
+ },
+ "1179": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "board games",
+   "cooking",
+   "outdoors",
+   "volunteering"
+  ],
+  "type": "Creative, quick-witted women who can hold their own at trivia night and don't mind paint on the coffee table.",
+  "dealbreaker": "Anyone who calls Codenames 'just a word game' and then gives a one-word clue for four cards and loses on purpose.",
+  "flirting_style": "She turns the date into an improv scene and quietly sketches your profile on a napkin, then pretends it's a Catan strategy diagram."
+ },
+ "1180": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "cooking",
+   "art and museums",
+   "reading",
+   "gardening",
+   "outdoors"
+  ],
+  "type": "Gentle, creative women who will happily taste-test a cardamom-jalapeño cornbread without making a face.",
+  "dealbreaker": "Anyone who leaves the potato salad out in the Texas sun for three hours and calls it 'fine.'",
+  "flirting_style": "She shyly offers you a homemade herb blend in a labeled jar, then over-explains its shelf life."
+ },
+ "1181": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.85,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "reading",
+   "yoga and wellness",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "Creative, cultured women who can debate a gallery opening over a long café brunch.",
+  "dealbreaker": "Anyone who calls her limited-edition prints 'posters' is getting gently but firmly escorted to the exit.",
+  "flirting_style": "She chats nonstop, then pencils you into her overbooked calendar for a 'curated' museum date before you've agreed to anything."
+ },
+ "1182": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "yoga and wellness",
+   "cooking",
+   "dancing",
+   "gardening",
+   "outdoors"
+  ],
+  "type": "Grounded, curious women who can keep up on a Red Rock trail and still show up for Sunday family dinner.",
+  "dealbreaker": "Anyone who calls store-bought tamales 'basically the same' is getting discharged immediately.",
+  "flirting_style": "She challenges you to a salsa dance-off, then quietly checks that you're hydrated."
+ },
+ "1183": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 2.95,
+  "ambition": 9.35,
+  "interests": [
+   "diy and crafts",
+   "gardening",
+   "reading",
+   "board games",
+   "tech"
+  ],
+  "type": "She goes for punctual, self-sufficient women who can hold a quiet evening without needing to fill the silence.",
+  "dealbreaker": "Anyone who leaves the cabinet doors open and calls a stripped screw 'basically fine.'",
+  "flirting_style": "She shows interest by quietly fixing your squeaky door hinge and then over-analyzing for three nights whether that came across as too forward."
+ },
+ "1184": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.55,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "diy and crafts",
+   "yoga and wellness",
+   "board games",
+   "fashion"
+  ],
+  "type": "Creative, grounded women who can talk about an exhibit for an hour and still be on time for brunch.",
+  "dealbreaker": "Anyone who calls a thrifted vintage blazer 'used clothes' or flips the board when they lose at Catan.",
+  "flirting_style": "She compliments your outfit with alarming specificity, then spends three days drafting the perfect follow-up text."
+ },
+ "1185": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "reading",
+   "gardening",
+   "outdoors",
+   "cooking",
+   "diy and crafts"
+  ],
+  "type": "Grounded, curious women who can name a bird by its call and argue both sides of a resolution.",
+  "dealbreaker": "Anyone who calls a meadowlark 'just a yellow bird' is getting a rebuttal, not a second date.",
+  "flirting_style": "She cross-examines you like a debate opponent, then sheepishly offers you a zucchini from her garden."
+ },
+ "1186": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "outdoors",
+   "cooking",
+   "live music",
+   "diy and crafts",
+   "reading"
+  ],
+  "type": "Down-to-earth women who'd rather watch a desert sunrise from a trailhead than a sunrise after a casino all-nighter.",
+  "dealbreaker": "Anyone who leaves a shopping cart in the middle of an aisle and calls it 'basically put away.'",
+  "flirting_style": "Shows up with a slightly lopsided experimental loaf and asks you to rate it out of ten, hoping that counts as a conversation starter."
+ },
+ "1187": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 4.4,
+  "interests": [
+   "outdoors",
+   "gardening",
+   "cooking",
+   "diy and crafts",
+   "volunteering"
+  ],
+  "type": "Steady, kind women who show up on time and don't mind a sunrise trailhead start.",
+  "dealbreaker": "She once ended a date because the woman left a shopping cart in the middle of the parking lot.",
+  "flirting_style": "She hands over a jar of homemade pickles and an overly detailed hiking itinerary, then worries for three days about whether it was too much."
+ },
+ "1188": {
+  "nightlife": 3,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.85,
+  "sincerity": 1.41,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 7.98,
+  "interests": [
+   "dancing",
+   "live music",
+   "eating out",
+   "yoga and wellness",
+   "travel"
+  ],
+  "type": "She goes for calm, grounded women who can laugh at her chaos and still remember where the car keys are.",
+  "dealbreaker": "If you don't clap when the improv scene ends, even the bad ones, it's over.",
+  "flirting_style": "She turns every conversation into an improv bit, then panics and over-explains the joke in a 2am text."
+ },
+ "1189": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.55,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "live music",
+   "tech",
+   "cooking",
+   "diy and crafts",
+   "religion"
+  ],
+  "type": "She goes for confident, grounded women who can hold a harmony and won't flinch at a competitive game night.",
+  "dealbreaker": "Anyone who calls an HDMI cable 'the TV cord' and then tangles it behind the couch is done.",
+  "flirting_style": "She invites you over to 'test the surround sound' and spends twenty minutes calibrating the speakers before realizing you were flirting back."
+ },
+ "1190": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "cooking",
+   "diy and crafts",
+   "reading",
+   "volunteering"
+  ],
+  "type": "Steady, kind women who show up on time and appreciate a labeled pantry.",
+  "dealbreaker": "If her junk drawer has no dividers, Susan will quietly start planning an intervention instead of a second date.",
+  "flirting_style": "She shows up with a crocheted coaster and a tin of homemade muffins, then apologizes nervously for both."
+ },
+ "1191": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.85,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 9.35,
+  "interests": [
+   "yoga and wellness",
+   "running",
+   "board games",
+   "cooking",
+   "volunteering"
+  ],
+  "type": "Warm, steady women who show up on time and can hold their own at a potluck and a book club.",
+  "dealbreaker": "If she says she'll 'probably' come to game night and then ghosts the group chat, it's over.",
+  "flirting_style": "She accidentally turns the first date into a structured interview, complete with follow-up questions and a mental scoring rubric, then apologizes nervously and offers you sweet tea."
+ },
+ "1192": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "diy and crafts",
+   "live music",
+   "reading",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "A grounded, soulful woman who'll sit through a whole jazz set without checking her phone and can tell a good story over sweet potato pie.",
+  "dealbreaker": "Anyone who tracks mud across a freshly waxed floor and says 'it's fine, it'll dry.'",
+  "flirting_style": "She quietly sketches you in watercolor at the café, then slides it across the table and pretends she was just practicing hands."
+ },
+ "1193": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.8,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 9.53,
+  "ambition": 6.74,
+  "interests": [
+   "dancing",
+   "cooking",
+   "gardening",
+   "volunteering",
+   "reading"
+  ],
+  "type": "Warm, grounded women who can keep up on the salsa floor and won't flinch at a shared spreadsheet of the date budget.",
+  "dealbreaker": "Anyone who declines a second helping of her flan is politely shown the door, with leftovers, as a lesson.",
+  "flirting_style": "She asks you to dance, compliments your footwork, then accidentally starts mentoring you on your retirement savings."
+ },
+ "1194": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.3,
+  "sincerity": 4.32,
+  "intelligence": 10.0,
+  "fun": 4.92,
+  "ambition": 10.0,
+  "interests": [
+   "yoga and wellness",
+   "cooking",
+   "outdoors",
+   "reading",
+   "volunteering"
+  ],
+  "type": "Grounded, driven women who can hold their own in a debate and still show up for a 6 a.m. hike.",
+  "dealbreaker": "Anyone who calls her grandmother's phở recipe 'basically soup' or can't split a check without a spreadsheet meltdown.",
+  "flirting_style": "She asks probing questions like it's a due-diligence meeting, then wins hearts by offering to cook you dinner."
+ },
+ "1195": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "cooking",
+   "reading",
+   "live music",
+   "volunteering"
+  ],
+  "type": "Grounded, warm women who show up for their community and will happily eat whatever experimental collard green dish she serves.",
+  "dealbreaker": "Anyone who lets a perfectly good tomato rot on the vine or calls volunteering 'not really their thing.'",
+  "flirting_style": "She invites you to help at the community garden, hands you a spare pair of gloves (not hers, she lost those), and sends you home with a care package of herbs."
+ },
+ "1196": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "diy and crafts",
+   "reading",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "Grounded, creative women who can talk sci-fi over coffee and don't mind sawdust on the couch.",
+  "dealbreaker": "Anyone who calls her reclaimed-lumber sculptures 'nice firewood.'",
+  "flirting_style": "She offers to sketch you, then gets so absorbed in the galaxy she's drawing in the background that she forgets to ask your name."
+ },
+ "1197": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 8.98,
+  "intelligence": 10.0,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "reading",
+   "outdoors",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "Thoughtful, curious women who can sit quietly through a two-hour wait for a heron without checking their phone.",
+  "dealbreaker": "Anyone who calls a pileated woodpecker 'just a big woodpecker' is getting a polite Southern 'bless your heart' and no second date.",
+  "flirting_style": "She offers to show you her watercolor of a nebula, then accidentally spends twenty minutes explaining stellar nurseries before realizing she forgot to ask your name."
+ },
+ "1198": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 4.4,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "reading",
+   "volunteering",
+   "yoga and wellness"
+  ],
+  "type": "Earthy, kind women who'll go kayaking at dawn and then split a basket of cheese curds without judgment.",
+  "dealbreaker": "Anyone who calls cheese curds 'squeaky cheese nuggets' and means it as an insult.",
+  "flirting_style": "Sketches you on a napkin mid-conversation, then gets flustered and forgets to actually give it to you."
+ },
+ "1199": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 2.96,
+  "interests": [
+   "gardening",
+   "reading",
+   "diy and crafts",
+   "religion",
+   "cooking"
+  ],
+  "type": "A sharp-witted woman who can finish a crossword in pen and appreciates a proper flamenco guitar.",
+  "dealbreaker": "Anyone who calls her hand-knit scarf 'cute' and then leaves it in a restaurant.",
+  "flirting_style": "She feeds you homemade croquetas, corrects your Spanish, and quietly tallies whether you were worth the ingredients."
+ },
+ "1200": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "outdoors",
+   "reading",
+   "cooking",
+   "volunteering",
+   "yoga and wellness"
+  ],
+  "type": "Outdoorsy, grounded women who can keep up on a trail and argue about a biography over coffee.",
+  "dealbreaker": "Anyone who cites a wellness influencer as a medical source gets a gentle but firm fact-check and no second date.",
+  "flirting_style": "She challenges you to a crossword race or a hill climb and lets the competitive banter do the work."
+ },
+ "1201": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "cooking",
+   "reading",
+   "yoga and wellness"
+  ],
+  "type": "Gentle, thoughtful women who'd rather hike at sunrise than hit a bar, bonus points if they appreciate a good tamale.",
+  "dealbreaker": "Anyone who calls watercolor 'just colored water' or is rude to their abuela.",
+  "flirting_style": "Nervously offers to sketch you, then spends the whole date apologizing that the nose came out wrong."
+ },
+ "1202": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.55,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 10.0,
+  "interests": [
+   "art and museums",
+   "gardening",
+   "yoga and wellness",
+   "volunteering",
+   "travel"
+  ],
+  "type": "Cultured, grounded women who can talk Faulkner over a gallery opening and appreciate original crown molding.",
+  "dealbreaker": "Anyone who calls a 1920s Craftsman bungalow a 'teardown with good bones.'",
+  "flirting_style": "She offers a personal guided tour of a historic district, complete with a color-coded itinerary she swears she didn't over-plan."
+ },
+ "1203": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.8,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "cooking",
+   "gardening",
+   "reading",
+   "religion",
+   "volunteering"
+  ],
+  "type": "A warm, grounded woman who'll show up to the potluck early and stay late to help with dishes.",
+  "dealbreaker": "Anyone who brings store-bought coleslaw to a potluck and calls it homemade.",
+  "flirting_style": "She feeds you a second helping of casserole and casts you in her next community theater production before you've said yes."
+ },
+ "1204": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 9.35,
+  "interests": [
+   "cooking",
+   "reading",
+   "running",
+   "diy and crafts",
+   "volunteering"
+  ],
+  "type": "Grounded, curious women who show up on time and can hold a conversation about something other than brunch.",
+  "dealbreaker": "Anyone who calls a beam bridge 'basically the same' as a suspension bridge, or puts ketchup on her mangú.",
+  "flirting_style": "She quietly cooks you sancocho and explains load paths, assuming you'll figure out that this means she likes you."
+ },
+ "1205": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "dancing",
+   "gardening",
+   "cooking",
+   "diy and crafts",
+   "volunteering"
+  ],
+  "type": "Warm, grounded women who'll happily spend a Saturday digging through a thrift store and then help repaint a dresser.",
+  "dealbreaker": "She once ended a promising date because the woman tossed a recyclable bottle in the trash right in front of her.",
+  "flirting_style": "She shows interest by offering stain-removal tips and a homemade pimento cheese sandwich, then waits to see whether that worked."
+ },
+ "1206": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "outdoors",
+   "diy and crafts",
+   "reading",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "Outdoorsy, grounded women who can paddle a kayak and keep up with a book club debate.",
+  "dealbreaker": "Anyone who leaves a campsite messier than they found it, or calls quilting 'just blankets.'",
+  "flirting_style": "She organizes a group hike, then strategically assigns herself as your trail buddy, with a color-coded itinerary."
+ },
+ "1207": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 9.35,
+  "interests": [
+   "art and museums",
+   "cooking",
+   "gardening",
+   "diy and crafts",
+   "live music"
+  ],
+  "type": "A grounded, family-oriented woman who appreciates color, good food, and a tidy kitchen.",
+  "dealbreaker": "If she opens your fridge and finds a science experiment in a Tupperware, the date is over.",
+  "flirting_style": "She shows up with homemade tamales and casually offers to get that wine stain out of your couch."
+ },
+ "1208": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.5,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 4.4,
+  "interests": [
+   "art and museums",
+   "reading",
+   "gardening",
+   "diy and crafts",
+   "live music"
+  ],
+  "type": "Thoughtful, warm women with a story to tell and an appreciation for old jazz records.",
+  "dealbreaker": "Anyone who calls her collages 'clutter' or skips the liner notes on a vinyl album.",
+  "flirting_style": "She asks to record your life story for her oral history project and somehow forgets to mention it's a date."
+ },
+ "1209": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.8,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 9.53,
+  "ambition": 7.98,
+  "interests": [
+   "dancing",
+   "cooking",
+   "board games",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "A warm, steady woman who can keep up on the salsa floor and doesn't mind a little drama.",
+  "dealbreaker": "Anyone who puts a wool sweater in the dryer is dead to her.",
+  "flirting_style": "She critiques your stain technique, then insists you take home a plate of pasteles and a dance-night flyer."
+ },
+ "1210": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.55,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 5.58,
+  "interests": [
+   "art and museums",
+   "reading",
+   "gardening",
+   "cooking",
+   "volunteering"
+  ],
+  "type": "Warm, creative women her age who can sit through a poetry reading and still laugh about it afterward.",
+  "dealbreaker": "Anyone who calls her hand-woven Guatemalan textiles 'a cute placemat.'",
+  "flirting_style": "She asks gentle, probing questions like it's a focus group, then shows up twenty minutes late to the second date with a watercolor she painted of you."
+ },
+ "1211": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "live music",
+   "reading",
+   "outdoors",
+   "cooking"
+  ],
+  "type": "Artsy, curious women who'll happily get lost in a gallery with her and argue about sci-fi endings over coffee.",
+  "dealbreaker": "Anyone who says pie charts are 'basically fine' is getting left on read.",
+  "flirting_style": "She sketches you on a napkin mid-conversation, then forgets to ask for your number because she got distracted by the lighting."
+ },
+ "1212": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 9.35,
+  "interests": [
+   "gardening",
+   "outdoors",
+   "reading",
+   "cooking",
+   "volunteering"
+  ],
+  "type": "Grounded, reliable women who show up on time and don't mind a Saturday morning at the farmers market.",
+  "dealbreaker": "Anyone who says 'we'll figure out the details later' about literally anything.",
+  "flirting_style": "She offers to help you organize something, then shyly hands you a zucchini from her garden as the closest thing to a love letter."
+ },
+ "1213": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 2.95,
+  "ambition": 6.74,
+  "interests": [
+   "gardening",
+   "cooking",
+   "reading",
+   "volunteering",
+   "diy and crafts"
+  ],
+  "type": "A calm, dependable woman who shows up on time and doesn't mind a Saturday at the farmers market.",
+  "dealbreaker": "She leaves dirty dishes 'soaking' for three days and calls it a system.",
+  "flirting_style": "She offers to color-code your pantry and considers it the most romantic thing she has ever said."
+ },
+ "1214": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.5,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "cooking",
+   "gardening",
+   "reading",
+   "yoga and wellness"
+  ],
+  "type": "Warm, grounded women who can talk about art for hours and won't judge her half-dead succulents.",
+  "dealbreaker": "Anyone who calls store-bought tamales 'basically the same' is getting a formal written notice of noncompliance.",
+  "flirting_style": "She asks thoughtful questions, then gets so absorbed in your answers that she forgets she was supposed to be flirting."
+ },
+ "1215": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.75,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "gardening",
+   "volunteering",
+   "diy and crafts",
+   "reading"
+  ],
+  "type": "Down-to-earth women who'll help haul mulch and still go back for a second slice of pie.",
+  "dealbreaker": "Anyone who calls store-bought biscuits 'basically the same' is getting walked to the door with a smile and no leftovers.",
+  "flirting_style": "She shows up with a foil-wrapped casserole and a karaoke duet request, then gets so competitive at trivia she forgets she was flirting."
+ },
+ "1216": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.55,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "diy and crafts",
+   "outdoors",
+   "gardening",
+   "cooking",
+   "art and museums"
+  ],
+  "type": "She goes for down-to-earth women who can swing a hammer, take a joke, and don't mind sawdust on the porch.",
+  "dealbreaker": "Anyone who calls every wall color 'just white' is getting shown the door, which she painted herself, in Swiss Coffee.",
+  "flirting_style": "She trash-talks you during softball, then shows up afterward with a jar of homemade pickles and acts like it's no big deal."
+ },
+ "1217": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 4.32,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "reading",
+   "art and museums",
+   "yoga and wellness",
+   "live music",
+   "cooking"
+  ],
+  "type": "Artsy, grounded women who can recommend a good novel and actually show up on time.",
+  "dealbreaker": "Anyone who calls the National Gallery 'just a bunch of old paintings' on the first date.",
+  "flirting_style": "She pitches herself like a press release, then panics and overshares about her journal."
+ },
+ "1218": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "gardening",
+   "reading",
+   "volunteering",
+   "outdoors",
+   "art and museums"
+  ],
+  "type": "Grounded, kind women around her age who'd rather hike a muddy trail than sit in a fancy restaurant.",
+  "dealbreaker": "Anyone who slams her car door or calls an EV 'a glorified golf cart' is getting dropped at the curb.",
+  "flirting_style": "She quietly offers you the scenic route and a bag of homegrown zucchini, then waits far too long to ask for your number."
+ },
+ "1219": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.25,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "reading",
+   "tech",
+   "cooking",
+   "outdoors",
+   "art and museums"
+  ],
+  "type": "Thoughtful, low-key women who can talk about sci-fi novels and don't mind comfortable silence over coffee.",
+  "dealbreaker": "Anyone who calls astrology 'basically astronomy' gets a polite, detailed correction and no second date.",
+  "flirting_style": "She sends a carefully drafted message three days late, then invites you to look at Saturn through her telescope as if that's not a huge deal."
+ },
+ "1220": {
+  "nightlife": 2,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 7.91,
+  "ambition": 10.0,
+  "interests": [
+   "cooking",
+   "yoga and wellness",
+   "volunteering",
+   "outdoors",
+   "reading"
+  ],
+  "type": "Driven, warm women who can keep up on a Mount Diablo hike and still show up on time to brunch.",
+  "dealbreaker": "Anyone who replies to a carefully planned date invite with 'let's play it by ear.'",
+  "flirting_style": "She schedules the second date before the first one ends, color-coded in her calendar, and calls it spontaneous."
+ },
+ "1221": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "yoga and wellness",
+   "outdoors",
+   "gardening",
+   "volunteering"
+  ],
+  "type": "Thoughtful, creative women who can hold a conversation about a gallery piece and still show up for the community potluck.",
+  "dealbreaker": "Anyone who calls watercolor 'basically coloring' or rinses their brush in her tea.",
+  "flirting_style": "She offers to sketch you during a gallery opening, then gets too shy to actually show you the drawing."
+ },
+ "1222": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 2.95,
+  "ambition": 2.96,
+  "interests": [
+   "gardening",
+   "reading",
+   "diy and crafts",
+   "volunteering",
+   "religion"
+  ],
+  "type": "A gentle, well-read woman who appreciates a quiet porch, a good hymn, and a hand-knitted scarf.",
+  "dealbreaker": "Anyone who calls the Alamo 'just an old church' or lets a perfectly good tomato rot on the vine.",
+  "flirting_style": "She knits you a scarf, leaves it on your doorstep without a note, and then denies all knowledge at mass."
+ },
+ "1223": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 7.98,
+  "interests": [
+   "dancing",
+   "volunteering",
+   "gardening",
+   "cooking",
+   "diy and crafts"
+  ],
+  "type": "A down-to-earth woman who can hold her own on the dance floor and isn't afraid of a little hard work.",
+  "dealbreaker": "Anyone who tosses a wool sweater in the dryer on high heat and calls it 'fine.'",
+  "flirting_style": "She offers to teach you the Boot Scootin' Boogie, then turns it into a friendly competition you're guaranteed to lose."
+ },
+ "1224": {
+  "nightlife": 0,
+  "gym": 2,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 2.96,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "reading",
+   "religion",
+   "volunteering"
+  ],
+  "type": "A gentle, well-organized woman who shows up on time and knows the difference between a cardinal and a tanager.",
+  "dealbreaker": "Anyone who calls store-bought pecan pie 'just as good' is shown politely to the porch steps.",
+  "flirting_style": "She quietly leaves a hand-crocheted coaster and a slice of pie on your chair at the senior center and pretends she has no idea who did it."
+ },
+ "1225": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "gardening",
+   "reading",
+   "art and museums",
+   "volunteering",
+   "outdoors"
+  ],
+  "type": "She falls for calm, grounded women who appreciate old brick buildings and don't mind dirt under their fingernails.",
+  "dealbreaker": "Anyone who calls a beautifully restored Italianate rowhouse 'kinda dated' or plants invasive Bradford pears on purpose.",
+  "flirting_style": "She nervously offers to give you a personal walking tour of Over-the-Rhine, then over-explains cornice details instead of asking you out."
+ },
+ "1226": {
+  "nightlife": 2,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.8,
+  "sincerity": 4.32,
+  "intelligence": 7.34,
+  "fun": 10.0,
+  "ambition": 9.35,
+  "interests": [
+   "dancing",
+   "cooking",
+   "volunteering",
+   "yoga and wellness",
+   "outdoors"
+  ],
+  "type": "Confident, grounded women who can keep up on the salsa floor and don't mind sharing her with half the community center.",
+  "dealbreaker": "Anyone who calls a baleada a 'Honduran taco' gets politely escorted off the dance floor and out of her life.",
+  "flirting_style": "She hands you the trivia team's answer sheet, spins you into a cumbia, and then worries for three days about whether she came on too strong."
+ },
+ "1227": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.25,
+  "sincerity": 6.73,
+  "intelligence": 10.0,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "art and museums",
+   "reading",
+   "outdoors",
+   "gardening",
+   "movies and tv"
+  ],
+  "type": "Quiet, creative women who can sit comfortably in silence on a hiking trail and argue about the ending of a sci-fi novel afterward.",
+  "dealbreaker": "Anyone who uses one of her sketchbooks as a coaster, even once, even ironically.",
+  "flirting_style": "She sketches you on a napkin without asking, slides it over, then immediately starts talking about bird migration to cover her nerves."
+ },
+ "1228": {
+  "nightlife": 1,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "dancing",
+   "volunteering",
+   "gardening",
+   "diy and crafts",
+   "outdoors"
+  ],
+  "type": "Down-to-earth women who'll show up to a potluck with a dish they actually made and stay to help fold chairs.",
+  "dealbreaker": "Anyone who leaves a shopping cart in the middle of the parking lot instead of returning it to the corral.",
+  "flirting_style": "She offers to reorganize your pantry and teach you a salsa step, then gets flustered and blames the volleyball for her blushing."
+ },
+ "1229": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 4.4,
+  "interests": [
+   "gardening",
+   "reading",
+   "diy and crafts",
+   "outdoors",
+   "volunteering"
+  ],
+  "type": "A calm, outdoorsy woman who can tell a chickadee from a nuthatch and doesn't mind dirt under her fingernails.",
+  "dealbreaker": "Anyone who borrows a trowel and returns it uncleaned, or worse, doesn't return it at all.",
+  "flirting_style": "She shows up with a jar of homemade pickles and a hand-knit scarf, then talks about seed germination rates until someone gently notices she likes them."
+ },
+ "1230": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.6,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "art and museums",
+   "outdoors",
+   "gardening",
+   "diy and crafts",
+   "live music"
+  ],
+  "type": "Down-to-earth women with paint or grease under their nails who'll happily help carry a casserole dish to the church hall.",
+  "dealbreaker": "Anyone who calls a diesel engine 'just a loud gas engine' is getting walked to the curb.",
+  "flirting_style": "She offers to look at your truck's weird noise, then spends forty minutes shyly showing you her watercolors of it."
+ },
+ "1231": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 7.98,
+  "interests": [
+   "diy and crafts",
+   "outdoors",
+   "gardening",
+   "cooking",
+   "volunteering"
+  ],
+  "type": "Grounded, kind women who show up on time, respect family, and don't mind a trail at sunrise.",
+  "dealbreaker": "Anyone who calls her handmade beadwork 'cute little bracelets' and asks if she sells them on Etsy for five bucks.",
+  "flirting_style": "She quietly gifts you a beaded keychain she 'just had lying around' and then changes the subject to birds."
+ },
+ "1232": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 8.98,
+  "intelligence": 5.73,
+  "fun": 6.48,
+  "ambition": 6.74,
+  "interests": [
+   "gardening",
+   "diy and crafts",
+   "outdoors",
+   "reading",
+   "volunteering"
+  ],
+  "type": "Steady, kind-hearted women who can hold a conversation on a long trail and appreciate a good casserole.",
+  "dealbreaker": "Anyone who parks diagonally across two spaces is dead to her, no appeals.",
+  "flirting_style": "She shyly offers a jar of home-canned tomatoes and then gets flustered explaining that the tomatoes were overwatered."
+ },
+ "1233": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.2,
+  "sincerity": 6.73,
+  "intelligence": 8.79,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "reading",
+   "outdoors",
+   "gardening",
+   "yoga and wellness",
+   "diy and crafts"
+  ],
+  "type": "Calm, thoughtful women who can sit in comfortable silence on a hiking trail and know their warblers from their wrens.",
+  "dealbreaker": "Anyone who brags about their fast-fashion haul gets mentally marked down like last season's inventory.",
+  "flirting_style": "She quietly lends you a book she thinks you'd love, then forgets to text back for four days."
+ },
+ "1234": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.35,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 4.92,
+  "ambition": 6.74,
+  "interests": [
+   "reading",
+   "gardening",
+   "yoga and wellness",
+   "diy and crafts",
+   "pets"
+  ],
+  "type": "Calm, dependable women who text back when they say they will and own at least one houseplant.",
+  "dealbreaker": "Anyone who says 'let's just wing it' about a weekend trip, or a first date.",
+  "flirting_style": "She follows up after a date with a polite, well-organized message that reads a little like a client check-in, plus a hand-knit coaster."
+ },
+ "1235": {
+  "nightlife": 1,
+  "gym": 2,
+  "dating_apps": true,
+  "gossip": 0.45,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 9.35,
+  "interests": [
+   "running",
+   "live music",
+   "gardening",
+   "reading",
+   "yoga and wellness"
+  ],
+  "type": "She goes for grounded, curious women who show up on time and can talk about a good mystery novel over a jazz set.",
+  "dealbreaker": "If you admit you only floss the week before your cleaning, she has already mentally charted your gums and the date is over.",
+  "flirting_style": "She asks a slightly too thorough series of follow-up questions, then compliments your smile with clinical precision and immediately worries it sounded like a work assessment."
+ },
+ "1236": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": true,
+  "gossip": 0.4,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 4.92,
+  "ambition": 7.98,
+  "interests": [
+   "cooking",
+   "gardening",
+   "yoga and wellness",
+   "religion",
+   "reading"
+  ],
+  "type": "Grounded, kind women who show up on time and appreciate a home-cooked plate of collard greens.",
+  "dealbreaker": "She once ended a date on the spot when the woman admitted she hadn't filed taxes in three years and 'just vibes it.'",
+  "flirting_style": "She shows affection by packing you leftovers and quietly offering to organize your receipts, then blushes if you notice."
+ },
+ "1237": {
+  "nightlife": 1,
+  "gym": 0,
+  "dating_apps": true,
+  "gossip": 0.7,
+  "sincerity": 6.73,
+  "intelligence": 5.73,
+  "fun": 7.91,
+  "ambition": 6.74,
+  "interests": [
+   "dancing",
+   "cooking",
+   "live music",
+   "volunteering",
+   "religion"
+  ],
+  "type": "Warm, steady women who show up on time, two-step without complaining, and have their finances in order.",
+  "dealbreaker": "Anyone who calls store-bought salsa 'homemade' or stacks heavy boxes on top of light ones.",
+  "flirting_style": "She feeds you brisket until you're too full to leave, then casually asks if you line-dance."
+ },
+ "1238": {
+  "nightlife": 0,
+  "gym": 1,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 6.73,
+  "intelligence": 7.34,
+  "fun": 2.95,
+  "ambition": 5.58,
+  "interests": [
+   "gardening",
+   "reading",
+   "volunteering",
+   "outdoors",
+   "diy and crafts"
+  ],
+  "type": "A calm, bookish woman who'd rather spend Saturday at a historical society open house than a party.",
+  "dealbreaker": "Anyone who keeps receipts crumpled loose in their purse instead of filed by month.",
+  "flirting_style": "She offers to look up your great-grandmother in the archives and considers this deeply romantic."
+ },
+ "1239": {
+  "nightlife": 0,
+  "gym": 0,
+  "dating_apps": false,
+  "gossip": 0.3,
+  "sincerity": 8.98,
+  "intelligence": 7.34,
+  "fun": 2.95,
+  "ambition": 5.58,
+  "interests": [
+   "diy and crafts",
+   "gardening",
+   "reading",
+   "cooking",
+   "outdoors"
+  ],
+  "type": "A steady, practical woman who shows up on time and knows the difference between a cardinal and a scarlet tanager.",
+  "dealbreaker": "Anyone who says 'just round it up' when splitting the check.",
+  "flirting_style": "She quietly hands you a jar of homemade pickles and a laminated list of the best birding spots, then waits three weeks to see if you call."
  }
 }

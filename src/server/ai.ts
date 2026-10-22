@@ -14,10 +14,11 @@ const jev = () => (jevClient ??= new TypeSafeClient());
 
 const traits = traitsJson as Record<string, { type: string; dealbreaker: string; flirting_style: string }>;
 const job = (occupation: string) => occupation.replaceAll("_", " ").replace("not in workforce", "not working");
-const persona = (i: number) => {
-  const p = personasJson[i], t = traits[String(i)];
+const persona = (world: World, i: number) => {
+  const p = personasJson[world.agents[i].persona], t = traits[String(p.id)];
   return { name: p.name, age: p.age, sex: p.sex, job: job(p.occupation), personality: p.persona.slice(0, 400),
-    hobbies: p.hobbies.slice(0, 300), type: t.type, dealbreaker: t.dealbreaker, flirting_style: t.flirting_style };
+    hobbies: p.hobbies.slice(0, 300), type: t.type, dealbreaker: t.dealbreaker, flirting_style: t.flirting_style,
+    ...("visitor" in p ? { lives: "out of town, met on the apps" } : {}) };
 };
 
 // ---------------------------------------------------------------- Claude
@@ -92,7 +93,7 @@ export async function story(spec: PlayerSpec, bio: string, world: World, res: Si
   const picked = [...keyEvents.filter(e => e.type !== "rejected"), ...keyEvents.filter(e => e.type === "rejected")]
     .slice(0, MAX_LINES).sort((x, y) => x.tick - y.tick);
   const other = (e: SimEvent) => (e.a === me ? e.b : e.a);
-  const people = Object.fromEntries([...new Set(picked.map(other))].map(i => [i, persona(i)]));
+  const people = Object.fromEntries([...new Set(picked.map(other))].map(i => [i, persona(world, i)]));
   const player = { name: spec.name, age: spec.age, sex: spec.sex, bio };
   // Plain facts with the direction spelled out; the writer embellishes but must not change who did what.
   const fact = (e: SimEvent) => {
@@ -110,7 +111,7 @@ export async function story(spec: PlayerSpec, bio: string, world: World, res: Si
     }
   };
   const events = picked.map(e => ({ key: eventKey(e), day: Math.floor(e.tick / 48) + 1, fact: fact(e), person: other(e) }));
-  const partners = res.partners[me].map(i => people[i]?.name ?? personasJson[i].name);
+  const partners = res.partners[me].map(i => people[i]?.name ?? world.agents[i].name);
   const gss = calibrationJson.partners_last_year_single[`${spec.sex}|${ageBand(spec.age)}` as keyof typeof calibrationJson.partners_last_year_single];
   const n = (f: (e: SimEvent) => boolean) => res.events.filter(f).length;
   const counts = { sparks: n(e => e.type === "spark"), app_matches: n(e => e.type === "match"), dates: n(e => e.type === "date"),
@@ -156,7 +157,7 @@ export async function moderate(character: { name?: string; description: string }
 
 const CHUNK = 40; // people per request: keeps state well under Jev's 32k-token per-question context
 const MAX_SPREAD = 0.5; // logit sd cap on who-likes-you differences between people
-const MAX_APPEAL = 1;   // logit cap on how much the description moves everyone at once: ±1 ≈ ±35% partners a month
+const MAX_APPEAL = 1;   // how much the description can move everyone at once (logit), approached smoothly, never reached
 // Jev's average answers (logit) for plain characters with an empty description; npm run jev-check measures them.
 export const BASELINE = { toward: -0.33, from: -0.39 };
 const logit = (p: number) => Math.log(p / (1 - p));
@@ -164,7 +165,20 @@ const logit = (p: number) => Math.log(p / (1 - p));
 // For each compatible persona: would they be into the player, and the player into them? Becomes logit offsets:
 // differences between people (who likes you) plus the town's overall verdict on the description (how many do),
 // capped so stats, apps and lifestyle still matter.
+// One verdict per character: "Run it back" rolls new dice for the month, not a new read of the description.
+// ponytail: in memory, newest 10k, lost on restart.
+const verdicts = new Map<string, Awaited<ReturnType<typeof readTown>>>();
 export async function affinity(spec: PlayerSpec, description: string, world: World) {
+  const key = JSON.stringify([spec.name, spec.age, spec.sex, spec.orientation, spec.interests, spec.nightlife, spec.gym, spec.employed, description]);
+  const hit = verdicts.get(key);
+  if (hit) return hit;
+  const out = await readTown(spec, description, world);
+  verdicts.set(key, out);
+  if (verdicts.size > 10_000) verdicts.delete(verdicts.keys().next().value!);
+  return out;
+}
+
+async function readTown(spec: PlayerSpec, description: string, world: World) {
   const me = world.agents.length - 1, player = world.agents[me];
   const ids = world.agents.filter(a => !a.isPlayer && compatible(a, player)).map(a => a.id);
   const playerState = { name: spec.name, age: spec.age, sex: spec.sex, description, interests: spec.interests,
@@ -176,7 +190,7 @@ export async function affinity(spec: PlayerSpec, description: string, world: Wor
     "Ignore whether either of them is already in a relationship.";
   const chunks = Array.from({ length: Math.ceil(ids.length / CHUNK) }, (_, c) => ids.slice(c * CHUNK, (c + 1) * CHUNK));
   const results = await Promise.all(chunks.map(chunk => jev().systemOne({
-    state: { player: playerState, people: chunk.map(persona) },
+    state: { player: playerState, people: chunk.map(i => persona(world, i)) },
     questions: Object.fromEntries(chunk.flatMap((_, k) => [
       [`in_${k}`, noul(`Would \`people[${k}]\` want a date with \`player\`, ${judge}`)],
       [`out_${k}`, noul(`Would \`player\` want a date with \`people[${k}]\`, ${judge}`)],
@@ -194,11 +208,12 @@ export async function affinity(spec: PlayerSpec, description: string, world: Wor
 }
 
 // Logits → offsets: spread around their mean capped at MAX_SPREAD, plus the mean's distance from a plain
-// character's, capped at ±MAX_APPEAL. npm run check guards that the spread alone doesn't shift luck much.
+// character's, eased toward ±MAX_APPEAL (tanh: a better description always helps a little more, with diminishing
+// returns, so the best bios don't all tie at a cap). npm run check guards that the spread alone doesn't shift luck much.
 export function offsets(xs: number[], ids: number[], baseline: number) {
   const mean = ids.reduce((s, i) => s + xs[i], 0) / Math.max(1, ids.length);
   const sd = Math.sqrt(ids.reduce((s, i) => s + (xs[i] - mean) ** 2, 0) / Math.max(1, ids.length));
-  const scale = Math.min(1, MAX_SPREAD / (sd || 1)), appeal = Math.max(-MAX_APPEAL, Math.min(MAX_APPEAL, mean - baseline));
+  const scale = Math.min(1, MAX_SPREAD / (sd || 1)), appeal = MAX_APPEAL * Math.tanh((mean - baseline) / MAX_APPEAL);
   const judged = new Set(ids), round = (v: number) => Math.round(v * 1000) / 1000;
   return { mean: round(mean), appeal: round(appeal), offsets: xs.map((x, i) => judged.has(i) ? round(Math.max(-1.5, Math.min(1.5, scale * (x - mean))) + appeal) : 0) };
 }
