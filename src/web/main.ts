@@ -181,15 +181,15 @@ $("#describe").onclick = async () => {
   } catch (e) { status.textContent = (e as Error).message; }
 };
 
-// 🎲 A starting point, free: a single resident aged 21-45 under an invented name (half the time from human-names'
-// English lists, whose index pulls in every language, so import the lists directly; half from data/indian-*-names.json,
-// first names seen at least twice in the indian-names npm package's records; both loaded on first use), their
+// 🎲 A starting point, free: a single resident aged 21-45 under an invented name, loaded on first use, half the time
+// from data/english-*-names.json (human-names' English lists, MIT, minus places, brands, celebrities and typos), half
+// from data/indian-*-names.json (first names seen at least twice in the indian-names npm package's records), their
 // job, quirks, week and ratings in the form, the ratings scaled to spend exactly the 33-point budget.
 const traitsOf = traitsJson as Record<string, { nightlife: number; gym: number; dating_apps: boolean; interests: string[]; type: string; dealbreaker: string; flirting_style: string }>;
 const cast21to45 = townJson.filter(p => !("visitor" in p) && p.status === "single" && p.age >= 21 && p.age <= 45);
 const randomName = async (sex: Sex) => {
   const names: string[] = (await (Math.random() < 0.5
-    ? sex === "female" ? import("human-names/data/female-human-names-en.json") : import("human-names/data/male-human-names-en.json")
+    ? sex === "female" ? import("../../data/english-female-names.json") : import("../../data/english-male-names.json")
     : sex === "female" ? import("../../data/indian-female-names.json") : import("../../data/indian-male-names.json"))).default;
   return names[Math.random() * names.length | 0];
 };
