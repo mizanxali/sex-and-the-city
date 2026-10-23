@@ -181,15 +181,21 @@ $("#describe").onclick = async () => {
   } catch (e) { status.textContent = (e as Error).message; }
 };
 
-// 🎲 A starting point, free: a single resident aged 21-45 under an invented name (human-names' English lists, loaded on
-// first click; its index pulls in every language, so import the lists directly), their
+// 🎲 A starting point, free: a single resident aged 21-45 under an invented name (half the time from human-names'
+// English lists, whose index pulls in every language, so import the lists directly; half from data/indian-*-names.json,
+// first names seen at least twice in the indian-names npm package's records; both loaded on first use), their
 // job, quirks, week and ratings in the form, the ratings scaled to spend exactly the 33-point budget.
 const traitsOf = traitsJson as Record<string, { nightlife: number; gym: number; dating_apps: boolean; interests: string[]; type: string; dealbreaker: string; flirting_style: string }>;
 const cast21to45 = townJson.filter(p => !("visitor" in p) && p.status === "single" && p.age >= 21 && p.age <= 45);
+const randomName = async (sex: Sex) => {
+  const names: string[] = (await (Math.random() < 0.5
+    ? sex === "female" ? import("human-names/data/female-human-names-en.json") : import("human-names/data/male-human-names-en.json")
+    : sex === "female" ? import("../../data/indian-female-names.json") : import("../../data/indian-male-names.json"))).default;
+  return names[Math.random() * names.length | 0];
+};
 $("#dice").onclick = async () => {
   const p = cast21to45[Math.random() * cast21to45.length | 0], t = traitsOf[String(p.id)], sex = p.sex as Sex;
-  const names: string[] = (await (sex === "female" ? import("human-names/data/female-human-names-en.json") : import("human-names/data/male-human-names-en.json"))).default;
-  const name = names[Math.random() * names.length | 0], old = new RegExp(`\\b${p.name.split(" ")[0]}\\b`, "g"), own = (s: string) => s.replace(old, name);
+  const name = await randomName(sex), old = new RegExp(`\\b${p.name.split(" ")[0]}\\b`, "g"), own = (s: string) => s.replace(old, name);
   const job = p.occupation.replaceAll("_", " "); // as the feed shows it: "janitor or building cleaner"
   const working = !["not_in_workforce", "no_occupation"].includes(p.occupation);
   const into = p.orientation === "bisexual" ? "everyone" : (p.orientation === "gay") === (sex === "female") ? "women" : "men";
@@ -205,6 +211,9 @@ $("#dice").onclick = async () => {
     nightlife: Math.min(5, t.nightlife), gym: Math.min(6, t.gym), apps: t.dating_apps, interests: t.interests.slice(0, MAX_INTERESTS) }, "");
   $<HTMLButtonElement>("#describe").disabled = true; // the form already matches; editing the text turns it back on
 };
+// the HTML's "Alex" holds the field until the list loads; swap it unless they've already typed a name
+const nameInput = form.elements.namedItem("name") as HTMLInputElement;
+randomName("male").then(n => { if (nameInput.value === nameInput.defaultValue) nameInput.value = n; });
 $("textarea[name=description]").addEventListener("input", () => ($<HTMLButtonElement>("#describe").disabled = false));
 
 const newSeed = () => (Math.random() * 2 ** 31) | 0;
