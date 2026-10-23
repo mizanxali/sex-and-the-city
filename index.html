@@ -168,6 +168,8 @@
     #how p, #how ul { margin: 0 0 6px; }
     #how ul { padding-left: 20px; }
     #how li { margin-bottom: 3px; }
+    #how .credit { margin-top: 16px; color: var(--muted); text-align: center; }
+    #how .credit a { color: inherit; }
 
     /* in-world labels */
     .label { font-size: 10px; color: white; background: rgba(20, 20, 30, 0.6); padding: 1px 5px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
@@ -337,9 +339,6 @@
         <li>People <b>gossip</b>: sleep with someone's friend and that friend might cool on you.</li>
       </ul>
 
-      <h3>⭐ You're the main character</h3>
-      <p>Everyone else lives by real-life odds, and in real life most single people have zero or one partner in a whole year. You get movie odds: you talk to more people, only to singles who could be into you, and you have better luck all round. A big score here would be very unusual in real life.</p>
-
       <h3>🎚️ What your stats do</h3>
       <p>You have 33 points to share out, and each extra point is worth a bit less than the one before, so piling everything into one stat rarely wins.</p>
       <ul>
@@ -365,9 +364,6 @@
       <h3>🏳️‍🌈 Gay characters</h3>
       <p>A town of 1,000 has only a handful of gay singles, so for gay characters the apps also reach singles from out of town. That makes the apps their best bet, and every kind of character has a real shot at the top.</p>
 
-      <h3>🎲 Fair dice</h3>
-      <p>Your score is the number of different people you went home with in 30 days. The server rolls the dice and runs your month, so nobody can fake a score. "Tweak &amp; try again" brings your character back to edit, or to release unchanged with new dice. The AI never decides what happens: the simulation does.</p>
-
       <h3>🤓 Technical details for nerds</h3>
       <ul>
         <li><b>Attraction:</b> two logistic regressions (women choosing, men choosing) fitted on ~3,400 speed-dating decisions each. P(yes) = σ(β₀ + Σ βᵢxᵢ) over the chooser's ratings and the age gap. AUC 0.81 / 0.84. Looks carry the most weight, then fun and shared interests.</li>
@@ -379,6 +375,7 @@
         <li><b>Determinism:</b> a seeded RNG gives the same month on the server and in your browser.</li>
         <li><b>Data sources:</b> General Social Survey 2022–24 (NORC), Fisman &amp; Iyengar speed-dating experiment (Columbia), How Couples Meet and Stay Together (Stanford), American Time Use Survey 2024 (BLS), Gallup, NVIDIA Nemotron-Personas-USA.</li>
       </ul>
+      <p class="credit">Built by <a href="https://x.com/mizanxali" target="_blank" rel="noopener">@mizanxali</a></p>
     </div>
   </aside>
   <aside id="board" class="panel">
