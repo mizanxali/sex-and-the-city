@@ -32,6 +32,9 @@ function specOf(v: unknown) {
 // Every run is ranked forever. The server picks the seed and simulates the month itself, so the score can't be
 // forged; the browser replays the same month from the same seed and Jev offsets (kept on the row for /api/story).
 type Route = (b: Record<string, unknown>, env: Env) => Promise<unknown>;
+// One place per run, no shared ranks: ties go to whoever got there first.
+const RANKED = "(SELECT id, name, score, ROW_NUMBER() OVER (ORDER BY score DESC, created, id) AS rank FROM runs)";
+
 const routes: Record<string, Route> = {
   // Free text → moderated, clamped character.
   "/api/character": async b => {
@@ -71,9 +74,9 @@ const routes: Record<string, Route> = {
     const limit = Math.min(100, Math.max(0, Number(b.limit ?? 50) | 0)), offset = Math.max(0, Number(b.offset ?? 0) | 0);
     const [total, rows, you] = await Promise.all([
       env.DB.prepare("SELECT COUNT(*) AS n FROM runs").first<{ n: number }>(),
-      env.DB.prepare("SELECT name, score, 1 + (SELECT COUNT(*) FROM runs x WHERE x.score > r.score) AS rank FROM runs r ORDER BY score DESC, created LIMIT ? OFFSET ?")
+      env.DB.prepare(`SELECT name, score, rank FROM ${RANKED} ORDER BY rank LIMIT ? OFFSET ?`)
         .bind(limit, offset).all(),
-      b.run ? env.DB.prepare("SELECT 1 + (SELECT COUNT(*) FROM runs WHERE score > r.score) AS rank, name, score FROM runs r WHERE id = ?")
+      b.run ? env.DB.prepare(`SELECT rank, name, score FROM ${RANKED} WHERE id = ?`)
         .bind(String(b.run)).first() : null,
     ]);
     return { total: total!.n, rows: rows.results, you };
